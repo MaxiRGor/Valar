@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ForMoxyTest</string>
+    <string name="hello">Hello from Moxy Test</string>
+</resources>
