@@ -15,7 +15,7 @@ public class MainMenuPresenter extends MvpPresenter<MainMenuView> {
 /*
     @Override
     public static void goToGame() {
-        Log.d("myLogs","GameActivity");
+        Log.d("myLogs","SetGameActivity");
     }
 
     @Override

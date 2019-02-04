@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameActivity extends MvpAppCompatActivity implements GameView {
+public class SetGameActivity extends MvpAppCompatActivity implements SetGameView {
 
     @InjectPresenter
-    GamePresenter gamePresenter;
+    SetGamePresenter gamePresenter;
 
     private TextView chooseLevelTV;
     private TextView chooseCategoryTV;
@@ -36,11 +36,11 @@ public class GameActivity extends MvpAppCompatActivity implements GameView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.game_empty_frame);
+        setContentView(R.layout.set_game_empty_frame);
         rootGroup = findViewById(R.id.frameLayout);
 
         if (savedInstanceState == null) {
-            tempView = LayoutInflater.from(this).inflate(R.layout.game_menu, rootGroup, false);
+            tempView = LayoutInflater.from(this).inflate(R.layout.set_game_menu, rootGroup, false);
             rootGroup.addView(tempView);
             setListeners();
         }
@@ -109,7 +109,7 @@ public class GameActivity extends MvpAppCompatActivity implements GameView {
         final String ATTRIBUTE_NAME_NUMBER = "number";
 
         rootGroup.removeAllViews();
-        tempView = LayoutInflater.from(this).inflate(R.layout.game_list, rootGroup, false);
+        tempView = LayoutInflater.from(this).inflate(R.layout.set_game_list, rootGroup, false);
         rootGroup.addView(tempView);
 
         ListView listView = tempView.findViewById(R.id.listView);
@@ -139,7 +139,7 @@ public class GameActivity extends MvpAppCompatActivity implements GameView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("myLogs", "id= " + String.valueOf(id) + "; position= " + String.valueOf(position));
-                Intent intent = new Intent(GameActivity.this, InPlayActivity.class);
+                Intent intent = new Intent(SetGameActivity.this, InPlayActivity.class);
                 intent.putExtra("level", position);
                 startActivity(intent);
             }

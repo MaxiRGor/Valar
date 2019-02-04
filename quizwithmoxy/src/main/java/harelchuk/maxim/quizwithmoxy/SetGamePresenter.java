@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @InjectViewState
-public class GamePresenter extends MvpPresenter<GameView> {
+public class SetGamePresenter extends MvpPresenter<SetGameView> {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
@@ -24,9 +24,9 @@ public class GamePresenter extends MvpPresenter<GameView> {
     private ArrayList<Integer> numberOfQuestions;
 
 
-    GamePresenter() {
+    SetGamePresenter() {
         this.databaseHelper = new DatabaseHelper(AppForContext.getContext());
-        Log.d("myLogs", "GamePresenter const");
+        Log.d("myLogs", "SetGamePresenter const");
         levels = new ArrayList<>();
         numberOfQuestions = new ArrayList<>();
     }

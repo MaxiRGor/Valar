@@ -5,7 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 
-public interface GameView extends MvpView {
+public interface SetGameView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void chooseBook();
 

@@ -1,6 +1,7 @@
 package harelchuk.maxim.quizwithmoxy;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -29,6 +30,8 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     private int counter_of_questions_from_DB;
     private int question_cursor;
 
+    private boolean is_lose;
+
     private QuestionClass[] questions;
 
 
@@ -42,6 +45,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         }
         this.counter_of_questions_from_DB = 0;
         this.databaseHelper = new DatabaseHelper(AppForContext.getContext());
+        this.is_lose = false;
         Log.d("myLogs", "InPlayPresenter const");
     }
 
@@ -148,6 +152,93 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         }
     };
 
+
+    @SuppressLint("StaticFieldLeak")
+    private AsyncTask<Void, Void, Void> sendInfoToUserStat = new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            databaseHelper = new DatabaseHelper(AppForContext.getContext());
+            ContentValues contentValues = new ContentValues();
+            String[] columns = {DatabaseHelper.COLUMN_U_LEVEL, DatabaseHelper.COLUMN_U_SCORE,
+                    DatabaseHelper.COLUMN_U_NUMBER_OF_ANSWERS, DatabaseHelper.COLUMN_U_NUMBER_OF_GAMES};        // 4 columns
+
+            try {
+                database = databaseHelper.open();
+                cursor = database.query(DatabaseHelper.UTABLE, columns, null, null, null, null, null);
+
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) do {
+                        Log.d("myLogs", "Getting statistics ");
+                        int lvl = cursor.getInt(0);
+                        int scr = cursor.getInt(1);
+                        int noa = cursor.getInt(2);
+                        int nog = cursor.getInt(3);
+                        contentValues = changedContentValues(lvl, scr, noa, nog);
+                    } while (cursor.moveToNext());
+                    cursor.close();
+                }
+
+                int update = database.update(DatabaseHelper.UTABLE, contentValues, null, null);
+                Log.d("MyLogs", "updated rows count = " + update);
+
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("MyLogs", "Statistics send");
+        }
+    };
+
+    private ContentValues changedContentValues(int lvl, int scr, int noa, int nog) {
+
+        int add_score;
+        int add_noa;
+        int add_nog;
+
+        if (is_lose) add_score = level * question_cursor;
+        else add_score = level * question_cursor * 10;
+
+        scr += add_score;
+
+        add_noa = question_cursor;
+        noa += add_noa;
+        add_nog = 1;
+        nog += add_nog;
+
+        switch (lvl) {
+            case 1:
+                if (scr >= 100) lvl++;
+                break;
+            case 2:
+                if (scr >= 300) lvl++;
+                break;
+            case 3:
+                if (scr >= 600) lvl++;
+                break;
+            case 4:
+                if (scr >= 1000) lvl++;
+                break;
+            case 5:
+                break;
+        }
+
+        Log.d("MyLogs", "score added " + add_score);
+        Log.d("MyLogs", "level " + lvl);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.COLUMN_U_LEVEL, lvl);
+        contentValues.put(DatabaseHelper.COLUMN_U_SCORE, scr);
+        contentValues.put(DatabaseHelper.COLUMN_U_NUMBER_OF_ANSWERS, noa);
+        contentValues.put(DatabaseHelper.COLUMN_U_NUMBER_OF_GAMES, nog);
+        return contentValues;
+    }
+
     private void sendQuestionToTheView() {
         getViewState().showQuestion(questionsToEnd, questions[question_cursor].text, questions[question_cursor].answer1,
                 questions[question_cursor].answer2, questions[question_cursor].answer3, questions[question_cursor].answer4);
@@ -172,13 +263,17 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
             } else {
                 //questionsToEnd--;
                 //question_cursor++;
-                Log.d("myLogs", "User answered wrong");
+                Log.d("myLogs", "User answered wrong and he lose");
                 //sendQuestionToTheView();
+                is_lose = true;
+                sendInfoToUserStat.execute();
                 getViewState().userLose(question_cursor);
             }
 
         } else {
             Log.d("myLogs", "All answered");
+            sendInfoToUserStat.execute();
+            question_cursor++;
             getViewState().userWin();
 
         }

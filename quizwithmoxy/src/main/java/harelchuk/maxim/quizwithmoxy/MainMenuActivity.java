@@ -66,22 +66,18 @@ public class MainMenuActivity extends MvpAppCompatActivity implements MainMenuVi
     public void goToGame() {
         Log.d("myLogs", "From MM to Game");
         //ViewGroup rootView = findViewById(R.id.main_menu);
-        //nextView = LayoutInflater.from(this).inflate(R.layout.game_menu,rootView,false);
+        //nextView = LayoutInflater.from(this).inflate(R.layout.set_game_menu,rootView,false);
         //rootView.addView(nextView);
-        Intent intent = new Intent(MainMenuActivity.this, GameActivity.class);
+        Intent intent = new Intent(MainMenuActivity.this, SetGameActivity.class);
         startActivity(intent);
-        //Toast.makeText(this,"GameActivity",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"SetGameActivity",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void goToStatistics() {
-        Log.d("myLogs", "Stat");
-
-        alertDialog = new AlertDialog.Builder(this)
-                .setTitle("Statistics")
-                .setMessage("Not Finished")
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+        Log.d("myLogs", "From MM to Stat");
+        Intent intent = new Intent(MainMenuActivity.this, StatisticsActivity.class);
+        startActivity(intent);
     }
 
     @Override
