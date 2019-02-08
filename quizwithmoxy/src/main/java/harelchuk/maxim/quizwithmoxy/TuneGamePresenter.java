@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @InjectViewState
-public class SetGamePresenter extends MvpPresenter<SetGameView> {
+public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
@@ -24,11 +24,12 @@ public class SetGamePresenter extends MvpPresenter<SetGameView> {
     private ArrayList<Integer> numberOfQuestions;
 
 
-    SetGamePresenter() {
+    TuneGamePresenter() {
         this.databaseHelper = new DatabaseHelper(AppForContext.getContext());
-        Log.d("myLogs", "SetGamePresenter const");
+        Log.d("myLogs", "TuneGamePresenter const");
         levels = new ArrayList<>();
         numberOfQuestions = new ArrayList<>();
+        getNumberOfQuestionForLevel.execute();
     }
 
     @SuppressLint("StaticFieldLeak")

@@ -1,6 +1,8 @@
 package harelchuk.maxim.quizwithmoxy;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +20,17 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     private View questionView;
 
     private TextView questionThemeTV;
-    private TextView userAnswerTV;
+    private TextView questionCategory;
     private TextView questionsToEndTV;
+    private TextView scoreAddedTV;
 
     private TextView qTTV;
     private TextView a1TV;
     private TextView a2TV;
     private TextView a3TV;
     private TextView a4TV;
+
+    SharedPreferences sharedPreferences;
 
 
     @Override
@@ -35,24 +40,20 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         viewGroup = findViewById(R.id.frameQuestionLayout);
         questionThemeTV = findViewById(R.id.themeTV);
-        userAnswerTV = findViewById(R.id.userAnserTV);
+        questionCategory = findViewById(R.id.categoryTV);
         questionsToEndTV = findViewById(R.id.quetionsToEndTV);
 
-        // добавить ещё один extra типа type
-        int level = getIntent().getExtras().getInt("level");
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        questionThemeTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
 
-        level++;
-
-        questionThemeTV.setText(String.format("Level = %s", String.valueOf(level)));
-
-        inPlayPresenter.getLevel(level);
     }
 
 
     @Override
-    public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4) {
+    public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4, String category) {
 
         questionsToEndTV.setText(String.valueOf(questionsToTheEnd));
+        questionCategory.setText(category);
 
         viewGroup.removeAllViews();
         questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
@@ -98,6 +99,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     public void userWin() {
         viewGroup.removeAllViews();
         questionView = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, viewGroup, false);
+        scoreAddedTV = questionView.findViewById(R.id.scoreAddedWinTV);
         viewGroup.addView(questionView);
     }
 
@@ -107,7 +109,13 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         questionView = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, viewGroup, false);
         TextView answeredTV = questionView.findViewById(R.id.loseAnsweredTV);
         answeredTV.setText(String.valueOf(answered));
+        scoreAddedTV = questionView.findViewById(R.id.scoreAddedLoseTV);
         viewGroup.addView(questionView);
+    }
+
+    @Override
+    public void showAddedScore(int score) {
+        scoreAddedTV.setText(String.valueOf(score));
     }
 
 
@@ -124,7 +132,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     public void checkAnswer(int userAnswer){
 
 
-        userAnswerTV.setText(String.valueOf(userAnswer));
+        questionCategory.setText(String.valueOf(userAnswer));
         questionsToEndTV.setText(String.valueOf(questionsToEnd));
         if(questionsToEnd>0) showQuestion();
         else{

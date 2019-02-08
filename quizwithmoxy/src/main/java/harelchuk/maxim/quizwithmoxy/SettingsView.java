@@ -4,12 +4,7 @@ import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-
-public interface MainMenuView extends MvpView {
+public interface SettingsView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void goToGame();
-
-    void goToStatistics();
-
-    void goToSettings();
+    void show();
 }

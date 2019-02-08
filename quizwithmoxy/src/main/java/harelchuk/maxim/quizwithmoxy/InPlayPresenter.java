@@ -2,9 +2,12 @@ package harelchuk.maxim.quizwithmoxy;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -20,7 +23,12 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
 
+    private SharedPreferences sharedPreferences;
+
+
     private Cursor cursor;
+
+    private Context context;
 
     private ArrayList<Integer> idArray;
 
@@ -29,6 +37,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     private int rightAnswer;
     private int counter_of_questions_from_DB;
     private int question_cursor;
+    private int addScore;
 
     private boolean is_lose;
 
@@ -36,6 +45,8 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
 
     InPlayPresenter() {
+        this.context = getContext();
+        getLevel();
         this.idArray = new ArrayList<>();
         this.questionsToEnd = 10;
         this.question_cursor = 0;
@@ -44,7 +55,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
             questions[i] = new QuestionClass();
         }
         this.counter_of_questions_from_DB = 0;
-        this.databaseHelper = new DatabaseHelper(AppForContext.getContext());
+
         this.is_lose = false;
         Log.d("myLogs", "InPlayPresenter const");
     }
@@ -55,7 +66,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         protected ArrayList<Integer> doInBackground(Void... voids) {
 
             ArrayList<Integer> tempArray = new ArrayList<>();
-
+            databaseHelper = new DatabaseHelper(context);
             try {
                 database = databaseHelper.open();
                 cursor = database.query(DatabaseHelper.QTABLE, new String[]{DatabaseHelper.COLUMN_Q_ID_QUESTION},
@@ -93,14 +104,16 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
             String[] columns = {DatabaseHelper.COLUMN_Q_ID_QUESTION, DatabaseHelper.COLUMN_Q_QUESTION_TEXT, DatabaseHelper.COLUMN_Q_ANSWER_ONE,
                     DatabaseHelper.COLUMN_Q_ANSWER_TWO, DatabaseHelper.COLUMN_Q_ANSWER_THREE,
-                    DatabaseHelper.COLUMN_Q_ANSWER_FOUR, DatabaseHelper.COLUMN_Q_RIGHT_ANSWER};        // 7 columns
+                    DatabaseHelper.COLUMN_Q_ANSWER_FOUR, DatabaseHelper.COLUMN_Q_RIGHT_ANSWER,
+                    DatabaseHelper.COLUMN_Q_CATEGORY};        // 8 columns
 
+            databaseHelper = new DatabaseHelper(context);
             try {
                 database = databaseHelper.open();
 
                 String[] id = new String[questionsToEnd];
                 for (int i = 0; i < questionsToEnd; i++) {
-                    int temp = randomElement(idArray);
+                    int temp = randomElement();
                     id[i] = String.valueOf(temp);
                     Log.d("myLogs", "id[" + i + "] = " + id[i]);
                 }
@@ -117,6 +130,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                     int A3 = cursor.getColumnIndex(DatabaseHelper.COLUMN_Q_ANSWER_THREE);
                     int A4 = cursor.getColumnIndex(DatabaseHelper.COLUMN_Q_ANSWER_FOUR);
                     int RIGHT = cursor.getColumnIndex(DatabaseHelper.COLUMN_Q_RIGHT_ANSWER);
+                    int CAT = cursor.getColumnIndex(DatabaseHelper.COLUMN_Q_CATEGORY);
 
                     if (cursor.moveToFirst()) do {
 
@@ -128,6 +142,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                         questions[i].answer3 = cursor.getString(A3);
                         questions[i].answer4 = cursor.getString(A4);
                         questions[i].rightAnswer = cursor.getInt(RIGHT);
+                        questions[i].category = cursor.getString(CAT);
                     } while (cursor.moveToNext());
                     counter_of_questions_from_DB = i;
                     cursor.close();
@@ -157,7 +172,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     private AsyncTask<Void, Void, Void> sendInfoToUserStat = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
-            databaseHelper = new DatabaseHelper(AppForContext.getContext());
+            databaseHelper = new DatabaseHelper(context);
             ContentValues contentValues = new ContentValues();
             String[] columns = {DatabaseHelper.COLUMN_U_LEVEL, DatabaseHelper.COLUMN_U_SCORE,
                     DatabaseHelper.COLUMN_U_NUMBER_OF_ANSWERS, DatabaseHelper.COLUMN_U_NUMBER_OF_GAMES};        // 4 columns
@@ -173,7 +188,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                         int scr = cursor.getInt(1);
                         int noa = cursor.getInt(2);
                         int nog = cursor.getInt(3);
-                        contentValues = changedContentValues(lvl, scr, noa, nog);
+                        contentValues = changeContentValues(lvl, scr, noa, nog);
                     } while (cursor.moveToNext());
                     cursor.close();
                 }
@@ -192,19 +207,19 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.d("MyLogs", "Statistics send");
+            getViewState().showAddedScore(addScore);
         }
     };
 
-    private ContentValues changedContentValues(int lvl, int scr, int noa, int nog) {
+    private ContentValues changeContentValues(int lvl, int scr, int noa, int nog) {
 
-        int add_score;
         int add_noa;
         int add_nog;
 
-        if (is_lose) add_score = level * question_cursor;
-        else add_score = level * question_cursor * 10;
+        if (is_lose) addScore = level * question_cursor;
+        else addScore = level * question_cursor * 10;
 
-        scr += add_score;
+        scr += addScore;
 
         add_noa = question_cursor;
         noa += add_noa;
@@ -228,7 +243,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                 break;
         }
 
-        Log.d("MyLogs", "score added " + add_score);
+        Log.d("MyLogs", "score added " + addScore);
         Log.d("MyLogs", "level " + lvl);
 
         ContentValues contentValues = new ContentValues();
@@ -241,14 +256,20 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
     private void sendQuestionToTheView() {
         getViewState().showQuestion(questionsToEnd, questions[question_cursor].text, questions[question_cursor].answer1,
-                questions[question_cursor].answer2, questions[question_cursor].answer3, questions[question_cursor].answer4);
+                questions[question_cursor].answer2, questions[question_cursor].answer3, questions[question_cursor].answer4,
+                questions[question_cursor].category);
     }
 
 
-    void getLevel(int level_chosen) {
-        this.level = level_chosen;
+    private void getLevel() {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.level = sharedPreferences.getInt("level", 0) + 1;
         Log.d("myLogs", "Level in presenter = " + level);
         getArrayOfSuitableIds.execute();
+    }
+
+    private Context getContext() {
+        return AppForContext.getContext();
     }
 
     void checkAnswer(int userAnswer) {
@@ -261,8 +282,6 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                 Log.d("myLogs", "User answered right");
                 sendQuestionToTheView();
             } else {
-                //questionsToEnd--;
-                //question_cursor++;
                 Log.d("myLogs", "User answered wrong and he lose");
                 //sendQuestionToTheView();
                 is_lose = true;
@@ -275,15 +294,17 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
             sendInfoToUserStat.execute();
             question_cursor++;
             getViewState().userWin();
-
         }
     }
 
-    private int randomElement(ArrayList<Integer> arrayList) {
+    private int randomElement() {
         // while calling, returns
-        int randomIndex = new Random().nextInt(arrayList.size());
-        //this.idArray.remove(randomIndex);
-        return arrayList.get(randomIndex);
+        int randomIndex = new Random().nextInt(idArray.size());
+        int element = idArray.get(randomIndex);
+        idArray.remove(randomIndex);
+        Log.d("myLogs", "size = " + idArray.size());
+        idArray.trimToSize();
+        return element;
     }
 
 }
@@ -297,6 +318,7 @@ class QuestionClass {
     String answer3;
     String answer4;
     int rightAnswer;
+    String category;
 
     QuestionClass() {
         this.id = 0;
@@ -306,6 +328,7 @@ class QuestionClass {
         this.answer3 = "0";
         this.answer4 = "0";
         this.rightAnswer = 0;
+        this.category = "None";
     }
 
 }
