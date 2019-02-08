@@ -275,6 +275,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     void checkAnswer(int userAnswer) {
 
         if (questionsToEnd > 1) {
+            // пропускает неправильный 10-ый
 
             if (userAnswer == questions[question_cursor].rightAnswer) {
                 questionsToEnd--;

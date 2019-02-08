@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -29,6 +31,8 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     private TextView a2TV;
     private TextView a3TV;
     private TextView a4TV;
+
+    private Animation animation;
 
     SharedPreferences sharedPreferences;
 
@@ -57,7 +61,12 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         viewGroup.removeAllViews();
         questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
+        //questionView.setVisibility(View.INVISIBLE);
+        //questionView.setAlpha(0.0f);
         viewGroup.addView(questionView);
+
+        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_up));
+
         qTTV = questionView.findViewById(R.id.questionTextTV);
         a1TV = questionView.findViewById(R.id.answer1TV);
         a2TV = questionView.findViewById(R.id.answer2TV);
@@ -70,21 +79,82 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a3TV.setText(a3);
         a4TV.setText(a4);
 
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_down);
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case (R.id.answer1TV):
-                        inPlayPresenter.checkAnswer(1);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(1);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a1TV.startAnimation(animation);
                         break;
                     case (R.id.answer2TV):
-                        inPlayPresenter.checkAnswer(2);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(2);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a2TV.startAnimation(animation);
                         break;
                     case (R.id.answer3TV):
-                        inPlayPresenter.checkAnswer(3);
+
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(3);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a3TV.startAnimation(animation);
                         break;
                     case (R.id.answer4TV):
-                        inPlayPresenter.checkAnswer(4);
+
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(4);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a4TV.startAnimation(animation);
                         break;
                 }
             }
