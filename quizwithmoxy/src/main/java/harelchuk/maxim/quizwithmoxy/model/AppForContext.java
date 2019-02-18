@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.model;
 
 import android.annotation.SuppressLint;
 import android.app.Application;

@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.view;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;

@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.presenter;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -12,6 +12,10 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import harelchuk.maxim.quizwithmoxy.model.AppForContext;
+import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
+import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
+
 @InjectViewState
 public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
 
@@ -24,7 +28,7 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
     private ArrayList<Integer> numberOfQuestions;
 
 
-    TuneGamePresenter() {
+    public TuneGamePresenter() {
         this.databaseHelper = new DatabaseHelper(AppForContext.getContext());
         Log.d("myLogs", "TuneGamePresenter const");
         levels = new ArrayList<>();

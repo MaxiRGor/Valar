@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import harelchuk.maxim.quizwithmoxy.InPlayActivity;
+import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.presenter.TuneGamePresenter;
+import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
 
 public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameView {
 

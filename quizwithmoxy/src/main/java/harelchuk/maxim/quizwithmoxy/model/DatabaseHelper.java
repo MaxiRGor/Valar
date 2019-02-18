@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.model;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,37 +19,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "quizformoxy.db";
     private static final int SCHEMA = 1; // DB version
 
-    static final String QTABLE = "qtable";
+    public static final String QTABLE = "qtable";
 
-    static final String COLUMN_Q_ID_QUESTION = "id_question";
-    static final String COLUMN_Q_QUESTION_TEXT = "question_text";
-    static final String COLUMN_Q_ANSWER_ONE = "answer_one";
-    static final String COLUMN_Q_ANSWER_TWO = "answer_two";
-    static final String COLUMN_Q_ANSWER_THREE = "answer_three";
-    static final String COLUMN_Q_ANSWER_FOUR = "answer_four";
-    static final String COLUMN_Q_RIGHT_ANSWER = "right_answer";
-    static final String COLUMN_Q_LEXEL = "level";
-    static final String COLUMN_Q_IN_BOOK = "in_book";
-    static final String COLUMN_Q_IN_SERIAL = "in_serial";
-    static final String COLUMN_Q_CATEGORY = "category";
-    static final String COLUMN_Q_SCORE = "score";
-    static final String COLUMN_Q_IS_ANSWERED = "is_answered";
-    static final String COLUMN_Q_USER_ANSWER = "user_answer";
+    public static final String COLUMN_Q_ID_QUESTION = "id_question";
+    public static final String COLUMN_Q_QUESTION_TEXT = "question_text";
+    public static final String COLUMN_Q_ANSWER_ONE = "answer_one";
+    public static final String COLUMN_Q_ANSWER_TWO = "answer_two";
+    public static final String COLUMN_Q_ANSWER_THREE = "answer_three";
+    public static final String COLUMN_Q_ANSWER_FOUR = "answer_four";
+    public static final String COLUMN_Q_RIGHT_ANSWER = "right_answer";
+    public static final String COLUMN_Q_LEXEL = "level";
+    public static final String COLUMN_Q_IN_BOOK = "in_book";
+    public static final String COLUMN_Q_IN_SERIAL = "in_serial";
+    public static final String COLUMN_Q_CATEGORY = "category";
+    public static final String COLUMN_Q_SCORE = "score";
+    public static final String COLUMN_Q_IS_ANSWERED = "is_answered";
+    public static final String COLUMN_Q_USER_ANSWER = "user_answer";
 
 
-    static final String UTABLE = "utable";
+    public static final String UTABLE = "utable";
 
-    static final String COLUMN_U_USER_NAME = "user_name";
-    static final String COLUMN_U_LEVEL = "level";
-    static final String COLUMN_U_SCORE = "score";
-    static final String COLUMN_U_NUMBER_OF_ANSWERS = "nuber_of_answers";
-    static final String COLUMN_U_NUMBER_OF_GAMES = "number_of_games";
-    static final String COLUMN_U_PERCENT_OF_RIGHT = "percent_of_right";
+    public static final String COLUMN_U_USER_NAME = "user_name";
+    public static final String COLUMN_U_LEVEL = "level";
+    public static final String COLUMN_U_SCORE = "score";
+    public static final String COLUMN_U_NUMBER_OF_ANSWERS = "nuber_of_answers";
+    public static final String COLUMN_U_NUMBER_OF_GAMES = "number_of_games";
+    public static final String COLUMN_U_PERCENT_OF_RIGHT = "percent_of_right";
 
     private Context myContext;
 
 
-    DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
         this.myContext = context;
         DB_PATH = context.getFilesDir().getPath() + DB_NAME;

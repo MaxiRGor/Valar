@@ -1,17 +1,24 @@
 package harelchuk.maxim.quizwithmoxy;
 
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.squareup.picasso.Picasso;
+
+import harelchuk.maxim.quizwithmoxy.presenter.InPlayPresenter;
+import harelchuk.maxim.quizwithmoxy.view.InPlayView;
 
 public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
@@ -34,6 +41,8 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
     private Animation animation;
 
+    ImageView imageView;
+
     SharedPreferences sharedPreferences;
 
 
@@ -41,16 +50,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.in_play_empty_frame);
-
-        viewGroup = findViewById(R.id.frameQuestionLayout);
-        questionThemeTV = findViewById(R.id.themeTV);
-        questionCategory = findViewById(R.id.categoryTV);
-        questionsToEndTV = findViewById(R.id.quetionsToEndTV);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        questionThemeTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
-
     }
+
+
 
 
     @Override
@@ -188,6 +190,30 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         scoreAddedTV.setText(String.valueOf(score));
     }
 
+    @Override
+    public void findElements() {
+
+        viewGroup = findViewById(R.id.frameQuestionLayout);
+        questionThemeTV = findViewById(R.id.themeTV);
+        questionCategory = findViewById(R.id.categoryTV);
+        questionsToEndTV = findViewById(R.id.quetionsToEndTV);
+        imageView = findViewById(R.id.imageViewInPlay);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        questionThemeTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        imageView = findViewById(R.id.imageViewInPlay);
+        Picasso.get().
+                load(R.drawable.fon)
+                .resize(width / 2, height / 2)
+                .placeholder(R.drawable.blackscreen)
+                .into(imageView);
+    }
 
 }
 

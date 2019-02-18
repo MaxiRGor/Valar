@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
+import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
 
 public class StatisticsFragment extends MvpAppCompatFragment implements StatisticsView {

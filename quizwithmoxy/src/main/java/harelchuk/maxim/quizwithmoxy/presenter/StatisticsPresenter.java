@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy;
+package harelchuk.maxim.quizwithmoxy.presenter;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -10,6 +10,10 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.sql.SQLException;
+
+import harelchuk.maxim.quizwithmoxy.model.AppForContext;
+import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
+import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
 
 @InjectViewState
@@ -26,7 +30,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     int number_of_games;
     int percent_of_right;
 
-    StatisticsPresenter() {
+    public StatisticsPresenter() {
         getUsersStatistics.execute();
         Log.d("myLogs", "Statistics Presenter started");
     }
