@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -53,8 +54,9 @@ public class TabMenuActivity extends AppCompatActivity {
         final ImageView imageView = findViewById(R.id.imageViewMenu);
 
         Picasso.get().
-                load(R.drawable.fon)
-                .resize(width / 2, height / 2)
+                load(R.drawable.backgr_targar1280)
+                /*.resize(width / 2, height / 2)*/
+                .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(imageView);
 
@@ -66,6 +68,14 @@ public class TabMenuActivity extends AppCompatActivity {
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        Menu a = navigation.getMenu();
+        MenuItem b = a.findItem(R.id.navigation_statistics);
+        b.setIcon(R.drawable.ic_wth);
+
+
+        // 6 hours of work just for this row
+        navigation.setItemIconTintList(null);
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
