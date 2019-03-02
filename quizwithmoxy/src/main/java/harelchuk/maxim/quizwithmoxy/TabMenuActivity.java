@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import harelchuk.maxim.quizwithmoxy.fragments.SettingsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.StatisticsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.TuneGameFragment;
+import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
 
 public class TabMenuActivity extends AppCompatActivity {
 
@@ -54,7 +55,7 @@ public class TabMenuActivity extends AppCompatActivity {
         final ImageView imageView = findViewById(R.id.imageViewMenu);
 
         Picasso.get().
-                load(R.drawable.backgr_targar1280)
+                load(R.drawable.background123)
                 /*.resize(width / 2, height / 2)*/
                 .fit()
                 .placeholder(R.drawable.blackscreen)
@@ -68,10 +69,11 @@ public class TabMenuActivity extends AppCompatActivity {
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        /*
         Menu a = navigation.getMenu();
         MenuItem b = a.findItem(R.id.navigation_statistics);
         b.setIcon(R.drawable.ic_wth);
-
+*/
 
         // 6 hours of work just for this row
         navigation.setItemIconTintList(null);

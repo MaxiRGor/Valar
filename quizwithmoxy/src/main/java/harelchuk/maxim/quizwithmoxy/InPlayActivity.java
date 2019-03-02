@@ -209,7 +209,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         int height = size.y;
         imageView = findViewById(R.id.imageViewInPlay);
         Picasso.get().
-                load(R.drawable.backgr_targar1280)
+                load(R.drawable.background123)
                 .resize(width, height)
                 .placeholder(R.drawable.blackscreen)
                 .into(imageView);

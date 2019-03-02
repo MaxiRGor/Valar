@@ -53,6 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, SCHEMA);
         this.myContext = context;
         DB_PATH = context.getFilesDir().getPath() + DB_NAME;
+        create_db();
     }
 
     @Override
