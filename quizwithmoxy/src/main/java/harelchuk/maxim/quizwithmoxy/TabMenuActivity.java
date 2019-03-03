@@ -1,13 +1,10 @@
 package harelchuk.maxim.quizwithmoxy;
 
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -16,9 +13,37 @@ import com.squareup.picasso.Picasso;
 import harelchuk.maxim.quizwithmoxy.fragments.SettingsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.StatisticsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.TuneGameFragment;
-import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
+import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 
 public class TabMenuActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.tab_menu);
+
+        SharedPreferencesInitializer.setSharedPreferencesMoney(getApplicationContext());
+        SharedPreferencesInitializer.setSharedPreferencesUser(getApplicationContext());
+
+        final ImageView imageView = findViewById(R.id.imageViewMenu);
+
+        Picasso.get().
+                load(R.drawable.background123)
+                .fit()
+                .placeholder(R.drawable.blackscreen)
+                .into(imageView);
+
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction
+                    .add(R.id.main_container, new TuneGameFragment()).commit();
+        }
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setItemIconTintList(null);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -40,45 +65,5 @@ public class TabMenuActivity extends AppCompatActivity {
             return false;
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.tab_menu);
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-        final ImageView imageView = findViewById(R.id.imageViewMenu);
-
-        Picasso.get().
-                load(R.drawable.background123)
-                /*.resize(width / 2, height / 2)*/
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(imageView);
-
-
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction
-                    .add(R.id.main_container, new TuneGameFragment()).commit();
-        }
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        /*
-        Menu a = navigation.getMenu();
-        MenuItem b = a.findItem(R.id.navigation_statistics);
-        b.setIcon(R.drawable.ic_wth);
-*/
-
-        // 6 hours of work just for this row
-        navigation.setItemIconTintList(null);
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
 
 }

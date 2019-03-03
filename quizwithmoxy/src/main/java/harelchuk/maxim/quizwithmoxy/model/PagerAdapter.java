@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import harelchuk.maxim.quizwithmoxy.fragments.TabFragment1;
 import harelchuk.maxim.quizwithmoxy.fragments.TabFragment2;
-import harelchuk.maxim.quizwithmoxy.fragments.TabFragment3;
+import harelchuk.maxim.quizwithmoxy.fragments.BankFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
@@ -25,7 +25,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new TabFragment2();
             case 2:
-                return new TabFragment3();
+                return new BankFragment();
             default:
                 return null;
         }

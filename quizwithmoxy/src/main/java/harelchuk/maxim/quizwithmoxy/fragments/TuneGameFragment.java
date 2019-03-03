@@ -36,7 +36,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     SharedPreferences sharedPreferences;
 
     private TextView chooseLevelTV;
-    private View setGameMenuView;
+    private View tuneGameMenuView;
     private View tempV;
     private ViewGroup levelListVG;
     private ViewGroup mainConteinerVG;
@@ -48,22 +48,25 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainConteinerVG = getActivity().findViewById(R.id.main_container);
         mainConteinerVG.removeAllViews();
-        setGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainConteinerVG, false);
-        levelListVG = setGameMenuView.findViewById(R.id.level_list_frame);
+        tuneGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainConteinerVG, false);
+        levelListVG = tuneGameMenuView.findViewById(R.id.level_list_frame);
         context = getContext();
-        return setGameMenuView;
+        return tuneGameMenuView;
     }
 
     @Override
-    public void chooseLevel(int levels[], int[] numberOfQuestions) {
+    public void chooseLevel(int levels[], int[] costs, int[] reward) {
 
         final String ATTRIBUTE_NAME_LEVEL = "level";
-        final String ATTRIBUTE_NAME_NUMBER = "number";
+        final String ATTRIBUTE_NAME_COST = "cost";
+        final String ATTRIBUTE_NAME_REWARD= "reward";
+        final String ATTRIBUTE_NAME_COIN= "coin";
+
 
         tempV = LayoutInflater.from(context).inflate(R.layout.tune_game_list, levelListVG, false);
         levelListVG.addView(tempV);
 
-        ListView listView = setGameMenuView.findViewById(R.id.listView);
+        ListView listView = tuneGameMenuView.findViewById(R.id.listView);
 
         ArrayList<Map<String, Object>> data = new ArrayList<>(levels.length);
 
@@ -72,12 +75,22 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         for (int i = 0; i < levels.length; i++) {
             map = new HashMap<>();
             map.put(ATTRIBUTE_NAME_LEVEL, levels[i]);
-            map.put(ATTRIBUTE_NAME_NUMBER, numberOfQuestions[i]);
+            map.put(ATTRIBUTE_NAME_COST, costs[i]);
+            map.put(ATTRIBUTE_NAME_REWARD, reward[i]);
+            if(levels[i]==1 || levels[i]==2 || levels[i]==3) {
+                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_warior);
+            }
+            if(levels[i]==4 || levels[i]==5 || levels[i]==6) {
+                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_deer);
+            }
+            if(levels[i]==7 || levels[i]==8 || levels[i]==9 || levels[i]==10) {
+                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_dragon);
+            }
             data.add(map);
         }
 
-        String from[] = {ATTRIBUTE_NAME_LEVEL, ATTRIBUTE_NAME_NUMBER};
-        int to[] = {R.id.item_level_nomTV, R.id.item_level_quens_nomTV};
+        String from[] = {ATTRIBUTE_NAME_LEVEL, ATTRIBUTE_NAME_COST,ATTRIBUTE_NAME_REWARD,ATTRIBUTE_NAME_COIN};
+        int to[] = {R.id.item_level_nomTV, R.id.item_level_quens_nomTV, R.id.item_level_rewardTV, R.id.item_level_coinIV};
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, data, R.layout.tune_item_level, from, to);
         listView.setAdapter(simpleAdapter);
