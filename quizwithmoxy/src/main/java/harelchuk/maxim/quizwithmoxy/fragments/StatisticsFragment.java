@@ -3,9 +3,12 @@ package harelchuk.maxim.quizwithmoxy.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +33,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
-        statisticsView = inflater.inflate(R.layout.statistics_new, mainContainerVG, false);
+        statisticsView = inflater.inflate(R.layout.statistics, mainContainerVG, false);
+        Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_top);
+        statisticsView.startAnimation(animation);
         return statisticsView;
     }
 

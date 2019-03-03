@@ -1,11 +1,16 @@
 package harelchuk.maxim.quizwithmoxy;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -51,6 +56,17 @@ public class TabMenuActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+
+
+            //Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.from_top_to_heaven);
+            //View view = findViewById(R.id.main_container);
+            //view.startAnimation(animation);
+
+            //ObjectAnimator.ofFloat(view,View.TRANSLATION_Y,0,-2000).setDuration(2000).start();
+
+
+
             switch (item.getItemId()) {
                 case R.id.navigation_play:
                     fragmentTransaction.replace(R.id.main_container, new TuneGameFragment()).commit();

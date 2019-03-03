@@ -6,8 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface StatisticsView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
-//    void showStatistics(String user_name, int level, int score, int number_of_answers,
-//                        int number_of_games, int percent_of_right);
 
     void showStatistics(String user_name, int money_GD_temp, int money_AD_temp, int money_CP_temp,
                         int money_GD_all, int money_AD_all, int money_CP_all,

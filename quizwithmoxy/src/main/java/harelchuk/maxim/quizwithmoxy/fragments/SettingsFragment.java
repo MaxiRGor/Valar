@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TabHost;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -28,67 +30,30 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
     @InjectPresenter
     SettingsPresenter settingsPresenter;
 
-    private ViewGroup mainConteinerVG;
-    private View settingsView;
-/*
-    TabHost tabHost;
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainConteinerVG = getActivity().findViewById(R.id.main_container);
-        settingsView = inflater.inflate(R.layout.settings, mainConteinerVG, false);
-        tabHost = settingsView.findViewById(android.R.id.tabhost);
-        setUpTabs();
-        return settingsView;
-    }
+        ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
+        View settingsView = inflater.inflate(R.layout.settings, mainContainerVG, false);
 
-    private void setUpTabs() {
-        tabHost.setup();
-        TabHost.TabSpec tabSpec;
-        tabSpec = tabHost.newTabSpec("tag1");
-        tabSpec.setIndicator(getResources().getString(R.string.tab_game));
-        tabSpec.setContent(R.id.tvTab1);
-        tabHost.addTab(tabSpec);
+        Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_top);
+        settingsView.startAnimation(animation);
 
-        tabSpec = tabHost.newTabSpec("tag2");
-        tabSpec.setIndicator(getResources().getString(R.string.tab_skin));
-        tabSpec.setContent(R.id.tvTab2);
-        tabHost.addTab(tabSpec);
+        View view1 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.set_book_or_film_selector);
 
-        tabSpec = tabHost.newTabSpec("tag3");
-        tabSpec.setIndicator(getResources().getString(R.string.tab_bank));
-        tabSpec.setContent(R.id.tvTab3);
-        tabHost.addTab(tabSpec);
+        View view2 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.set_emblem_selector);
 
-        tabHost.setCurrentTabByTag("tag3");
-    }
+        View view3 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.set_bank_selector);
 
-    @Override
-    public void show() {
-
-    }
-    */
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainConteinerVG = getActivity().findViewById(R.id.main_container);
-        settingsView = inflater.inflate(R.layout.settings, mainConteinerVG, false);
-        //Toolbar toolbar = settingsView.findViewById(R.id.toolbar);
-        //((TabMenuActivity)getActivity()).setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) settingsView.findViewById(R.id.tab_layout);
-        //tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        /*
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_set_books_films));
-        //tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
-        //tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_set_emblem));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_set_bank));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-*/
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
+
         final ViewPager viewPager = (ViewPager) settingsView.findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 ( ((TabMenuActivity)getActivity()).getSupportFragmentManager(), tabLayout.getTabCount());

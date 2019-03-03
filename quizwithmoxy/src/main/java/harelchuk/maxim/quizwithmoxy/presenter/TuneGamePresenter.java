@@ -1,23 +1,16 @@
 package harelchuk.maxim.quizwithmoxy.presenter;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
 
@@ -68,7 +61,7 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                getViewState().chooseLevel(levels, costs, rewards);
+                getViewState().fillLevelList(levels, costs, rewards);
             }
         };
         fillList.execute();
@@ -128,7 +121,7 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
             lvls[i] = levels.get(i);
             qstns[i] = numberOfQuestions.get(i);
         }
-        getViewState().chooseLevel(lvls, qstns);
+        getViewState().fillLevelList(lvls, qstns);
     }
 
     */

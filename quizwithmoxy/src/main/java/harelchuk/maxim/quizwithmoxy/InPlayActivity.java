@@ -67,7 +67,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         //questionView.setAlpha(0.0f);
         viewGroup.addView(questionView);
 
-        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_up));
+        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_top));
 
         qTTV = questionView.findViewById(R.id.questionTextTV);
         a1TV = questionView.findViewById(R.id.answer1TV);
@@ -82,7 +82,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a4TV.setText(a4);
 
 
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_down);
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_heaven);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

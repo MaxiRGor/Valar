@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -39,23 +41,24 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     private View tuneGameMenuView;
     private View tempV;
     private ViewGroup levelListVG;
-    private ViewGroup mainConteinerVG;
     private Context context;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainConteinerVG = getActivity().findViewById(R.id.main_container);
-        mainConteinerVG.removeAllViews();
-        tuneGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainConteinerVG, false);
+        ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
+        mainContainerVG.removeAllViews();
+        tuneGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainContainerVG, false);
         levelListVG = tuneGameMenuView.findViewById(R.id.level_list_frame);
         context = getContext();
+        Animation animation = AnimationUtils.loadAnimation(context,R.anim.from_bottom_to_top);
+        levelListVG.startAnimation(animation);
         return tuneGameMenuView;
     }
 
     @Override
-    public void chooseLevel(int levels[], int[] costs, int[] reward) {
+    public void fillLevelList(int levels[], int[] costs, int[] reward) {
 
         final String ATTRIBUTE_NAME_LEVEL = "level";
         final String ATTRIBUTE_NAME_COST = "cost";
