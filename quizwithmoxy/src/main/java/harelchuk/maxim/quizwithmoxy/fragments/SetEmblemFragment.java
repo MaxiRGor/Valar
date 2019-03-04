@@ -9,9 +9,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import harelchuk.maxim.quizwithmoxy.R;
 
-public class TabFragment2 extends MvpAppCompatFragment {
+public class SetEmblemFragment extends MvpAppCompatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tab_fragment_2, container, false);
+        return inflater.inflate(R.layout.set_emblem_fragment, container, false);
     }
 }

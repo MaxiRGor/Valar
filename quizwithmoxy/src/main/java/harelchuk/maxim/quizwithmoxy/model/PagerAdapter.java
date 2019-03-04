@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import harelchuk.maxim.quizwithmoxy.fragments.TabFragment1;
-import harelchuk.maxim.quizwithmoxy.fragments.TabFragment2;
-import harelchuk.maxim.quizwithmoxy.fragments.BankFragment;
+import harelchuk.maxim.quizwithmoxy.fragments.SetUsersPreferencesFragment;
+import harelchuk.maxim.quizwithmoxy.fragments.SetEmblemFragment;
+import harelchuk.maxim.quizwithmoxy.fragments.SetBankFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
@@ -21,11 +21,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new TabFragment1();
+                return new SetUsersPreferencesFragment();
             case 1:
-                return new TabFragment2();
+                return new SetEmblemFragment();
             case 2:
-                return new BankFragment();
+                return new SetBankFragment();
             default:
                 return null;
         }
