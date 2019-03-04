@@ -27,8 +27,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
     private View statisticsView;
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
