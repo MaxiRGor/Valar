@@ -1,4 +1,4 @@
-package harelchuk.maxim.quizwithmoxy.fragments;
+package harelchuk.maxim.quizwithmoxy.presenter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,7 +34,7 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
 
     private int one_lap = 2*60*1000; //ms , == 2 min
 
-    SetBankPresenter(){
+    public SetBankPresenter(){
         sharedPreferencesUser = AppForContext.getContext().
                 getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
         getInfoFromSP();
@@ -84,7 +84,7 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
         Log.d("myLogs","3) divideMoney="+debit_GD+" GD "+debit_AD+" AD "+debit_CP+" CP "+sum+"(zero) money");
     }
 
-    void writeDebitIntoSP(int sum_to_add) {
+    public void writeDebitIntoSP(int sum_to_add) {
         countTimeAndReward();
         Date date = new Date();
         time_debit=date.getTime();
@@ -104,7 +104,7 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
                 debit_GD,debit_AD,debit_CP,user_money);
     }
 
-    void removeDebitFromSP() {
+    public void removeDebitFromSP() {
         countTimeAndReward();
         Log.d("myLogs","11) removeDebitFromSP, userMoney = "+user_money + ", sum_debit (WAS) = " + sum_debit);
         user_money+=sum_debit;

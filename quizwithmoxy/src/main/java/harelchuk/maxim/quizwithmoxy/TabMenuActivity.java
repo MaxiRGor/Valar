@@ -1,16 +1,11 @@
 package harelchuk.maxim.quizwithmoxy;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -33,7 +28,7 @@ public class TabMenuActivity extends AppCompatActivity {
         final ImageView imageView = findViewById(R.id.imageViewMenu);
 
         Picasso.get().
-                load(R.drawable.background123)
+                load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(imageView);

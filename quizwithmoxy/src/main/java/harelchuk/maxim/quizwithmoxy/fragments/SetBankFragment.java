@@ -17,6 +17,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.presenter.SetBankPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SetBankView;
 
 public class SetBankFragment extends MvpAppCompatFragment implements SetBankView {
@@ -65,14 +66,14 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             @Override
             public void onClick(View v) {
                 if(v==returnAllTV){
-                    Toast.makeText(getContext(),"return",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(),"return",Toast.LENGTH_LONG).show();
                     setBankPresenter.removeDebitFromSP();
                 }
                 if(v==addDebitTV){
                     final int progress = addDebitSeekBar.getProgress();
                     final int sum_to_add = user_money*progress/10;
                     setBankPresenter.writeDebitIntoSP(sum_to_add);
-                    Toast.makeText(getContext(),"add " + sum_to_add,Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(),"add " + sum_to_add,Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -124,7 +125,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
 
 
         /*textView = view.findViewById(R.id.tab3textView);
-        Button button = view.findViewById(R.id.button);
+        Button button_targ = view.findViewById(R.id.button_targ);
         progressBar = view.findViewById(R.id.progressBar);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -138,4 +139,4 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                 date1 = date;
             }
         };
-        button.setOnClickListener(onClickListener);*/
+        button_targ.setOnClickListener(onClickListener);*/
