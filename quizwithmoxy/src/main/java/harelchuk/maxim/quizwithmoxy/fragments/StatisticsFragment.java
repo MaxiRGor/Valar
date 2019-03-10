@@ -38,14 +38,14 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     }
 
     @Override
-    public void showStatistics(String user_name, int money_GD_temp, int money_AD_temp, int money_CP_temp,
-                               int money_GD_all, int money_AD_all, int money_CP_all,
+    public void showStatistics(String user_name, long money_GD_temp, long money_AD_temp, long money_CP_temp,
+                               long money_GD_all, long money_AD_all, long money_CP_all,
                                int number_easy_games, int number_medium_games, int number_hard_games,
                                int number_easy_winnings, int number_medium_winnings, int number_hard_winnings,
                                boolean is_books, boolean is_films,
                                boolean is_skin_targar, boolean is_skin_stark, boolean is_skin_lann, boolean is_skin_night,
-                               boolean is_credit, long credit_time, int credit_sum,
-                               boolean is_debit, long debit_time, int debit_sum) {
+                               boolean is_credit, long credit_time, long credit_sum,
+                               boolean is_debit, long debit_time, long debit_sum) {
         TextView user_name_TV = statisticsView.findViewById(R.id.userNameTV);
         ImageView user_read_watch_TV = statisticsView.findViewById(R.id.userReadWatchIV);
         TextView user_GD_temp_TV = statisticsView.findViewById(R.id.userGDTempTV);

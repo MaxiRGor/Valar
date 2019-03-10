@@ -48,15 +48,15 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     private SharedPreferences sharedPreferencesUser;
 
     private String user_name;
-    private int money_temp;
-    private int money_GD_temp;
-    private int money_AD_temp;
-    private int money_CP_temp;
+    private long money_temp;
+    private long money_GD_temp;
+    private long money_AD_temp;
+    private long money_CP_temp;
 
-    private int money_all;
-    private int money_GD_all;
-    private int money_AD_all;
-    private int money_CP_all;
+    private long money_all;
+    private long money_GD_all;
+    private long money_AD_all;
+    private long money_CP_all;
 
     private int number_easy_games;
     private int number_medium_games;
@@ -76,11 +76,11 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
 
     private boolean is_credit;
     private long credit_time;
-    private int credit_sum;
+    private long credit_sum;
 
     private boolean is_debit;
     private long debit_time;
-    private int debit_sum;
+    private long debit_sum;
 
 
     public StatisticsPresenter() {
@@ -90,22 +90,22 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         AsyncTask<Void, Void, Void> getUsersStatistics = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                int defValue = Integer.valueOf(R.string.zero_number);
+                long defValue = 0;
 
                 user_name = sharedPreferencesUser.getString(USER_NAME, String.valueOf(R.string.user_name));
-                money_temp=sharedPreferencesUser.getInt(MONEY_TEMP,defValue);
-                money_all= sharedPreferencesUser.getInt(MONEY_ALL,defValue);
+                money_temp=sharedPreferencesUser.getLong(MONEY_TEMP,defValue);
+                money_all= sharedPreferencesUser.getLong(MONEY_ALL,defValue);
 
                 divideMoneyTemp(money_temp);
                 divideMoneyAll(money_all);
 
-                number_easy_games= sharedPreferencesUser.getInt(NUMBER_EASY_GAMES,defValue);
-                number_medium_games= sharedPreferencesUser.getInt(NUMBER_MEDIUM_GAMES,defValue);
-                number_hard_games= sharedPreferencesUser.getInt(NUMBER_HARD_GAMES,defValue);
+                number_easy_games= sharedPreferencesUser.getInt(NUMBER_EASY_GAMES,0);
+                number_medium_games= sharedPreferencesUser.getInt(NUMBER_MEDIUM_GAMES,0);
+                number_hard_games= sharedPreferencesUser.getInt(NUMBER_HARD_GAMES,0);
 
-                number_easy_winnings=sharedPreferencesUser.getInt(NUMBER_EASY_WINNINGS,defValue);
-                number_medium_winnings= sharedPreferencesUser.getInt(NUMBER_MEDIUM_WINNINGS,defValue);
-                number_hard_winnings= sharedPreferencesUser.getInt(NUMBER_HARD_WINNINGS,defValue);
+                number_easy_winnings=sharedPreferencesUser.getInt(NUMBER_EASY_WINNINGS,0);
+                number_medium_winnings= sharedPreferencesUser.getInt(NUMBER_MEDIUM_WINNINGS,0);
+                number_hard_winnings= sharedPreferencesUser.getInt(NUMBER_HARD_WINNINGS,0);
 
                 is_books=sharedPreferencesUser.getBoolean(IS_BOOKS,false);
                 is_films= sharedPreferencesUser.getBoolean(IS_FILMS,true);
@@ -117,15 +117,15 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
 
                 is_credit= sharedPreferencesUser.getBoolean(IS_CREDIT,false);
                 credit_time=sharedPreferencesUser.getLong(CREDIT_TIME,defValue);
-                credit_sum=sharedPreferencesUser.getInt(CREDIT_SUM,defValue);
+                credit_sum=sharedPreferencesUser.getLong(CREDIT_SUM,defValue);
 
                 is_debit= sharedPreferencesUser.getBoolean(IS_DEBIT,false);
                 debit_time= sharedPreferencesUser.getLong(DEBIT_TIME,defValue);
-                debit_sum=sharedPreferencesUser.getInt(DEBIT_SUM,defValue);
+                debit_sum=sharedPreferencesUser.getLong(DEBIT_SUM,defValue);
                 return null;
             }
 
-            private void divideMoneyAll(int money_all_divide) {
+            private void divideMoneyAll(long money_all_divide) {
                 money_GD_all=money_all_divide/(11760);
                 money_all_divide-=money_GD_all*11760;
                 money_AD_all=money_all_divide/(56);
@@ -133,7 +133,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
                 money_CP_all=money_all_divide;
             }
 
-            private void divideMoneyTemp(int money_temp_divide) {
+            private void divideMoneyTemp(long money_temp_divide) {
                 money_GD_temp=money_temp_divide/(11760);
                 money_temp_divide-=money_GD_temp*11760;
                 money_AD_temp=money_temp_divide/(56);

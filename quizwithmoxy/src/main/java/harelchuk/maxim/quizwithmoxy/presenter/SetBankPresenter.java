@@ -24,15 +24,15 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
     SharedPreferences sharedPreferencesUser;
     private boolean is_debit;
     private long time_debit;
-    private int sum_debit;
-    private int debit_GD;
-    private int debit_AD;
-    private int debit_CP;
-    private int user_money;
+    private long sum_debit;
+    private long debit_GD;
+    private long debit_AD;
+    private long debit_CP;
+    private long user_money;
     private long time_now;
-    private int time_to_increase;
+    private long time_to_increase;
 
-    private int one_lap = 2*60*1000; //ms , == 2 min
+    private long one_lap = 2*60*1000; //ms , == 2 min
 
     public SetBankPresenter(){
         sharedPreferencesUser = AppForContext.getContext().
@@ -47,8 +47,8 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
     private void getInfoFromSP(){
         is_debit=sharedPreferencesUser.getBoolean(IS_DEBIT,false);
         time_debit=sharedPreferencesUser.getLong(DEBIT_TIME,0);
-        sum_debit=sharedPreferencesUser.getInt(DEBIT_SUM,0);
-        user_money =sharedPreferencesUser.getInt(MONEY_TEMP,0);
+        sum_debit=sharedPreferencesUser.getLong(DEBIT_SUM,0);
+        user_money =sharedPreferencesUser.getLong(MONEY_TEMP,0);
         Log.d("myLogs", "1) is_debit= "+ is_debit + " sum_debit= "+ sum_debit+" user_money= " + user_money);
     }
 
@@ -65,26 +65,26 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
                     Log.d("myLogs","8) lap passed, sum debit="+sum_debit);
                 }
                 SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-                editor.putInt(DEBIT_SUM,sum_debit);
+                editor.putLong(DEBIT_SUM,sum_debit);
                 editor.putLong(DEBIT_TIME,time_debit);
                 editor.commit();
                 Log.d("myLogs","9) new sum_debit= "+sum_debit);
             }
-            time_to_increase=(int) (time_now-time_debit)/1000; //in seconds
+            time_to_increase=(time_now-time_debit)/1000; //in seconds
             Log.d("myLogs","10) time_to_increase, sec="+time_to_increase);
         }
     }
 
-    private void divideMoney(int sum) {
+    private void divideMoney(long sum) {
         debit_GD=sum/(11760);
         sum-=debit_GD*11760;
         debit_AD=sum/(56);
         sum-=debit_AD*56;
         debit_CP=sum;
-        Log.d("myLogs","3) divideMoney="+debit_GD+" GD "+debit_AD+" AD "+debit_CP+" CP "+sum+"(zero) money");
+        Log.d("myLogs","3) divideMoney="+debit_GD+" GD "+debit_AD+" AD "+debit_CP+" CP "+sum +" money");
     }
 
-    public void writeDebitIntoSP(int sum_to_add) {
+    public void writeDebitIntoSP(long sum_to_add) {
         countTimeAndReward();
         Date date = new Date();
         time_debit=date.getTime();
@@ -93,8 +93,8 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
         user_money-=sum_to_add;
         SharedPreferences.Editor editor = sharedPreferencesUser.edit();
         editor.putBoolean(IS_DEBIT,true);
-        editor.putInt(DEBIT_SUM,sum_debit);
-        editor.putInt(MONEY_TEMP,user_money);
+        editor.putLong(DEBIT_SUM,sum_debit);
+        editor.putLong(MONEY_TEMP,user_money);
         editor.putLong(DEBIT_TIME,time_debit);
         editor.commit();
         getInfoFromSP();
@@ -112,8 +112,8 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
         Log.d("myLogs","12) removeDebitFromSP, userMoney = "+user_money + ", sum_debit (NOW) = " + sum_debit);
         SharedPreferences.Editor editor= sharedPreferencesUser.edit();
         editor.putBoolean(IS_DEBIT,false);
-        editor.putInt(DEBIT_SUM,sum_debit);
-        editor.putInt(MONEY_TEMP,user_money);
+        editor.putLong(DEBIT_SUM,sum_debit);
+        editor.putLong(MONEY_TEMP,user_money);
         editor.putLong(DEBIT_TIME,0);
         editor.commit();
         getInfoFromSP();

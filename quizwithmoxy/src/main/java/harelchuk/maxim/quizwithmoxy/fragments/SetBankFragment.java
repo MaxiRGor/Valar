@@ -36,19 +36,18 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     }
 
 
-
     @Override
-    public void showDebit(boolean is_debit, int time_to_increase_in_seconds, int debit_GD, int debit_AD, int debit_CP, int user_money) {
-        Log.d("myLogs", "4) is_debit "+ is_debit +" time_to_increase_in_seconds " +
-                time_to_increase_in_seconds+ " debit_GD "+ debit_GD+" debit_AD "+ debit_AD+" debit_CP "+debit_CP+" user_money " + user_money);
+    public void showDebit(boolean is_debit, long time_to_increase_in_seconds, long debit_GD, long debit_AD, long debit_CP, long user_money) {
+        Log.d("myLogs", "4) is_debit " + is_debit + " time_to_increase_in_seconds " +
+                time_to_increase_in_seconds + " debit_GD " + debit_GD + " debit_AD " + debit_AD + " debit_CP " + debit_CP + " user_money " + user_money);
         ProgressBar timeToIncreaseProgressBar = view.findViewById(R.id.DebitProgressBar);
         timeToIncreaseProgressBar.setMax(Integer.valueOf(getResources().getString(R.string.sixHoursOr120Seconds)));         //in seconds
-        timeToIncreaseProgressBar.setProgress(time_to_increase_in_seconds);
+        timeToIncreaseProgressBar.setProgress((int) time_to_increase_in_seconds);
         TextView debitGDTV = view.findViewById(R.id.bankDebitSumGDTV);
         TextView debitADTV = view.findViewById(R.id.bankDebitSumADTV);
         TextView debitCPTV = view.findViewById(R.id.bankDebitSumCPTV);
         SeekBar addDebitSeekBar = view.findViewById(R.id.bankAddDebitSeekBar);
-        TextView returnAllTV= view.findViewById(R.id.bankReturnDebitTV);
+        TextView returnAllTV = view.findViewById(R.id.bankReturnDebitTV);
         TextView addDebitTV = view.findViewById(R.id.bankAddDebitTV);
 
         debitGDTV.setText(String.valueOf(debit_GD));
@@ -57,21 +56,21 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         setOnClickListeners(user_money);
     }
 
-    private void setOnClickListeners(final int user_money) {
-        final TextView returnAllTV= view.findViewById(R.id.bankReturnDebitTV);
+    private void setOnClickListeners(final long user_money) {
+        final TextView returnAllTV = view.findViewById(R.id.bankReturnDebitTV);
         final TextView addDebitTV = view.findViewById(R.id.bankAddDebitTV);
         final SeekBar addDebitSeekBar = view.findViewById(R.id.bankAddDebitSeekBar);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v==returnAllTV){
+                if (v == returnAllTV) {
                     //Toast.makeText(getContext(),"return",Toast.LENGTH_LONG).show();
                     setBankPresenter.removeDebitFromSP();
                 }
-                if(v==addDebitTV){
+                if (v == addDebitTV) {
                     final int progress = addDebitSeekBar.getProgress();
-                    final int sum_to_add = user_money*progress/10;
+                    final long sum_to_add = user_money * progress / 10;
                     setBankPresenter.writeDebitIntoSP(sum_to_add);
                     //Toast.makeText(getContext(),"add " + sum_to_add,Toast.LENGTH_LONG).show();
                 }
@@ -90,12 +89,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             public void onClick(View v) {
                 String message;
                 String title;
-                if (v==bankDebitIB){
-                    message=getResources().getString(R.string.debitInfo);
-                    title=getResources().getString(R.string.debit);
-                } else{
-                    message=getResources().getString(R.string.creditInfo);
-                    title=getResources().getString(R.string.credit);
+                if (v == bankDebitIB) {
+                    message = getResources().getString(R.string.debitInfo);
+                    title = getResources().getString(R.string.debit);
+                } else {
+                    message = getResources().getString(R.string.creditInfo);
+                    title = getResources().getString(R.string.credit);
                 }
                 //AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.MyDialogTheme);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

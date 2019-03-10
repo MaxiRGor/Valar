@@ -139,8 +139,8 @@ public class SharedPreferencesInitializer {
             editor.putString(USER_ID,uniqueID);
             editor.putString(USER_NAME,"Great Player");
 
-            editor.putInt(MONEY_TEMP,6123456);            //      test version, need 3
-            editor.putInt(MONEY_ALL,16123456);             //      test version, need 3
+            editor.putLong(MONEY_TEMP,6123456);            //      test version, need 3
+            editor.putLong(MONEY_ALL,16123456);             //      test version, need 3
 
             editor.putInt(NUMBER_EASY_GAMES,0);
             editor.putInt(NUMBER_MEDIUM_GAMES,0);
@@ -162,11 +162,11 @@ public class SharedPreferencesInitializer {
 
             editor.putBoolean(IS_CREDIT,false);
             editor.putLong(CREDIT_TIME,0);
-            editor.putInt(CREDIT_SUM,0);
+            editor.putLong(CREDIT_SUM,0);
 
             editor.putBoolean(IS_DEBIT,false);
             editor.putLong(DEBIT_TIME,0);
-            editor.putInt(DEBIT_SUM,0);
+            editor.putLong(DEBIT_SUM,0);
 
             editor.apply();
         }
