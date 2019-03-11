@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
+import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.CREDIT_SUM;
@@ -85,6 +85,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
 
     public StatisticsPresenter() {
         sharedPreferencesUser = AppForContext.getContext().getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
+        final SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
 
         @SuppressLint("StaticFieldLeak")
         AsyncTask<Void, Void, Void> getUsersStatistics = new AsyncTask<Void, Void, Void>() {
@@ -96,8 +97,15 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
                 money_temp=sharedPreferencesUser.getLong(MONEY_TEMP,defValue);
                 money_all= sharedPreferencesUser.getLong(MONEY_ALL,defValue);
 
-                divideMoneyTemp(money_temp);
-                divideMoneyAll(money_all);
+                long[] mt = sharedPreferencesFunctions.coins_GD_AD_CP(money_temp);
+                money_GD_temp=mt[0];
+                money_AD_temp=mt[1];
+                money_CP_temp=mt[2];
+
+                long[] ma= sharedPreferencesFunctions.coins_GD_AD_CP(money_all);
+                money_GD_all=ma[0];
+                money_AD_all=ma[1];
+                money_CP_all=ma[2];
 
                 number_easy_games= sharedPreferencesUser.getInt(NUMBER_EASY_GAMES,0);
                 number_medium_games= sharedPreferencesUser.getInt(NUMBER_MEDIUM_GAMES,0);
@@ -123,22 +131,6 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
                 debit_time= sharedPreferencesUser.getLong(DEBIT_TIME,defValue);
                 debit_sum=sharedPreferencesUser.getLong(DEBIT_SUM,defValue);
                 return null;
-            }
-
-            private void divideMoneyAll(long money_all_divide) {
-                money_GD_all=money_all_divide/(11760);
-                money_all_divide-=money_GD_all*11760;
-                money_AD_all=money_all_divide/(56);
-                money_all_divide-=money_AD_all*56;
-                money_CP_all=money_all_divide;
-            }
-
-            private void divideMoneyTemp(long money_temp_divide) {
-                money_GD_temp=money_temp_divide/(11760);
-                money_temp_divide-=money_GD_temp*11760;
-                money_AD_temp=money_temp_divide/(56);
-                money_temp_divide-=money_AD_temp*56;
-                money_CP_temp=money_temp_divide;
             }
 
             @Override

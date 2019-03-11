@@ -52,7 +52,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         tuneGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainContainerVG, false);
         levelListVG = tuneGameMenuView.findViewById(R.id.level_list_frame);
         context = getContext();
-        Animation animation = AnimationUtils.loadAnimation(context,R.anim.from_bottom_to_top);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_top);
         levelListVG.startAnimation(animation);
         return tuneGameMenuView;
     }
@@ -62,8 +62,8 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
         final String ATTRIBUTE_NAME_LEVEL = "level";
         final String ATTRIBUTE_NAME_COST = "cost";
-        final String ATTRIBUTE_NAME_REWARD= "reward";
-        final String ATTRIBUTE_NAME_COIN= "coin";
+        final String ATTRIBUTE_NAME_REWARD = "reward";
+        final String ATTRIBUTE_NAME_COIN = "coin";
 
 
         tempV = LayoutInflater.from(context).inflate(R.layout.tune_game_list, levelListVG, false);
@@ -80,19 +80,19 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             map.put(ATTRIBUTE_NAME_LEVEL, levels[i]);
             map.put(ATTRIBUTE_NAME_COST, costs[i]);
             map.put(ATTRIBUTE_NAME_REWARD, reward[i]);
-            if(levels[i]==1 || levels[i]==2 || levels[i]==3) {
+            if (levels[i] == 1 || levels[i] == 2 || levels[i] == 3) {
                 map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_warior);
             }
-            if(levels[i]==4 || levels[i]==5 || levels[i]==6) {
+            if (levels[i] == 4 || levels[i] == 5 || levels[i] == 6) {
                 map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_deer);
             }
-            if(levels[i]==7 || levels[i]==8 || levels[i]==9 || levels[i]==10) {
+            if (levels[i] == 7 || levels[i] == 8 || levels[i] == 9 || levels[i] == 10) {
                 map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_dragon);
             }
             data.add(map);
         }
 
-        String from[] = {ATTRIBUTE_NAME_LEVEL, ATTRIBUTE_NAME_COST,ATTRIBUTE_NAME_REWARD,ATTRIBUTE_NAME_COIN};
+        String from[] = {ATTRIBUTE_NAME_LEVEL, ATTRIBUTE_NAME_COST, ATTRIBUTE_NAME_REWARD, ATTRIBUTE_NAME_COIN};
         int to[] = {R.id.item_level_nomTV, R.id.item_level_quens_nomTV, R.id.item_level_rewardTV, R.id.item_level_coinIV};
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, data, R.layout.tune_item_level, from, to);
@@ -116,6 +116,16 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void fillCoins(long[] coins_GAC) {
+        TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
+        TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
+        TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
+        coins_GD.setText(String.valueOf(coins_GAC[0]));
+        coins_AD.setText(String.valueOf(coins_GAC[1]));
+        coins_CP.setText(String.valueOf(coins_GAC[2]));
     }
 
 }

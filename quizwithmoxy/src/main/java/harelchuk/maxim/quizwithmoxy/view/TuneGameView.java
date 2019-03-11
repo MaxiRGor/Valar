@@ -10,4 +10,6 @@ public interface TuneGameView extends MvpView {
 
     void fillLevelList(int[] levels, int[] costs, int[] reward);
 
+    void fillCoins(long[] coins_GAC);
+
 }

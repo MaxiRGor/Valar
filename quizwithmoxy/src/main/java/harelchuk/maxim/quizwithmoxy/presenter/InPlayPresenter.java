@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,26 +16,49 @@ import java.sql.SQLException;
 import java.util.List;
 
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.DatabaseHelper;
 import harelchuk.maxim.quizwithmoxy.model.NetworkService;
 import harelchuk.maxim.quizwithmoxy.model.Question;
+import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
+import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 import harelchuk.maxim.quizwithmoxy.view.InPlayView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_LOSE_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_LOSE_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_REWARD_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_LOSE_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_REWARD_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_COST_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_LOSE_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_REWARD_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_LOSE_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_REWARD_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_LOSE_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_REWARD_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_LOSE_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_REWARD_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_LOSE_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_8_LOSE_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_8_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_LOSE_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.MONEY_TEMP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_GAMES;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_WINNINGS;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_HARD_GAMES;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_HARD_WINNINGS;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_MEDIUM_GAMES;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_MEDIUM_WINNINGS;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.SHARED_PREFERENCES_MONEY;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.SHARED_PREFERENCES_USER;
+
 @InjectViewState
 public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
-    private DatabaseHelper databaseHelper;
-    private SQLiteDatabase database;
-
-    private SharedPreferences sharedPreferences;
-
-
-    private Cursor cursor;
-
-    private Context context;
 
     private int level;
     private int questionsToEnd;
@@ -51,7 +73,6 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
 
     public InPlayPresenter() {
-        this.context = getContext();
         getLevel();
         this.questionsToEnd = 10;
         this.question_cursor = 0;
@@ -61,6 +82,129 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     }
 
 
+    private void sendQuestionToTheView() {
+        getViewState().showQuestion(questionsToEnd, questions.get(question_cursor).getQuestion_text(),
+                questions.get(question_cursor).getAnswer_one(), questions.get(question_cursor).getAnswer_two(),
+                questions.get(question_cursor).getAnswer_three(), questions.get(question_cursor).getAnswer_four(),
+                questions.get(question_cursor).getCategory());
+    }
+
+    private void getLevel() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AppForContext.getContext());
+        this.level = sharedPreferences.getInt("level", 0) + 1;
+        Log.d("myLogs", "Level in presenter = " + level);
+        getQuestionsByLevelFromServer(level);
+    }
+
+    private void getQuestionsByLevelFromServer(int lvl) {
+        NetworkService.getInstance().getJSONApi().getByLevel(lvl).enqueue(new Callback<List<Question>>() {
+            @Override
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                questions = response.body();
+                Log.d("myLogs", "Connected");
+                if (questions != null) {
+                    sendQuestionToTheView();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Question>> call, Throwable t) {
+                Log.d("myLogs", "Not Connected");
+            }
+        });
+    }
+
+    public void checkAnswer(int userAnswer) {
+
+        updateAnswerOnServer(questions.get(question_cursor).getId_question(), userAnswer);
+
+        if (userAnswer == questions.get(question_cursor).getRight_answer()) {
+            questionsToEnd--;
+            question_cursor++;
+            Log.d("myLogs", "User answered right");
+            if (questionsToEnd > 0) {
+                sendQuestionToTheView();
+            } else {
+                Log.d("myLogs", "All answered");
+                //sendInfoToUserStat();
+                question_cursor++;
+                getViewState().userWin();
+            }
+        } else {
+            Log.d("myLogs", "User answered wrong and he lose");
+            is_lose = true;
+            //sendInfoToUserStat();
+            getViewState().userLose(question_cursor);
+        }
+    }
+
+    public void sendInfoToUserStat() {
+        SharedPreferences userSP = AppForContext.getContext().
+                getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
+
+        int[] money_and_type;
+        SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
+        money_and_type = sharedPreferencesFunctions.money_and_type(level,is_lose);
+        int money_add = money_and_type[0];
+        int money_type = money_and_type[1];
+
+        int coins_add = 0;
+
+        if (money_type == 2) {
+            coins_add = money_add * 56;
+        }
+        if (money_type == 3) {
+            coins_add = money_add * 56 * 210;
+        }
+        if (money_type == 1) {
+            coins_add = money_add;
+        }
+
+        long usermoney = userSP.getLong(MONEY_TEMP, 0);
+        usermoney += (long) coins_add;
+        SharedPreferences.Editor editor = userSP.edit();
+        editor.putLong(MONEY_TEMP, usermoney);
+        if (level == 1 || level == 2 || level == 3) {
+            editor.putInt(NUMBER_EASY_GAMES, userSP.getInt(NUMBER_EASY_GAMES, 0) + 1);
+            if (!is_lose) {
+                editor.putInt(NUMBER_EASY_WINNINGS, userSP.getInt(NUMBER_EASY_WINNINGS, 0) + 1);
+            }
+        }
+        if (level == 4 || level == 5 || level == 6) {
+            editor.putInt(NUMBER_MEDIUM_GAMES, userSP.getInt(NUMBER_MEDIUM_GAMES, 0) + 1);
+            if (!is_lose) {
+                editor.putInt(NUMBER_MEDIUM_WINNINGS, userSP.getInt(NUMBER_MEDIUM_WINNINGS, 0) + 1);
+            }
+        }
+        if (level == 7 || level == 8 || level == 9 || level == 10) {
+            editor.putInt(NUMBER_HARD_GAMES, userSP.getInt(NUMBER_HARD_GAMES, 0) + 1);
+            if (!is_lose) {
+                editor.putInt(NUMBER_HARD_WINNINGS, userSP.getInt(NUMBER_HARD_WINNINGS, 0) + 1);
+            }
+        }
+        editor.apply();
+
+        Log.d("myLogs", "coins_add = " + (int) coins_add + ", type = " + money_type);
+        getViewState().showAddedScore((int) coins_add);
+
+    }
+
+    private void updateAnswerOnServer(int id_question, int userAnswer) {
+        NetworkService.getInstance().getJSONApi().updateAnswer(id_question, userAnswer).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("myLogs", "maybe updated");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("myLogs", "MISTAKE");
+            }
+        });
+    }
+}
+
+/*
     @SuppressLint("StaticFieldLeak")
     private AsyncTask<Void, Void, Void> sendInfoToUserStat = new AsyncTask<Void, Void, Void>() {
         @Override
@@ -146,87 +290,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         contentValues.put(DatabaseHelper.COLUMN_U_NUMBER_OF_GAMES, nog);
         return contentValues;
     }
-
-    private void sendQuestionToTheView() {
-
-        getViewState().showQuestion(questionsToEnd, questions.get(question_cursor).getQuestion_text(),
-                questions.get(question_cursor).getAnswer_one(), questions.get(question_cursor).getAnswer_two(),
-                questions.get(question_cursor).getAnswer_three(), questions.get(question_cursor).getAnswer_four(),
-                questions.get(question_cursor).getCategory());
-
-        //Log.d("myLogs", "Right answer" + questions.get(question_cursor).getRight_answer());
-
-    }
-
-
-    private void getLevel() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        this.level = sharedPreferences.getInt("level", 0) + 1;
-        Log.d("myLogs", "Level in presenter = " + level);
-        getQuestionsByLevel(level);
-    }
-
-    private void getQuestionsByLevel(int lvl) {
-        NetworkService.getInstance().getJSONApi().getByLevel(lvl).enqueue(new Callback<List<Question>>() {
-            @Override
-            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
-                questions = response.body();
-                Log.d("myLogs", "Connected");
-                if (questions != null) {
-                    sendQuestionToTheView();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Question>> call, Throwable t) {
-                Log.d("myLogs", "Not Connected");
-            }
-        });
-    }
-
-    private Context getContext() {
-        return AppForContext.getContext();
-    }
-
-    public void checkAnswer(int userAnswer) {
-
-        updateAnswer(questions.get(question_cursor).getId_question(), userAnswer);
-
-        if (userAnswer == questions.get(question_cursor).getRight_answer()) {
-            questionsToEnd--;
-            question_cursor++;
-            Log.d("myLogs", "User answered right");
-            if (questionsToEnd > 0) {
-                sendQuestionToTheView();
-            } else {
-                Log.d("myLogs", "All answered");
-                sendInfoToUserStat.execute();
-                question_cursor++;
-                getViewState().userWin();
-            }
-        } else {
-            Log.d("myLogs", "User answered wrong and he lose");
-            is_lose = true;
-            sendInfoToUserStat.execute();
-            getViewState().userLose(question_cursor);
-        }
-    }
-
-    private void updateAnswer(int id_question, int userAnswer) {
-        NetworkService.getInstance().getJSONApi().updateAnswer(id_question, userAnswer).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("myLogs", "maybe updated");
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("myLogs", "MISTAKE");
-            }
-        });
-    }
-}
-
+*/
 
 /*
 
