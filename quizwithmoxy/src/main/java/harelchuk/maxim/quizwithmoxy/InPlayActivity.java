@@ -23,14 +23,14 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     InPlayPresenter inPlayPresenter;
 
     private ViewGroup viewGroup;
-
     private TextView questionCategory;
-    private TextView questionsToEndTV;
-    private TextView scoreAddedTV;
-
-    ImageView imageView;
-    ImageView imageView2;
-
+    private TextView coinsGD;
+    private TextView coinsAD;
+    private TextView coinsCP;
+    private ImageView coinGDImage;
+    private ImageView coinADImage;
+    private ImageView coinCPImage;
+    private ImageView currentQuestionImage;
     SharedPreferences sharedPreferences;
 
 
@@ -44,8 +44,31 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     @Override
     public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4, String category) {
 
-        questionsToEndTV.setText(String.valueOf(questionsToTheEnd));
         questionCategory.setText(category);
+
+        int currentQuestion = 1 + 7 - questionsToTheEnd;
+        currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
+        switch (currentQuestion) {
+            case 2:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage2);
+                break;
+            case 3:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage3);
+                break;
+            case 4:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage4);
+                break;
+            case 5:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage5);
+                break;
+            case 6:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage6);
+                break;
+            case 7:
+                currentQuestionImage = findViewById(R.id.inPlayQuestionImage7);
+                break;
+        }
+        currentQuestionImage.setVisibility(View.VISIBLE);
 
         viewGroup.removeAllViews();
         View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
@@ -68,6 +91,11 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Picasso.get().
+                        load(R.drawable.ic_logo_dragon_yes)
+                        .fit()
+                        .placeholder(R.drawable.blackscreen)
+                        .into(currentQuestionImage);
                 switch (v.getId()) {
                     case (R.id.answer1TV):
                         inPlayPresenter.checkAnswer(1);
@@ -96,12 +124,24 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         emptyView.removeAllViews();
         View userWin = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, emptyView, false);
         ImageView backgroundIV = userWin.findViewById(R.id.userWinBackgroundIV);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        };
+        backgroundIV.setOnClickListener(onClickListener);
         Picasso.get().
                 load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(backgroundIV);
-        scoreAddedTV = userWin.findViewById(R.id.userWinScoreAddTV);
+        coinsGD = userWin.findViewById(R.id.userWinCoinsGD);
+        coinsAD = userWin.findViewById(R.id.userWinCoinsAD);
+        coinsCP = userWin.findViewById(R.id.userWinCoinsCP);
+        coinGDImage = userWin.findViewById(R.id.endGameGDImage);
+        coinADImage = userWin.findViewById(R.id.endGameADImage);
+        coinCPImage = userWin.findViewById(R.id.endGameCPImage);
         emptyView.addView(userWin);
         inPlayPresenter.sendInfoToUserStat();
     }
@@ -114,43 +154,94 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
 
         ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        };
+        backgroundIV.setOnClickListener(onClickListener);
         //backgroundIV.setVisibility(View.VISIBLE);
-        Picasso.get().
-                load(R.drawable.background_targ)
+        Picasso.get()
+                .load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(backgroundIV);
 
         TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
         answeredTV.setText(String.valueOf(answered));
-        scoreAddedTV = userLose.findViewById(R.id.scoreAddedLoseTV);
+        coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
+        coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
+        coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
+        coinGDImage = userLose.findViewById(R.id.endGameGDImage);
+        coinADImage = userLose.findViewById(R.id.endGameADImage);
+        coinCPImage = userLose.findViewById(R.id.endGameCPImage);
         emptyView.addView(userLose);
         inPlayPresenter.sendInfoToUserStat();
     }
 
     @Override
-    public void showAddedScore(int score) {
-        scoreAddedTV.setText(String.valueOf(score));
+    public void showAddedScore(int coinGD, int coinAD, int coinCP) {
+        coinsGD.setText(String.valueOf(coinGD));
+        if (coinGD == 0) {
+            coinsGD.setVisibility(View.INVISIBLE);
+            coinGDImage.setVisibility(View.INVISIBLE);
+        }
+        coinsAD.setText(String.valueOf(coinAD));
+        if (coinAD == 0) {
+            coinsAD.setVisibility(View.INVISIBLE);
+            coinADImage.setVisibility(View.INVISIBLE);
+        }
+        coinsCP.setText(String.valueOf(coinCP));
+        if (coinCP == 0) {
+            coinsCP.setVisibility(View.INVISIBLE);
+            coinCPImage.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void findElements() {
-
         viewGroup = findViewById(R.id.frameQuestionLayout);
         TextView questionLevelTV = findViewById(R.id.inPlayLevelTV);
         questionCategory = findViewById(R.id.inPlayCategoryTV);
-        questionsToEndTV = findViewById(R.id.inPlayQuestionsToTheEndTV);
-        imageView = findViewById(R.id.inPlayBackgroundIV);
-        imageView2 = findViewById(R.id.inPlayCategoryIV);
-
+        ImageView backgroundImage = findViewById(R.id.inPlayBackgroundIV);
+        ImageView categoryImage = findViewById(R.id.inPlayCategoryIV);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        questionLevelTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
-
-        Picasso.get().
-                load(R.drawable.background_targ)
+        Picasso.get()
+                .load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
-                .into(imageView);
+                .into(backgroundImage);
+        questionLevelTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
+    }
+
+    @Override
+    public void showFailure() {
+        ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
+        emptyView.removeAllViews();
+        View userLose;
+        userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
+
+        ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
+        //backgroundIV.setVisibility(View.VISIBLE);
+        Picasso.get()
+                .load(R.drawable.background_targ)
+                .fit()
+                .placeholder(R.drawable.blackscreen)
+                .into(backgroundIV);
+
+        TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
+        TextView notConnectedTV = userLose.findViewById(R.id.loseTV);
+        notConnectedTV.setText(getResources().getString(R.string.notConnected));
+        coinGDImage = userLose.findViewById(R.id.endGameGDImage);
+        coinADImage = userLose.findViewById(R.id.endGameADImage);
+        coinCPImage = userLose.findViewById(R.id.endGameCPImage);
+        answeredTV.setText(String.valueOf(0));
+        coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
+        coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
+        coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
+        emptyView.addView(userLose);
+        inPlayPresenter.sendFailToUserStat();
     }
 
 }

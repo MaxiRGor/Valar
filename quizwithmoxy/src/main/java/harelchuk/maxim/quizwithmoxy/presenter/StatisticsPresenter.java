@@ -149,6 +149,12 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         Log.d("myLogs", "Statistics Presenter started");
         getUsersStatistics.execute();
     }
+
+    public void changeName(String newName) {
+        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
+        editor.putString(USER_NAME,newName);
+        editor.apply();
+    }
 }
 
 

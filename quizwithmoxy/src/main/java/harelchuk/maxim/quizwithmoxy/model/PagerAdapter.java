@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import harelchuk.maxim.quizwithmoxy.fragments.SetUsersPreferencesFragment;
+import harelchuk.maxim.quizwithmoxy.fragments.SetUsersBooksFilmsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.SetEmblemFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.SetBankFragment;
 
@@ -21,7 +21,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new SetUsersPreferencesFragment();
+                return new SetUsersBooksFilmsFragment();
             case 1:
                 return new SetEmblemFragment();
             case 2:

@@ -1,20 +1,12 @@
 package harelchuk.maxim.quizwithmoxy.presenter;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-
-import java.sql.SQLException;
 import java.util.List;
-
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
 import harelchuk.maxim.quizwithmoxy.model.NetworkService;
 import harelchuk.maxim.quizwithmoxy.model.Question;
@@ -25,27 +17,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_LOSE_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_REWARD_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_LOSE_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_REWARD_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_LOSE_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_REWARD_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_COST_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_COST_CP;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_COST_CP;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_COST_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_LOSE_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_REWARD_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_LOSE_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_REWARD_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_LOSE_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_REWARD_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_LOSE_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_REWARD_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_LOSE_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_COST_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_COST_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_COST_AD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_COST_GD;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_8_LOSE_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_8_REWARD_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_LOSE_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_REWARD_GD;
+import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_COST_GD;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.MONEY_TEMP;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_GAMES;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_WINNINGS;
@@ -59,37 +40,29 @@ import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.SH
 @InjectViewState
 public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
-
     private int level;
     private int questionsToEnd;
-
-    private int question_cursor;
-    private int addScore;
-
+    private int questionCursor;
     private boolean is_lose;
-
-
     private List<Question> questions;
 
-
     public InPlayPresenter() {
-        getLevel();
-        this.questionsToEnd = 10;
-        this.question_cursor = 0;
+        getLevelFromSP();
+        this.questionsToEnd = 7;
+        this.questionCursor = 0;
         this.is_lose = false;
         Log.d("myLogs", "InPlayPresenter const");
         getViewState().findElements();
     }
 
-
     private void sendQuestionToTheView() {
-        getViewState().showQuestion(questionsToEnd, questions.get(question_cursor).getQuestion_text(),
-                questions.get(question_cursor).getAnswer_one(), questions.get(question_cursor).getAnswer_two(),
-                questions.get(question_cursor).getAnswer_three(), questions.get(question_cursor).getAnswer_four(),
-                questions.get(question_cursor).getCategory());
+        getViewState().showQuestion(questionsToEnd, questions.get(questionCursor).getQuestion_text(),
+                questions.get(questionCursor).getAnswer_one(), questions.get(questionCursor).getAnswer_two(),
+                questions.get(questionCursor).getAnswer_three(), questions.get(questionCursor).getAnswer_four(),
+                questions.get(questionCursor).getCategory());
     }
 
-    private void getLevel() {
+    private void getLevelFromSP() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AppForContext.getContext());
         this.level = sharedPreferences.getInt("level", 0) + 1;
         Log.d("myLogs", "Level in presenter = " + level);
@@ -110,31 +83,32 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
             @Override
             public void onFailure(Call<List<Question>> call, Throwable t) {
                 Log.d("myLogs", "Not Connected");
+                getViewState().showFailure();
             }
         });
     }
 
     public void checkAnswer(int userAnswer) {
 
-        updateAnswerOnServer(questions.get(question_cursor).getId_question(), userAnswer);
+        updateAnswerOnServer(questions.get(questionCursor).getId_question(), userAnswer);
 
-        if (userAnswer == questions.get(question_cursor).getRight_answer()) {
+        if (userAnswer == questions.get(questionCursor).getRight_answer()) {
             questionsToEnd--;
-            question_cursor++;
+            questionCursor++;
             Log.d("myLogs", "User answered right");
             if (questionsToEnd > 0) {
                 sendQuestionToTheView();
             } else {
                 Log.d("myLogs", "All answered");
                 //sendInfoToUserStat();
-                question_cursor++;
+                questionCursor++;
                 getViewState().userWin();
             }
         } else {
             Log.d("myLogs", "User answered wrong and he lose");
             is_lose = true;
             //sendInfoToUserStat();
-            getViewState().userLose(question_cursor);
+            getViewState().userLose(questionCursor);
         }
     }
 
@@ -144,7 +118,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
         int[] money_and_type;
         SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
-        money_and_type = sharedPreferencesFunctions.money_and_type(level,is_lose);
+        money_and_type = sharedPreferencesFunctions.money_and_type(level, is_lose);
         int money_add = money_and_type[0];
         int money_type = money_and_type[1];
 
@@ -185,7 +159,12 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         editor.apply();
 
         Log.d("myLogs", "coins_add = " + (int) coins_add + ", type = " + money_type);
-        getViewState().showAddedScore((int) coins_add);
+
+        long[] money = sharedPreferencesFunctions.coins_GD_AD_CP(coins_add);
+        int coinGD = (int) money[0];
+        int coinAD = (int) money[1];
+        int coinCP = (int) money[2];
+        getViewState().showAddedScore(coinGD, coinAD, coinCP);
 
     }
 
@@ -201,6 +180,59 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                 Log.d("myLogs", "MISTAKE");
             }
         });
+    }
+
+    public void sendFailToUserStat() {
+        SharedPreferences moneySP = AppForContext.getContext().
+                getSharedPreferences(SHARED_PREFERENCES_MONEY, Context.MODE_PRIVATE);
+        SharedPreferences userSP = AppForContext.getContext().
+                getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
+        SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
+
+        long moneyToReturn = 0;
+
+        if (level == 1){
+            moneyToReturn=moneySP.getInt(L_1_COST_CP,0);
+        }
+        if (level == 2){
+            moneyToReturn=moneySP.getInt(L_2_COST_CP,0);
+        }
+        if (level == 3){
+            moneyToReturn=moneySP.getInt(L_3_COST_CP,0);
+        }
+        if (level == 4){
+            moneyToReturn=moneySP.getInt(L_4_COST_AD,0) * 56 ;
+        }
+        if (level == 5){
+            moneyToReturn=moneySP.getInt(L_5_COST_AD,0) * 56 ;
+        }
+        if (level == 6){
+            moneyToReturn=moneySP.getInt(L_6_COST_AD,0) * 56 ;
+        }
+        if (level == 7){
+            moneyToReturn=moneySP.getInt(L_7_COST_GD,0) * 56 * 210 ;
+        }
+        if (level == 8){
+            moneyToReturn=moneySP.getInt(L_8_LOSE_GD,0) * 56 * 210 ;
+        }
+        if (level == 9){
+            moneyToReturn=moneySP.getInt(L_9_COST_GD,0) * 56 * 210 ;
+        }
+        if (level == 10){
+            moneyToReturn=moneySP.getInt(L_10_COST_GD,0) * 56 * 210 ;
+        }
+
+        long userMoney = userSP.getLong(MONEY_TEMP,0);
+        userMoney+=moneyToReturn;
+        SharedPreferences.Editor editor = userSP.edit();
+        editor.putLong(MONEY_TEMP,userMoney);
+        editor.apply();
+
+        long[] coinsToReturn = sharedPreferencesFunctions.coins_GD_AD_CP(moneyToReturn);
+        int coinGD = (int) coinsToReturn[0];
+        int coinAD = (int) coinsToReturn[1];
+        int coinCP = (int) coinsToReturn[2];
+        getViewState().showAddedScore(coinGD, coinAD, coinCP);
     }
 }
 
@@ -253,12 +285,12 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         int add_noa;
         int add_nog;
 
-        if (is_lose) addScore = level * question_cursor;
-        else addScore = level * question_cursor * 10;
+        if (is_lose) addScore = level * questionCursor;
+        else addScore = level * questionCursor * 10;
 
         scr += addScore;
 
-        add_noa = question_cursor;
+        add_noa = questionCursor;
         noa += add_noa;
         add_nog = 1;
         nog += add_nog;

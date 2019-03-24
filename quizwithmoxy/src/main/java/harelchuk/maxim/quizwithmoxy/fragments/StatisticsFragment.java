@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -12,11 +15,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.TabMenuActivity;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
 import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
@@ -28,6 +33,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     StatisticsPresenter statisticsPresenter;
 
     private View statisticsView;
+    private String[] names;
 
     @Nullable
     @Override
@@ -36,6 +42,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         statisticsView = inflater.inflate(R.layout.statistics, mainContainerVG, false);
         Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_top);
         statisticsView.startAnimation(animation);
+        names=new String[2];
         return statisticsView;
     }
 
@@ -52,9 +59,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView user_read_watch_TV = statisticsView.findViewById(R.id.userReadWatchIV);
         TextView user_GD_temp_TV = statisticsView.findViewById(R.id.userGDTempTV);
         TextView user_GD_all_TV = statisticsView.findViewById(R.id.userGDAllTV);
-        TextView user_AD_temp_TV = statisticsView.findViewById(R.id.userADTempTV);
+        final TextView user_AD_temp_TV = statisticsView.findViewById(R.id.userADTempTV);
         TextView user_AD_all_TV = statisticsView.findViewById(R.id.userADAllTV);
-        TextView user_CP_temp_TV = statisticsView.findViewById(R.id.userCPTempTV);
+        final TextView user_CP_temp_TV = statisticsView.findViewById(R.id.userCPTempTV);
         TextView user_CP_all_TV = statisticsView.findViewById(R.id.userCPAllTV);
         TextView user_rounds_GD_TV = statisticsView.findViewById(R.id.userRoundsGDTV);
         TextView user_rounds_AD_TV = statisticsView.findViewById(R.id.userRoundsADTV);
@@ -70,9 +77,13 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView userSkinStarksImage = statisticsView.findViewById(R.id.userSkinStarkIV);
         ImageView userSkinLannImage = statisticsView.findViewById(R.id.userSkinLannIV);
         ImageView userSkinNKImage = statisticsView.findViewById(R.id.userSkinNKIV);
-        TextView user_debit_value_TV = statisticsView.findViewById(R.id.userDebitValueTV);
-        TextView user_credit_value_TV = statisticsView.findViewById(R.id.userCreditValueTV);
+        final TextView user_debit_value_TV = statisticsView.findViewById(R.id.userDebitValueTV);
+        final TextView user_credit_value_TV = statisticsView.findViewById(R.id.userCreditValueTV);
+
+
         user_name_TV.setText(user_name);
+        names[0]=user_name;
+        names[1]=user_name;
         user_GD_temp_TV.setText(String.valueOf(money_GD_temp));
         user_AD_temp_TV.setText(String.valueOf(money_AD_temp));
         user_CP_temp_TV.setText(String.valueOf(money_CP_temp));
@@ -89,10 +100,24 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         user_winnings_AD_TV.setText(String.valueOf(number_medium_winnings));
         user_winnings_CP_TV.setText(String.valueOf(number_easy_winnings));
 
+        user_name_TV.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                names[1]=s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         int current_theme=0;
 
         if(is_skin_targar) {
-            //user_skin_targar_TV.setText(getResources().getString(R.string.targariens));
             userSkinTargImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_yes));
             if(current_theme==0){
                 userSkinTargImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_en));
@@ -154,6 +179,38 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         } else {
             user_credit_value_TV.setText(getResources().getString(R.string.noCredit));
         }
+        if (is_books) {
+            if (is_films) {
+                user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
+            } else {
+                user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
+            }
+        } else {
+            user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
+        }
+/*
+
+        ImageView skinWindowImage = statisticsView.findViewById(R.id.imageViewWindow4);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"YES",Toast.LENGTH_SHORT).show();
+                final LayoutInflater inflater = getLayoutInflater();
+                final View view = inflater.inflate(R.layout.tab_menu,null);
+                BottomNavigationView navigationView = view.findViewById(R.id.navigation);
+                MenuItem goto3 = navigationView.findViewById(R.id.navigation_settings);
+                onOptionsItemSelected(goto3);
+            }
+        };
+        skinWindowImage.setOnClickListener(onClickListener);
+        */
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(!names[0].equals(names[1])){
+            statisticsPresenter.changeName(names[1]);
+        }
+    }
 }

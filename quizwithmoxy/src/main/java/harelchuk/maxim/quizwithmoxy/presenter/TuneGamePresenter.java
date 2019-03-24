@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -26,7 +27,6 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
     private int[] levels;
     private int[] costs;
     private int[] rewards;
-    private long[] money_GD_AD_CP;
 
     public TuneGamePresenter() {
         Log.d("myLogs", "TuneGamePresenter const");
@@ -39,6 +39,9 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
         levels = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         costs = new int[levels.length];
         rewards = new int[levels.length];
+
+
+
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> fillList = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -63,18 +66,31 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
                 rewards[7] = sharedPreferencesMoney.getInt(L_8_REWARD_GD, defValue);
                 rewards[8] = sharedPreferencesMoney.getInt(L_9_REWARD_GD, defValue);
                 rewards[9] = sharedPreferencesMoney.getInt(L_10_REWARD_GD, defValue);
-                long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
-                money_GD_AD_CP = sharedPreferencesFunctions.coins_GD_AD_CP(money);
                 return null;
             }
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 getViewState().fillLevelList(levels, costs, rewards);
-                getViewState().fillCoins(money_GD_AD_CP);
             }
         };
         fillList.execute();
+    }
+
+    public void writeOff(long money_to_write_off) {
+        long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
+        money-=money_to_write_off;
+        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
+        editor.putLong(MONEY_TEMP,money);
+        editor.apply();
+    }
+
+    public void showUsersMoneyAndBF() {
+        long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
+        boolean isBooks = sharedPreferencesUser.getBoolean(IS_BOOKS,false);
+        boolean isSeries = sharedPreferencesUser.getBoolean(IS_FILMS,false);
+        long[] money_GD_AD_CP = sharedPreferencesFunctions.coins_GD_AD_CP(money);
+        getViewState().fillCoins(money_GD_AD_CP, isBooks, isSeries);
     }
 }
 
