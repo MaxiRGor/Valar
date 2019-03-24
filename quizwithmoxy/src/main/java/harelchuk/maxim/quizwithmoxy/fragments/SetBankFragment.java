@@ -30,8 +30,6 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bank_fragment, container, false);
-        setAlertDialogs();
-
         return view;
     }
 
@@ -79,43 +77,6 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         returnAllTV.setOnClickListener(onClickListener);
         addDebitTV.setOnClickListener(onClickListener);
     }
-
-    private void setAlertDialogs() {
-
-        final ImageButton bankDebitIB = view.findViewById(R.id.bankDebitInfoImageButton);
-        //ImageButton bankCreditIB = view.findViewById(R.id.bankCreditInfoImageButton);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message;
-                String title;
-                if (v == bankDebitIB) {
-                    message = getResources().getString(R.string.debitInfo);
-                    title = getResources().getString(R.string.debit);
-                } else {
-                    message = getResources().getString(R.string.creditInfo);
-                    title = getResources().getString(R.string.credit);
-                }
-                //AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.MyDialogTheme);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setIcon(R.drawable.ic_set_bank)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setCancelable(false)
-                        .setNegativeButton("Return",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        };
-        bankDebitIB.setOnClickListener(onClickListener);
-        //bankCreditIB.setOnClickListener(onClickListener);
-    }
-
 
 }
 

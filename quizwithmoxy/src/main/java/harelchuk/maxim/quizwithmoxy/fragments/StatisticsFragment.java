@@ -1,27 +1,25 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.TabMenuActivity;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
 import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
@@ -47,7 +45,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     }
 
     @Override
-    public void showStatistics(String user_name, long money_GD_temp, long money_AD_temp, long money_CP_temp,
+    public void showStatistics(String user_name, final long money_GD_temp, final long money_AD_temp, final long money_CP_temp,
                                long money_GD_all, long money_AD_all, long money_CP_all,
                                int number_easy_games, int number_medium_games, int number_hard_games,
                                int number_easy_winnings, int number_medium_winnings, int number_hard_winnings,
@@ -56,7 +54,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                                boolean is_credit, long credit_time, long credit_sum,
                                boolean is_debit, long debit_time, long debit_sum) {
         EditText user_name_TV = statisticsView.findViewById(R.id.userNameTV);
-        ImageView user_read_watch_TV = statisticsView.findViewById(R.id.userReadWatchIV);
+        ImageView booksFilmsImage = statisticsView.findViewById(R.id.userReadWatchIV);
         TextView user_GD_temp_TV = statisticsView.findViewById(R.id.userGDTempTV);
         TextView user_GD_all_TV = statisticsView.findViewById(R.id.userGDAllTV);
         final TextView user_AD_temp_TV = statisticsView.findViewById(R.id.userADTempTV);
@@ -79,6 +77,96 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView userSkinNKImage = statisticsView.findViewById(R.id.userSkinNKIV);
         final TextView user_debit_value_TV = statisticsView.findViewById(R.id.userDebitValueTV);
         final TextView user_credit_value_TV = statisticsView.findViewById(R.id.userCreditValueTV);
+
+        ImageView coinsWindow = statisticsView.findViewById(R.id.statiscticsWindowCoinsImage);
+        coinsWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion,null);
+                builder.setView(dialogView);
+                final AlertDialog dialog = builder.create();
+                Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
+                //TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
+                //titleTV.setText(getResources().getString(R.string.money));
+                //TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
+                //textTV.setText(getResources().getString(R.string.youHaveMoney));
+                TextView coinsGD = dialogView.findViewById(R.id.alertUsersGD);
+                coinsGD.setText(String.valueOf(money_GD_temp));
+                TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);
+                coinsAD.setText(String.valueOf(money_GD_temp*210 + money_AD_temp));
+                TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
+                coinsCP.setText(String.valueOf(money_GD_temp*210*56 + money_AD_temp*56 + money_CP_temp));
+                closeDialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        ImageView roundsWindow = statisticsView.findViewById(R.id.statisticsWindowRoundsImage);
+        ImageView winningsWindow = statisticsView.findViewById(R.id.statisticsWindowWinningsImage);
+        ImageView emblemsWindow = statisticsView.findViewById(R.id.statisticsWindowEmblemsImage);
+        ImageView debitWindow = statisticsView.findViewById(R.id.statisticsWindowDebitImage);
+        ImageView creditWindow = statisticsView.findViewById(R.id.statisticsWindowCreditImage);
+
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String alertTitle = "Title";
+                String alertText = "Text";
+                switch (v.getId()){
+                    case R.id.userReadWatchIV:
+                        alertTitle = getResources().getString(R.string.booksOrFilms);
+                        alertText = getResources().getString(R.string.booksFilmsStatistics);
+                        break;
+                    case R.id.statisticsWindowRoundsImage:
+                        alertTitle = getResources().getString(R.string.rounds);
+                        alertText = getResources().getString(R.string.roundsStatistics);
+                        break;
+                    case R.id.statisticsWindowWinningsImage:
+                        alertTitle = getResources().getString(R.string.winnings);
+                        alertText = getResources().getString(R.string.winningsStatistics);
+                        break;
+                    case R.id.statisticsWindowEmblemsImage:
+                        alertTitle = getResources().getString(R.string.emblem);
+                        alertText = getResources().getString(R.string.emblemsStatistics);
+                        break;
+                    case R.id.statisticsWindowDebitImage:
+                        alertTitle = getResources().getString(R.string.debit);
+                        alertText = getResources().getString(R.string.debitInfo);
+                        break;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alertdialog_text_message,null);
+                builder.setView(dialogView);
+                final AlertDialog dialog = builder.create();
+                Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
+                TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
+                titleTV.setText(alertTitle);
+                TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
+                textTV.setText(alertText);
+                closeDialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+
+            }
+        };
+        roundsWindow.setOnClickListener(onClickListener);
+        winningsWindow.setOnClickListener(onClickListener);
+        emblemsWindow.setOnClickListener(onClickListener);
+        booksFilmsImage.setOnClickListener(onClickListener);
+        debitWindow.setOnClickListener(onClickListener);
 
 
         user_name_TV.setText(user_name);
@@ -181,12 +269,12 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         }
         if (is_books) {
             if (is_films) {
-                user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
+                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
             } else {
-                user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
+                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
             }
         } else {
-            user_read_watch_TV.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
+            booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
         }
 /*
 

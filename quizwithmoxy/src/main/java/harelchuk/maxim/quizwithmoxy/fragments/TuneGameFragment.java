@@ -1,9 +1,9 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -15,15 +15,14 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     private View tuneGameMenuView;
     private ViewGroup levelListVG;
     private Context context;
-    private long[] level_user_money;
+    private long[] coinsGAC;
     private int[] level_costs;
 
 
@@ -57,7 +56,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         context = getContext();
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_top);
         levelListVG.startAnimation(animation);
-        level_user_money = new long[2];
+        coinsGAC = new long[2];
         level_costs = new int[9];
         return tuneGameMenuView;
     }
@@ -127,7 +126,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         if (level == 7 || level == 8 || level == 9 || level == 10) {
             cost *= 56 * 210;
         }
-        long money = level_user_money[2] + level_user_money[1] * 56 + level_user_money[0] * 56 * 210;
+        long money = coinsGAC[2] + coinsGAC[1] * 56 + coinsGAC[0] * 56 * 210;
         //Toast.makeText(getContext(),money + " must be > then " + cost, Toast.LENGTH_SHORT).show();
 
         if (money >= cost) {
@@ -148,11 +147,12 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
     @Override
     public void fillCoins(long[] coins_GAC, boolean isBooks, boolean isSeries) {
-        level_user_money = coins_GAC;
+        coinsGAC = coins_GAC;
         TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
         TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
         ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
+        ImageView moneyImage = tuneGameMenuView.findViewById(R.id.windowUserMoneyIV);
         coins_GD.setText(String.valueOf(coins_GAC[0]));
         coins_AD.setText(String.valueOf(coins_GAC[1]));
         coins_CP.setText(String.valueOf(coins_GAC[2]));
@@ -165,6 +165,39 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         } else {
             booksFilms.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
         }
+        moneyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion,null);
+                builder.setView(dialogView);
+                final AlertDialog dialog = builder.create();
+                Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
+                TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
+                titleTV.setText(getResources().getString(R.string.money));
+                TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
+                textTV.setText(getResources().getString(R.string.youHaveMoney));
+
+                TextView coinsGD = dialogView.findViewById(R.id.alertUsersGD);
+                coinsGD.setText(String.valueOf(coinsGAC[0]));
+
+                TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);
+                coinsAD.setText(String.valueOf(coinsGAC[0]*210 + coinsGAC[1]));
+
+                TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
+                coinsCP.setText(String.valueOf(coinsGAC[0]*210*56 + coinsGAC[1]*56 + coinsGAC[2]));
+
+
+                closeDialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
     }
 
 }
