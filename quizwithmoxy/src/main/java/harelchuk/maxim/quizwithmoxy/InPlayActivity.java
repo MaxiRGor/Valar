@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,7 +69,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                 currentQuestionImage = findViewById(R.id.inPlayQuestionImage7);
                 break;
         }
-        currentQuestionImage.setVisibility(View.VISIBLE);
+        //currentQuestionImage.setVisibility(View.VISIBLE);
 
         viewGroup.removeAllViews();
         View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
@@ -76,11 +77,11 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_center));
 
-        TextView qTTV = questionView.findViewById(R.id.questionTextTV);
-        TextView a1TV = questionView.findViewById(R.id.answer1TV);
-        TextView a2TV = questionView.findViewById(R.id.answer2TV);
-        TextView a3TV = questionView.findViewById(R.id.answer3TV);
-        TextView a4TV = questionView.findViewById(R.id.answer4TV);
+        final TextView qTTV = questionView.findViewById(R.id.questionTextTV);
+        final TextView a1TV = questionView.findViewById(R.id.answer1TV);
+        final TextView a2TV = questionView.findViewById(R.id.answer2TV);
+        final TextView a3TV = questionView.findViewById(R.id.answer3TV);
+        final TextView a4TV = questionView.findViewById(R.id.answer4TV);
 
         qTTV.setText(question);
         a1TV.setText(a1);
@@ -89,25 +90,118 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a4TV.setText(a4);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
+            final Animation animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.constriction);
+            final Animation animationFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
             @Override
             public void onClick(View v) {
-                Picasso.get().
-                        load(R.drawable.ic_logo_dragon_yes)
+                Picasso.get()
+                        .load(R.drawable.ic_logo_dragon_yes)
                         .fit()
                         .placeholder(R.drawable.blackscreen)
                         .into(currentQuestionImage);
                 switch (v.getId()) {
                     case (R.id.answer1TV):
-                        inPlayPresenter.checkAnswer(1);
+                        animationConstriction.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(1);
+                                qTTV.setVisibility(View.INVISIBLE);
+                                a2TV.setVisibility(View.INVISIBLE);
+                                a3TV.setVisibility(View.INVISIBLE);
+                                a4TV.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a1TV.startAnimation(animationConstriction);
+                        qTTV.startAnimation(animationFadeOut);
+                        a2TV.startAnimation(animationFadeOut);
+                        a3TV.startAnimation(animationFadeOut);
+                        a4TV.startAnimation(animationFadeOut);
                         break;
+
                     case (R.id.answer2TV):
-                        inPlayPresenter.checkAnswer(2);
+                        animationConstriction.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(2);
+                                qTTV.setVisibility(View.INVISIBLE);
+                                a1TV.setVisibility(View.INVISIBLE);
+                                a3TV.setVisibility(View.INVISIBLE);
+                                a4TV.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a2TV.startAnimation(animationConstriction);
+                        qTTV.startAnimation(animationFadeOut);
+                        a1TV.startAnimation(animationFadeOut);
+                        a3TV.startAnimation(animationFadeOut);
+                        a4TV.startAnimation(animationFadeOut);
                         break;
+
                     case (R.id.answer3TV):
-                        inPlayPresenter.checkAnswer(3);
+                        animationConstriction.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(3);
+                                qTTV.setVisibility(View.INVISIBLE);
+                                a2TV.setVisibility(View.INVISIBLE);
+                                a1TV.setVisibility(View.INVISIBLE);
+                                a4TV.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a3TV.startAnimation(animationConstriction);
+                        qTTV.startAnimation(animationFadeOut);
+                        a1TV.startAnimation(animationFadeOut);
+                        a2TV.startAnimation(animationFadeOut);
+                        a4TV.startAnimation(animationFadeOut);
                         break;
+
                     case (R.id.answer4TV):
-                        inPlayPresenter.checkAnswer(4);
+                        animationConstriction.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                inPlayPresenter.checkAnswer(4);
+                                qTTV.setVisibility(View.INVISIBLE);
+                                a2TV.setVisibility(View.INVISIBLE);
+                                a3TV.setVisibility(View.INVISIBLE);
+                                a1TV.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+                            }
+                        });
+                        a4TV.startAnimation(animationConstriction);
+                        qTTV.startAnimation(animationFadeOut);
+                        a1TV.startAnimation(animationFadeOut);
+                        a2TV.startAnimation(animationFadeOut);
+                        a3TV.startAnimation(animationFadeOut);
                         break;
                 }
             }
@@ -131,8 +225,8 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             }
         };
         backgroundIV.setOnClickListener(onClickListener);
-        Picasso.get().
-                load(R.drawable.background_targ)
+        Picasso.get()
+                .load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(backgroundIV);
@@ -245,7 +339,6 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     }
 
 }
-
 
 //====================================================================================================================
 

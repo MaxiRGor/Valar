@@ -41,8 +41,8 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         //Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom_to_center);
         //statisticsView.startAnimation(animation);
         names = new String[2];
-        names[0]="";
-        names[1]="";
+        names[0] = "";
+        names[1] = "";
         return statisticsView;
     }
 
@@ -79,6 +79,8 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView userSkinNKImage = statisticsView.findViewById(R.id.userSkinNKIV);
         final TextView user_debit_value_TV = statisticsView.findViewById(R.id.userDebitValueTV);
         final TextView user_credit_value_TV = statisticsView.findViewById(R.id.userCreditValueTV);
+        final long coinsADLong = money_GD_temp * 210 + money_AD_temp;
+        final long coinsCPLong = coinsADLong * 56 + money_CP_temp;
 
         ImageView coinsWindow = statisticsView.findViewById(R.id.statiscticsWindowCoinsImage);
         coinsWindow.setOnClickListener(new View.OnClickListener() {
@@ -94,12 +96,13 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                 //titleTV.setText(getResources().getString(R.string.money));
                 //TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
                 //textTV.setText(getResources().getString(R.string.youHaveMoney));
+
                 TextView coinsGD = dialogView.findViewById(R.id.alertUsersGD);
                 coinsGD.setText(String.valueOf(money_GD_temp));
                 TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);
-                coinsAD.setText(String.valueOf(money_GD_temp * 210 + money_AD_temp));
+                coinsAD.setText(String.valueOf(coinsADLong));
                 TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
-                coinsCP.setText(String.valueOf(money_GD_temp * 210 * 56 + money_AD_temp * 56 + money_CP_temp));
+                coinsCP.setText(String.valueOf(coinsCPLong));
                 closeDialogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
