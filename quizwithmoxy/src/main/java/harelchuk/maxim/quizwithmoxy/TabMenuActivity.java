@@ -50,17 +50,9 @@ public class TabMenuActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-
-
-            //Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.from_top_to_heaven);
-            //View view = findViewById(R.id.main_container);
-            //view.startAnimation(animation);
-
-            //ObjectAnimator.ofFloat(view,View.TRANSLATION_Y,0,-2000).setDuration(2000).start();
-
-
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.from_bottom_to_center,R.anim.from_center_to_bottom);
 
             switch (item.getItemId()) {
                 case R.id.navigation_play:

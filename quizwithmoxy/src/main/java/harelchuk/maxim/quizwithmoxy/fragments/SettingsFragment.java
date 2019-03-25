@@ -5,17 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TabHost;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -36,8 +31,8 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         View settingsView = inflater.inflate(R.layout.settings, mainContainerVG, false);
 
-        Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_top);
-        settingsView.startAnimation(animation);
+        //Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_center);
+        //settingsView.startAnimation(animation);
 
         View view1 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
         view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.set_book_or_film_selector);

@@ -74,7 +74,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
         viewGroup.addView(questionView);
 
-        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_top));
+        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_center));
 
         TextView qTTV = questionView.findViewById(R.id.questionTextTV);
         TextView a1TV = questionView.findViewById(R.id.answer1TV);

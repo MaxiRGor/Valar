@@ -18,7 +18,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -49,13 +48,14 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.context = getContext();
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         mainContainerVG.removeAllViews();
         tuneGameMenuView = inflater.inflate(R.layout.tune_game_empty, mainContainerVG, false);
+        //Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_center);
+        //tuneGameMenuView.startAnimation(animation);
         levelListVG = tuneGameMenuView.findViewById(R.id.level_list_frame);
-        context = getContext();
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_top);
-        levelListVG.startAnimation(animation);
+
         coinsGAC = new long[2];
         level_costs = new int[9];
         return tuneGameMenuView;
@@ -65,6 +65,11 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     public void onStart() {
         super.onStart();
         gamePresenter.showUsersMoneyAndBF();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -101,6 +106,9 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_center);
+        //recyclerView.startAnimation(animation);
+
     }
 
     private void checkIfAvailable(int position) {
@@ -133,12 +141,16 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
     @Override
     public void fillCoins(long[] coins_GAC, boolean isBooks, boolean isSeries) {
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_top_to_center);
         coinsGAC = coins_GAC;
         TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
         TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
         ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
         ImageView moneyImage = tuneGameMenuView.findViewById(R.id.windowUserMoneyIV);
+        coins_AD.startAnimation(animation);
+        coins_CP.startAnimation(animation);
+        coins_GD.startAnimation(animation);
         coins_GD.setText(String.valueOf(coins_GAC[0]));
         coins_AD.setText(String.valueOf(coins_GAC[1]));
         coins_CP.setText(String.valueOf(coins_GAC[2]));
@@ -181,7 +193,8 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
                         dialog.cancel();
                     }
                 });
-                dialog.getWindow().setDimAmount(0.7f);
+                dialog.getWindow().setDimAmount(0.8f);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
                 dialog.show();
             }
         });

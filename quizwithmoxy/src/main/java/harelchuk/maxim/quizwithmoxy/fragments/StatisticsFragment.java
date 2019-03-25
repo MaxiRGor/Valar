@@ -38,9 +38,11 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         statisticsView = inflater.inflate(R.layout.statistics, mainContainerVG, false);
-        Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_top);
-        statisticsView.startAnimation(animation);
-        names=new String[2];
+        //Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom_to_center);
+        //statisticsView.startAnimation(animation);
+        names = new String[2];
+        names[0]="";
+        names[1]="";
         return statisticsView;
     }
 
@@ -84,7 +86,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion,null);
+                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion, null);
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
                 Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
@@ -95,16 +97,17 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                 TextView coinsGD = dialogView.findViewById(R.id.alertUsersGD);
                 coinsGD.setText(String.valueOf(money_GD_temp));
                 TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);
-                coinsAD.setText(String.valueOf(money_GD_temp*210 + money_AD_temp));
+                coinsAD.setText(String.valueOf(money_GD_temp * 210 + money_AD_temp));
                 TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
-                coinsCP.setText(String.valueOf(money_GD_temp*210*56 + money_AD_temp*56 + money_CP_temp));
+                coinsCP.setText(String.valueOf(money_GD_temp * 210 * 56 + money_AD_temp * 56 + money_CP_temp));
                 closeDialogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
                     }
                 });
-                dialog.getWindow().setDimAmount(0.7f);
+                dialog.getWindow().setDimAmount(0.8f);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
                 dialog.show();
             }
         });
@@ -121,7 +124,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             public void onClick(View v) {
                 String alertTitle = "Title";
                 String alertText = "Text";
-                switch (v.getId()){
+                switch (v.getId()) {
                     case R.id.userReadWatchIV:
                         alertTitle = getResources().getString(R.string.booksOrFilms);
                         alertText = getResources().getString(R.string.booksFilmsStatistics);
@@ -145,7 +148,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alertdialog_text_message,null);
+                View dialogView = inflater.inflate(R.layout.alertdialog_text_message, null);
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
                 Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
@@ -159,7 +162,8 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                         dialog.cancel();
                     }
                 });
-                dialog.getWindow().setDimAmount(0.7f);
+                dialog.getWindow().setDimAmount(0.8f);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
                 dialog.show();
 
             }
@@ -172,8 +176,8 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
 
         user_name_TV.setText(user_name);
-        names[0]=user_name;
-        names[1]=user_name;
+        names[0] = user_name;
+        names[1] = user_name;
         user_GD_temp_TV.setText(String.valueOf(money_GD_temp));
         user_AD_temp_TV.setText(String.valueOf(money_AD_temp));
         user_CP_temp_TV.setText(String.valueOf(money_CP_temp));
@@ -197,7 +201,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                names[1]=s.toString();
+                names[1] = s.toString();
             }
 
             @Override
@@ -205,41 +209,41 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             }
         });
 
-        int current_theme=0;
+        int current_theme = 0;
 
-        if(is_skin_targar) {
+        if (is_skin_targar) {
             userSkinTargImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_yes));
-            if(current_theme==0){
+            if (current_theme == 0) {
                 userSkinTargImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_en));
             }
-        }else {
+        } else {
             user_skin_targar_TV.setText(R.string.unavailable);
         }
-        if(is_skin_stark) {
+        if (is_skin_stark) {
             userSkinStarksImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_yes));
-            if(current_theme==1){
+            if (current_theme == 1) {
                 userSkinStarksImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_en));
             }
-        }else {
+        } else {
             user_skin_stark_TV.setText(R.string.unavailable);
         }
-        if(is_skin_lann) {
+        if (is_skin_lann) {
             userSkinLannImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_yes));
-            if(current_theme==2){
+            if (current_theme == 2) {
                 userSkinLannImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_en));
             }
-        }else{
+        } else {
             user_skin_lann_TV.setText(R.string.unavailable);
         }
-        if(is_skin_night) {
+        if (is_skin_night) {
             userSkinNKImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_yes));
-            if(current_theme==3){
+            if (current_theme == 3) {
                 userSkinNKImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_en));
             }
-        }else{
+        } else {
             user_skin_night_TV.setText(R.string.unavailable);
         }
-        if(is_debit) {
+        if (is_debit) {
             //user_debit_value_TV.setText(String.valueOf(debit_sum));
             SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
             long coins[] = sharedPreferencesFunctions.coins_GD_AD_CP(debit_sum);
@@ -249,9 +253,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             TextView debitGD = statisticsView.findViewById(R.id.userDebitGDTV);
             TextView debitAD = statisticsView.findViewById(R.id.userDebitADTV);
             TextView debitCP = statisticsView.findViewById(R.id.userDebitCPTV);
-            debitGD.setText(String.valueOf((int)coins[0]));
-            debitAD.setText(String.valueOf((int)coins[1]));
-            debitCP.setText(String.valueOf((int)coins[2]));
+            debitGD.setText(String.valueOf((int) coins[0]));
+            debitAD.setText(String.valueOf((int) coins[1]));
+            debitCP.setText(String.valueOf((int) coins[2]));
             debitGD.setVisibility(View.VISIBLE);
             debitAD.setVisibility(View.VISIBLE);
             debitCP.setVisibility(View.VISIBLE);
@@ -264,7 +268,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             user_debit_value_TV.setVisibility(View.VISIBLE);
 
         }
-        if(is_credit) {
+        if (is_credit) {
             user_credit_value_TV.setText(String.valueOf(credit_sum));
         } else {
             user_credit_value_TV.setText(getResources().getString(R.string.noCredit));
@@ -299,7 +303,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     @Override
     public void onPause() {
         super.onPause();
-        if(!names[0].equals(names[1])){
+        if (!names[0].equals(names[1])) {
             statisticsPresenter.changeName(names[1]);
         }
     }
