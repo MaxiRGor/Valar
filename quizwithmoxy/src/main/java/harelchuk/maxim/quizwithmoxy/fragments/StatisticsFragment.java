@@ -104,6 +104,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                         dialog.cancel();
                     }
                 });
+                dialog.getWindow().setDimAmount(0.7f);
                 dialog.show();
             }
         });
@@ -158,6 +159,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                         dialog.cancel();
                     }
                 });
+                dialog.getWindow().setDimAmount(0.7f);
                 dialog.show();
 
             }

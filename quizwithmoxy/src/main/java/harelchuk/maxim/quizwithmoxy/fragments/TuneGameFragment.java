@@ -8,18 +8,17 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -30,6 +29,7 @@ import java.util.Map;
 
 import harelchuk.maxim.quizwithmoxy.InPlayActivity;
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
 import harelchuk.maxim.quizwithmoxy.presenter.TuneGamePresenter;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
 
@@ -51,7 +51,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         mainContainerVG.removeAllViews();
-        tuneGameMenuView = inflater.inflate(R.layout.tune_level_list_menu, mainContainerVG, false);
+        tuneGameMenuView = inflater.inflate(R.layout.tune_game_empty, mainContainerVG, false);
         levelListVG = tuneGameMenuView.findViewById(R.id.level_list_frame);
         context = getContext();
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_top);
@@ -70,51 +70,37 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Override
     public void fillLevelList(int levels[], int[] costs, int[] reward) {
 
-        final String ATTRIBUTE_NAME_LEVEL = "level";
-        final String ATTRIBUTE_NAME_COST = "cost";
-        final String ATTRIBUTE_NAME_REWARD = "reward";
-        final String ATTRIBUTE_NAME_COIN = "coin";
-
         level_costs = costs;
-        View tempV = LayoutInflater.from(context).inflate(R.layout.tune_game_list, levelListVG, false);
+        View tempV = LayoutInflater.from(context).inflate(R.layout.tune_game_recycle_view, levelListVG, false);
         levelListVG.addView(tempV);
-
-        ListView listView = tuneGameMenuView.findViewById(R.id.listView);
-
-        ArrayList<Map<String, Object>> data = new ArrayList<>(levels.length);
-
-        Map<String, Object> map;
-
+        ArrayList<Map<String, Integer>> data = new ArrayList<>(levels.length);
+        Map<String, Integer> map;
         for (int i = 0; i < levels.length; i++) {
             map = new HashMap<>();
-            map.put(ATTRIBUTE_NAME_LEVEL, levels[i]);
-            map.put(ATTRIBUTE_NAME_COST, costs[i]);
-            map.put(ATTRIBUTE_NAME_REWARD, reward[i]);
+            map.put("level", levels[i]);
+            map.put("cost", costs[i]);
+            map.put("reward", reward[i]);
             if (levels[i] == 1 || levels[i] == 2 || levels[i] == 3) {
-                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_warior);
+                map.put("coin", 2);
             }
             if (levels[i] == 4 || levels[i] == 5 || levels[i] == 6) {
-                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_deer);
+                map.put("coin", 1);
             }
             if (levels[i] == 7 || levels[i] == 8 || levels[i] == 9 || levels[i] == 10) {
-                map.put(ATTRIBUTE_NAME_COIN, R.drawable.ic_money_dragon);
+                map.put("coin", 0);
             }
             data.add(map);
         }
-
-        String from[] = {ATTRIBUTE_NAME_LEVEL, ATTRIBUTE_NAME_COST, ATTRIBUTE_NAME_REWARD, ATTRIBUTE_NAME_COIN};
-        int to[] = {R.id.item_level_nomTV, R.id.item_level_quens_nomTV, R.id.item_level_rewardTV, R.id.item_level_coinIV};
-
-        SimpleAdapter simpleAdapter = new SimpleAdapter(context, data, R.layout.tune_item_level, from, to);
-        listView.setAdapter(simpleAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView recyclerView = tuneGameMenuView.findViewById(R.id.recyclerView);
+        DataAdapter adapter = new DataAdapter(getContext(), data);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("myLogs", "id= " + String.valueOf(id) + "; position= " + String.valueOf(position));
+            public void onItemClick(int position, View v) {
                 checkIfAvailable(position);
             }
         });
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void checkIfAvailable(int position) {
@@ -170,7 +156,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion,null);
+                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion, null);
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
                 Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
@@ -183,10 +169,10 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
                 coinsGD.setText(String.valueOf(coinsGAC[0]));
 
                 TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);
-                coinsAD.setText(String.valueOf(coinsGAC[0]*210 + coinsGAC[1]));
+                coinsAD.setText(String.valueOf(coinsGAC[0] * 210 + coinsGAC[1]));
 
                 TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
-                coinsCP.setText(String.valueOf(coinsGAC[0]*210*56 + coinsGAC[1]*56 + coinsGAC[2]));
+                coinsCP.setText(String.valueOf(coinsGAC[0] * 210 * 56 + coinsGAC[1] * 56 + coinsGAC[2]));
 
 
                 closeDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +181,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
                         dialog.cancel();
                     }
                 });
+                dialog.getWindow().setDimAmount(0.7f);
                 dialog.show();
             }
         });
