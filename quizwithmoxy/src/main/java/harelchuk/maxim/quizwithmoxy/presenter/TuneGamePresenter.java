@@ -10,12 +10,18 @@ import android.widget.Toast;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
+import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
 
+import static harelchuk.maxim.quizwithmoxy.model.AppForContext.getContext;
 import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.*;
 
 @InjectViewState
@@ -24,27 +30,24 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
     private SharedPreferences sharedPreferencesMoney;
     private SharedPreferences sharedPreferencesUser;
     private SharedPreferencesFunctions sharedPreferencesFunctions;
-    private int[] levels;
-    private int[] costs;
-    private int[] rewards;
+    //private DataAdapter adapter;
+    private ArrayList<Map<String, Integer>> data;
 
     public TuneGamePresenter() {
         Log.d("myLogs", "TuneGamePresenter const");
-        sharedPreferencesFunctions = new SharedPreferencesFunctions();
-        sharedPreferencesMoney = AppForContext.getContext().
-                getSharedPreferences(SharedPreferencesInitializer.SHARED_PREFERENCES_MONEY, Context.MODE_PRIVATE);
-        sharedPreferencesUser = AppForContext.getContext().
-                getSharedPreferences(SharedPreferencesInitializer.SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
-
-        levels = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        costs = new int[levels.length];
-        rewards = new int[levels.length];
-
-
+        final int[] levels = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        final int[] rewards = new int[levels.length];
+        final int[] costs = new int[levels.length];
+        data = new ArrayList<>(levels.length);
 
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> fillList = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                sharedPreferencesFunctions = new SharedPreferencesFunctions();
+                sharedPreferencesMoney = getContext().
+                        getSharedPreferences(SharedPreferencesInitializer.SHARED_PREFERENCES_MONEY, Context.MODE_PRIVATE);
+                sharedPreferencesUser = getContext().
+                        getSharedPreferences(SharedPreferencesInitializer.SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
                 int defValue = 0;
                 costs[0] = sharedPreferencesMoney.getInt(L_1_COST_CP, defValue);
                 costs[1] = sharedPreferencesMoney.getInt(L_2_COST_CP, defValue);
@@ -66,27 +69,46 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
                 rewards[7] = sharedPreferencesMoney.getInt(L_8_REWARD_GD, defValue);
                 rewards[8] = sharedPreferencesMoney.getInt(L_9_REWARD_GD, defValue);
                 rewards[9] = sharedPreferencesMoney.getInt(L_10_REWARD_GD, defValue);
+
+                Map<String, Integer> map;
+                for (int i = 0; i < levels.length; i++) {
+                    map = new HashMap<>();
+                    map.put("level", levels[i]);
+                    map.put("cost", costs[i]);
+                    map.put("reward", rewards[i]);
+                    if (levels[i] == 1 || levels[i] == 2 || levels[i] == 3) {
+                        map.put("coin", 2);
+                    }
+                    if (levels[i] == 4 || levels[i] == 5 || levels[i] == 6) {
+                        map.put("coin", 1);
+                    }
+                    if (levels[i] == 7 || levels[i] == 8 || levels[i] == 9 || levels[i] == 10) {
+                        map.put("coin", 0);
+                    }
+                    data.add(map);
+                }
                 return null;
             }
+
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                getViewState().fillLevelList(levels, costs, rewards);
+                getViewState().fillLevelList(data, costs);
             }
         };
         fillList.execute();
     }
 
     public void writeOff(long money_to_write_off) {
-        long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
-        money-=money_to_write_off;
+        long money = sharedPreferencesUser.getLong(MONEY_TEMP, 0);
+        money -= money_to_write_off;
         SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-        editor.putLong(MONEY_TEMP,money);
+        editor.putLong(MONEY_TEMP, money);
         editor.apply();
     }
 
     public void showUsersMoneyAndBF() {
-        long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
+        long money = sharedPreferencesUser.getLong(MONEY_TEMP, 0);
         long[] money_GD_AD_CP = sharedPreferencesFunctions.coins_GD_AD_CP(money);
         getViewState().fillCoins(money_GD_AD_CP);
     }

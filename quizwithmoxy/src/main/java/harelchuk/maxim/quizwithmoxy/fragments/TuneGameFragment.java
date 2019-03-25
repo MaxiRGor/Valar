@@ -73,31 +73,12 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     }
 
     @Override
-    public void fillLevelList(int levels[], int[] costs, int[] reward) {
-
+    public void fillLevelList(ArrayList<Map<String, Integer>> data,int[] costs) {
         level_costs = costs;
         View tempV = LayoutInflater.from(context).inflate(R.layout.tune_game_recycle_view, levelListVG, false);
         levelListVG.addView(tempV);
-        ArrayList<Map<String, Integer>> data = new ArrayList<>(levels.length);
-        Map<String, Integer> map;
-        for (int i = 0; i < levels.length; i++) {
-            map = new HashMap<>();
-            map.put("level", levels[i]);
-            map.put("cost", costs[i]);
-            map.put("reward", reward[i]);
-            if (levels[i] == 1 || levels[i] == 2 || levels[i] == 3) {
-                map.put("coin", 2);
-            }
-            if (levels[i] == 4 || levels[i] == 5 || levels[i] == 6) {
-                map.put("coin", 1);
-            }
-            if (levels[i] == 7 || levels[i] == 8 || levels[i] == 9 || levels[i] == 10) {
-                map.put("coin", 0);
-            }
-            data.add(map);
-        }
         RecyclerView recyclerView = tuneGameMenuView.findViewById(R.id.recyclerView);
-        DataAdapter adapter = new DataAdapter(getContext(), data);
+        DataAdapter adapter = new DataAdapter(getContext(),data);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
             @Override
@@ -106,9 +87,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_bottom_to_center);
-        //recyclerView.startAnimation(animation);
-
+        recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_center));
     }
 
     private void checkIfAvailable(int position) {
@@ -121,8 +100,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             cost *= 56 * 210;
         }
         long money = coinsGAC[2] + coinsGAC[1] * 56 + coinsGAC[0] * 56 * 210;
-        //Toast.makeText(getContext(),money + " must be > then " + cost, Toast.LENGTH_SHORT).show();
-
         if (money >= cost) {
             gamePresenter.writeOff(cost);
             startGame(position);

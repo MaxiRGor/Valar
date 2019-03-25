@@ -68,7 +68,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         } else
             bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
 
-        //bookFilmImage.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
+        bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this,R.anim.from_left_to_center));
 
         int currentQuestion = 1 + 7 - questionsToTheEnd;
         switch (currentQuestion) {
@@ -96,7 +96,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroupQuestionFrame, false);
         viewGroupQuestionFrame.addView(questionView);
 
-        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_center));
+        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
 
         final TextView qTTV = questionView.findViewById(R.id.questionTextTV);
         final TextView a1TV = questionView.findViewById(R.id.answer1TV);
@@ -243,6 +243,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         if (category == 1) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_1_syuzhet));
         }
+        if (category == 2) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_2_semi));
+        }
         if (category == 3) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_3_personazhi));
         }
@@ -270,6 +273,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         if (category == 11) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_11_izobr));
         }
+        categoryImage.startAnimation(AnimationUtils.loadAnimation(this,R.anim.from_right_to_center));
     }
 
     @Override
