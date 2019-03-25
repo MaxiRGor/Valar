@@ -32,9 +32,21 @@ public class Question {
     @Expose
     private int right_answer;
 
+    @SerializedName("level")
+    @Expose
+    private int level;
+
+    @SerializedName("in_book")
+    @Expose
+    private boolean in_book;
+
+    @SerializedName("in_serial")
+    @Expose
+    private boolean in_serial;
+
     @SerializedName("category")
     @Expose
-    private String category;
+    private int category;
 
 
     public int getId_question() {
@@ -61,8 +73,20 @@ public class Question {
         return answer_four;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean getIn_serial() {
+        return in_serial;
+    }
+
+    public boolean getIn_book() {
+        return in_book;
     }
 
     public int getRight_answer() {

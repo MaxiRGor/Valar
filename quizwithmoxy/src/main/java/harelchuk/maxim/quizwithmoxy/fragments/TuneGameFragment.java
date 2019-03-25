@@ -140,13 +140,13 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     }
 
     @Override
-    public void fillCoins(long[] coins_GAC, boolean isBooks, boolean isSeries) {
+    public void fillCoins(long[] coins_GAC) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_top_to_center);
         coinsGAC = coins_GAC;
         TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
         TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
-        ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
+        //ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
         ImageView moneyImage = tuneGameMenuView.findViewById(R.id.windowUserMoneyIV);
         coins_AD.startAnimation(animation);
         coins_CP.startAnimation(animation);
@@ -154,15 +154,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         coins_GD.setText(String.valueOf(coins_GAC[0]));
         coins_AD.setText(String.valueOf(coins_GAC[1]));
         coins_CP.setText(String.valueOf(coins_GAC[2]));
-        if (isBooks) {
-            if (isSeries) {
-                booksFilms.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
-            } else {
-                booksFilms.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
-            }
-        } else {
-            booksFilms.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
-        }
         moneyImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -92,11 +92,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
                 Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
-                //TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
-                //titleTV.setText(getResources().getString(R.string.money));
-                //TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
-                //textTV.setText(getResources().getString(R.string.youHaveMoney));
-
                 TextView coinsGD = dialogView.findViewById(R.id.alertUsersGD);
                 coinsGD.setText(String.valueOf(money_GD_temp));
                 TextView coinsAD = dialogView.findViewById(R.id.alertUsersAD);

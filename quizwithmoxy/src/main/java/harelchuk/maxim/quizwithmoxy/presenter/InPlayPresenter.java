@@ -11,7 +11,6 @@ import harelchuk.maxim.quizwithmoxy.model.AppForContext;
 import harelchuk.maxim.quizwithmoxy.model.NetworkService;
 import harelchuk.maxim.quizwithmoxy.model.Question;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
-import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 import harelchuk.maxim.quizwithmoxy.view.InPlayView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,14 +51,15 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         this.questionCursor = 0;
         this.is_lose = false;
         Log.d("myLogs", "InPlayPresenter const");
-        getViewState().findElements();
+        getViewState().findElement();
     }
 
     private void sendQuestionToTheView() {
         getViewState().showQuestion(questionsToEnd, questions.get(questionCursor).getQuestion_text(),
                 questions.get(questionCursor).getAnswer_one(), questions.get(questionCursor).getAnswer_two(),
                 questions.get(questionCursor).getAnswer_three(), questions.get(questionCursor).getAnswer_four(),
-                questions.get(questionCursor).getCategory());
+                questions.get(questionCursor).getCategory(),questions.get(questionCursor).getLevel(),
+                questions.get(questionCursor).getIn_book(),questions.get(questionCursor).getIn_serial());
     }
 
     private void getLevelFromSP() {

@@ -87,10 +87,8 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
 
     public void showUsersMoneyAndBF() {
         long money = sharedPreferencesUser.getLong(MONEY_TEMP,0);
-        boolean isBooks = sharedPreferencesUser.getBoolean(IS_BOOKS,false);
-        boolean isSeries = sharedPreferencesUser.getBoolean(IS_FILMS,false);
         long[] money_GD_AD_CP = sharedPreferencesFunctions.coins_GD_AD_CP(money);
-        getViewState().fillCoins(money_GD_AD_CP, isBooks, isSeries);
+        getViewState().fillCoins(money_GD_AD_CP);
     }
 }
 

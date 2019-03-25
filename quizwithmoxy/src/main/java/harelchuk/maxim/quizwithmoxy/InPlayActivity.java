@@ -1,8 +1,6 @@
 package harelchuk.maxim.quizwithmoxy;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +21,13 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     @InjectPresenter
     InPlayPresenter inPlayPresenter;
 
-    private ViewGroup viewGroup;
-    private TextView questionCategory;
+    private ViewGroup viewGroupQuestionFrame;
     private TextView coinsGD;
     private TextView coinsAD;
     private TextView coinsCP;
     private ImageView coinGDImage;
     private ImageView coinADImage;
     private ImageView coinCPImage;
-    private ImageView currentQuestionImage;
-    SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +35,42 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         setContentView(R.layout.in_play_empty_frame);
     }
 
+    @Override
+    public void findElement() {
+        viewGroupQuestionFrame = findViewById(R.id.frameQuestionLayout);
+        ImageView backgroundImage = findViewById(R.id.inPlayBackgroundIV);
+        Picasso.get()
+                .load(R.drawable.background_targ)
+                .fit()
+                .placeholder(R.drawable.blackscreen)
+                .into(backgroundImage);
+    }
 
     @Override
-    public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4, String category) {
+    public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4, int category,
+                             int level, boolean inBook, boolean inSerial) {
 
-        questionCategory.setText(category);
+        TextView questionLevelTV = findViewById(R.id.inPlayLevelTV);
+        TextView questionCategoryTV = findViewById(R.id.inPlayCategoryTV);
+        String[] categories = getResources().getStringArray(R.array.categories);
+        ImageView bookFilmImage = findViewById(R.id.inPlayBookFilmImage);
+        ImageView currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
+        setQuestionCategoryImage(category);
+
+        questionLevelTV.setText(String.format(getResources().getString(R.string.level) + " = %s", level));
+        questionCategoryTV.setText(categories[category]);
+
+        if (inBook) {
+            if (inSerial) {
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
+            } else
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
+        } else
+            bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
+
+        //bookFilmImage.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
 
         int currentQuestion = 1 + 7 - questionsToTheEnd;
-        currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
         switch (currentQuestion) {
             case 2:
                 currentQuestionImage = findViewById(R.id.inPlayQuestionImage2);
@@ -69,11 +91,10 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                 currentQuestionImage = findViewById(R.id.inPlayQuestionImage7);
                 break;
         }
-        //currentQuestionImage.setVisibility(View.VISIBLE);
 
-        viewGroup.removeAllViews();
-        View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroup, false);
-        viewGroup.addView(questionView);
+        viewGroupQuestionFrame.removeAllViews();
+        View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroupQuestionFrame, false);
+        viewGroupQuestionFrame.addView(questionView);
 
         questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_bottom_to_center));
 
@@ -89,16 +110,18 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a3TV.setText(a3);
         a4TV.setText(a4);
 
+        final ImageView finalCurrentQuestionImage = currentQuestionImage;
         View.OnClickListener onClickListener = new View.OnClickListener() {
             final Animation animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.constriction);
             final Animation animationFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
             @Override
             public void onClick(View v) {
                 Picasso.get()
                         .load(R.drawable.ic_logo_dragon_yes)
                         .fit()
                         .placeholder(R.drawable.blackscreen)
-                        .into(currentQuestionImage);
+                        .into(finalCurrentQuestionImage);
                 switch (v.getId()) {
                     case (R.id.answer1TV):
                         animationConstriction.setAnimationListener(new Animation.AnimationListener() {
@@ -212,6 +235,43 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a4TV.setOnClickListener(onClickListener);
     }
 
+    void setQuestionCategoryImage(int category) {
+        ImageView categoryImage = findViewById(R.id.inPlayCategoryImage);
+        if (category == 0) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_0_obschie));
+        }
+        if (category == 1) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_1_syuzhet));
+        }
+        if (category == 3) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_3_personazhi));
+        }
+        if (category == 4) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_4_istoria));
+        }
+        if (category == 5) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_5_geraldika));
+        }
+        if (category == 6) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_6_religia));
+        }
+        if (category == 7) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_7_skolko));
+        }
+        if (category == 8) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_8_citaty));
+        }
+        if (category == 9) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_9_dotrakiytsy));
+        }
+        if (category == 10) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_10_geografia));
+        }
+        if (category == 11) {
+            categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_11_izobr));
+        }
+    }
+
     @Override
     public void userWin() {
         ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
@@ -293,37 +353,18 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         }
     }
 
-    @Override
-    public void findElements() {
-        viewGroup = findViewById(R.id.frameQuestionLayout);
-        TextView questionLevelTV = findViewById(R.id.inPlayLevelTV);
-        questionCategory = findViewById(R.id.inPlayCategoryTV);
-        ImageView backgroundImage = findViewById(R.id.inPlayBackgroundIV);
-        ImageView categoryImage = findViewById(R.id.inPlayCategoryIV);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Picasso.get()
-                .load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(backgroundImage);
-        questionLevelTV.setText(String.format("Level = %s", String.valueOf(sharedPreferences.getInt("level", 0) + 1)));
-    }
 
     @Override
     public void showFailure() {
         ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
         emptyView.removeAllViews();
-        View userLose;
-        userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
-
+        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
         ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
-        //backgroundIV.setVisibility(View.VISIBLE);
         Picasso.get()
                 .load(R.drawable.background_targ)
                 .fit()
                 .placeholder(R.drawable.blackscreen)
                 .into(backgroundIV);
-
         TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
         TextView notConnectedTV = userLose.findViewById(R.id.loseTV);
         notConnectedTV.setText(getResources().getString(R.string.notConnected));
@@ -350,7 +391,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     public void checkAnswer(int userAnswer){
 
 
-        questionCategory.setText(String.valueOf(userAnswer));
+        questionCategoryTV.setText(String.valueOf(userAnswer));
         questionsToEndTV.setText(String.valueOf(questionsToEnd));
         if(questionsToEnd>0) showQuestion();
         else{
