@@ -1,6 +1,7 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
 import android.app.AlertDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,8 +10,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.squareup.picasso.Picasso;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
@@ -38,12 +38,35 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         statisticsView = inflater.inflate(R.layout.statistics, mainContainerVG, false);
-        //Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom_to_center);
-        //statisticsView.startAnimation(animation);
         names = new String[2];
         names[0] = "";
         names[1] = "";
+        setBackgroundsByTheme(0);
         return statisticsView;
+    }
+
+    private void setBackgroundsByTheme(int theme) {
+        Drawable windowImage = getResources().getDrawable(R.drawable.window_targariens);;
+
+        if(theme==0){
+            windowImage = getResources().getDrawable(R.drawable.window_targariens);
+        }
+
+        ImageView nameWindow = statisticsView.findViewById(R.id.statisticsWindowUsernameImage);
+        ImageView coinsWindow = statisticsView.findViewById(R.id.statisticsWindowCoinsImage);
+        ImageView roundsWindow = statisticsView.findViewById(R.id.statisticsWindowRoundsImage);
+        ImageView winningsWindow = statisticsView.findViewById(R.id.statisticsWindowWinningsImage);
+        ImageView emblemsWindow = statisticsView.findViewById(R.id.statisticsWindowEmblemsImage);
+        ImageView debitWindow = statisticsView.findViewById(R.id.statisticsWindowDebitImage);
+        ImageView creditWindow = statisticsView.findViewById(R.id.statisticsWindowCreditImage);
+
+        nameWindow.setBackground(windowImage);
+        coinsWindow.setBackground(windowImage);
+        roundsWindow.setBackground(windowImage);
+        winningsWindow.setBackground(windowImage);
+        emblemsWindow.setBackground(windowImage);
+        debitWindow.setBackground(windowImage);
+        creditWindow.setBackground(windowImage);
     }
 
     @Override
@@ -58,11 +81,8 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         EditText user_name_TV = statisticsView.findViewById(R.id.userNameTV);
         ImageView booksFilmsImage = statisticsView.findViewById(R.id.userReadWatchIV);
         TextView user_GD_temp_TV = statisticsView.findViewById(R.id.userGDTempTV);
-        TextView user_GD_all_TV = statisticsView.findViewById(R.id.userGDAllTV);
         final TextView user_AD_temp_TV = statisticsView.findViewById(R.id.userADTempTV);
-        TextView user_AD_all_TV = statisticsView.findViewById(R.id.userADAllTV);
         final TextView user_CP_temp_TV = statisticsView.findViewById(R.id.userCPTempTV);
-        TextView user_CP_all_TV = statisticsView.findViewById(R.id.userCPAllTV);
         TextView user_rounds_GD_TV = statisticsView.findViewById(R.id.userRoundsGDTV);
         TextView user_rounds_AD_TV = statisticsView.findViewById(R.id.userRoundsADTV);
         TextView user_rounds_CP_TV = statisticsView.findViewById(R.id.userRoundsCPTV);
@@ -82,7 +102,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         final long coinsADLong = money_GD_temp * 210 + money_AD_temp;
         final long coinsCPLong = coinsADLong * 56 + money_CP_temp;
 
-        ImageView coinsWindow = statisticsView.findViewById(R.id.statiscticsWindowCoinsImage);
+        int current_theme = 0;
+
+        ImageView coinsWindow = statisticsView.findViewById(R.id.statisticsWindowCoinsImage);
         coinsWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +138,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView debitWindow = statisticsView.findViewById(R.id.statisticsWindowDebitImage);
         ImageView creditWindow = statisticsView.findViewById(R.id.statisticsWindowCreditImage);
 
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +163,10 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                     case R.id.statisticsWindowDebitImage:
                         alertTitle = getResources().getString(R.string.debit);
                         alertText = getResources().getString(R.string.debitInfo);
+                        break;
+                    case R.id.statisticsWindowCreditImage:
+                        alertTitle = getResources().getString(R.string.credit);
+                        alertText = getResources().getString(R.string.creditInfo);
                         break;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -171,6 +196,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         emblemsWindow.setOnClickListener(onClickListener);
         booksFilmsImage.setOnClickListener(onClickListener);
         debitWindow.setOnClickListener(onClickListener);
+        creditWindow.setOnClickListener(onClickListener);
 
 
         user_name_TV.setText(user_name);
@@ -182,9 +208,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         //user_GD_all_TV.setText(String.valueOf(money_GD_all));
         //user_AD_all_TV.setText(String.valueOf(money_AD_all));
         //user_CP_all_TV.setText(String.valueOf(money_CP_all));
-        user_GD_all_TV.setVisibility(View.INVISIBLE);
-        user_AD_all_TV.setVisibility(View.INVISIBLE);
-        user_CP_all_TV.setVisibility(View.INVISIBLE);
+        //user_GD_all_TV.setVisibility(View.INVISIBLE);
+        //user_AD_all_TV.setVisibility(View.INVISIBLE);
+        //user_CP_all_TV.setVisibility(View.INVISIBLE);
         user_rounds_GD_TV.setText(String.valueOf(number_hard_games));
         user_rounds_AD_TV.setText(String.valueOf(number_medium_games));
         user_rounds_CP_TV.setText(String.valueOf(number_easy_games));
@@ -207,7 +233,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             }
         });
 
-        int current_theme = 0;
+
 
         if (is_skin_targar) {
             userSkinTargImage.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_yes));
@@ -267,9 +293,27 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
         }
         if (is_credit) {
-            user_credit_value_TV.setText(String.valueOf(credit_sum));
+            //user_credit_value_TV.setText(String.valueOf(credit_sum));
+            SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
+            long coins[] = sharedPreferencesFunctions.coins_GD_AD_CP(credit_sum);
+            ImageView GD = statisticsView.findViewById(R.id.userCreditGDImage);
+            ImageView AD = statisticsView.findViewById(R.id.userCreditADImage);
+            ImageView CP = statisticsView.findViewById(R.id.userCreditCPImage);
+            TextView creditGD = statisticsView.findViewById(R.id.userCreditGDTV);
+            TextView creditAD = statisticsView.findViewById(R.id.userCreditADTV);
+            TextView creditCP = statisticsView.findViewById(R.id.userCreditCPTV);
+            creditGD.setText(String.valueOf((int) coins[0]));
+            creditAD.setText(String.valueOf((int) coins[1]));
+            creditCP.setText(String.valueOf((int) coins[2]));
+            creditGD.setVisibility(View.VISIBLE);
+            creditAD.setVisibility(View.VISIBLE);
+            creditCP.setVisibility(View.VISIBLE);
+            GD.setVisibility(View.VISIBLE);
+            AD.setVisibility(View.VISIBLE);
+            CP.setVisibility(View.VISIBLE);
         } else {
             user_credit_value_TV.setText(getResources().getString(R.string.noCredit));
+            user_credit_value_TV.setVisibility(View.VISIBLE);
         }
         if (is_books) {
             if (is_films) {

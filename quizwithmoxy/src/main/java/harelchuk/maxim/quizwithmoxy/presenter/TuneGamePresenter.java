@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -14,9 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
+
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
 import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
