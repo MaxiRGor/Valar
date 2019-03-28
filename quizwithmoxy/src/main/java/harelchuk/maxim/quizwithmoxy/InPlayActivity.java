@@ -13,6 +13,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.squareup.picasso.Picasso;
 
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.InPlayPresenter;
 import harelchuk.maxim.quizwithmoxy.view.InPlayView;
 
@@ -68,7 +69,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         } else
             bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
 
-        bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this,R.anim.from_left_to_center));
+        bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_left_to_center));
 
         int currentQuestion = 1 + 7 - questionsToTheEnd;
         switch (currentQuestion) {
@@ -273,7 +274,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         if (category == 11) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_11_izobr));
         }
-        categoryImage.startAnimation(AnimationUtils.loadAnimation(this,R.anim.from_right_to_center));
+        categoryImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_right_to_center));
     }
 
     @Override

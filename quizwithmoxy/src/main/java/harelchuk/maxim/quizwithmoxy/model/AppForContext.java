@@ -13,16 +13,7 @@ public class AppForContext extends Application {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-    /*
-    private static AppForContext mInstance;
 
-    private static AppForContext getInstance(){
-        if(mInstance == null){
-            mInstance = new AppForContext();
-        }
-        return mInstance;
-        }
-*/
     public static Context getContext() {
         return context;
     }

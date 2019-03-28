@@ -1,76 +1,59 @@
 package harelchuk.maxim.quizwithmoxy.presenter;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+
 import java.util.List;
+
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
+import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
 import harelchuk.maxim.quizwithmoxy.model.NetworkService;
 import harelchuk.maxim.quizwithmoxy.model.Question;
-import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.view.InPlayView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_10_COST_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_1_COST_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_2_COST_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_3_COST_CP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_4_COST_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_5_COST_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_6_COST_AD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_7_COST_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_8_LOSE_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.L_9_COST_GD;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.MONEY_TEMP;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_GAMES;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_EASY_WINNINGS;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_HARD_GAMES;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_HARD_WINNINGS;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_MEDIUM_GAMES;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.NUMBER_MEDIUM_WINNINGS;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.SHARED_PREFERENCES_MONEY;
-import static harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer.SHARED_PREFERENCES_USER;
-
 @InjectViewState
 public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
-    private int level;
+    private int levelUserChoose;
+    private boolean is_book;
+    private boolean is_serial;
+
     private int questionsToEnd;
     private int questionCursor;
     private boolean is_lose;
     private List<Question> questions;
 
     public InPlayPresenter() {
-        getLevelFromSP();
+        Log.d("myLogs", "InPlayPresenter const");
+        this.is_book = UserDataSingleton.getInstance().isIs_books();
+        this.is_serial = UserDataSingleton.getInstance().isIs_films();
+        this.levelUserChoose = UserDataSingleton.getInstance().getChosen_level();
         this.questionsToEnd = 7;
         this.questionCursor = 0;
         this.is_lose = false;
-        Log.d("myLogs", "InPlayPresenter const");
+        getQuestionsByLevelFromServer(levelUserChoose);
         getViewState().findElement();
     }
+
 
     private void sendQuestionToTheView() {
         getViewState().showQuestion(questionsToEnd, questions.get(questionCursor).getQuestion_text(),
                 questions.get(questionCursor).getAnswer_one(), questions.get(questionCursor).getAnswer_two(),
                 questions.get(questionCursor).getAnswer_three(), questions.get(questionCursor).getAnswer_four(),
-                questions.get(questionCursor).getCategory(),questions.get(questionCursor).getLevel(),
-                questions.get(questionCursor).getIn_book(),questions.get(questionCursor).getIn_serial());
+                questions.get(questionCursor).getCategory(), questions.get(questionCursor).getLevel(),
+                questions.get(questionCursor).getIn_book(), questions.get(questionCursor).getIn_serial());
     }
 
-    private void getLevelFromSP() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AppForContext.getContext());
-        this.level = sharedPreferences.getInt("level", 0) + 1;
-        Log.d("myLogs", "Level in presenter = " + level);
-        getQuestionsByLevelFromServer(level);
-    }
 
     private void getQuestionsByLevelFromServer(int lvl) {
-        NetworkService.getInstance().getJSONApi().getByLevel(lvl).enqueue(new Callback<List<Question>>() {
+        NetworkService.getInstance().getJSONApi().getByLevel(lvl, is_book, is_serial).enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
                 questions = response.body();
@@ -100,72 +83,42 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                 sendQuestionToTheView();
             } else {
                 Log.d("myLogs", "All answered");
-                //sendInfoToUserStat();
                 questionCursor++;
                 getViewState().userWin();
             }
         } else {
             Log.d("myLogs", "User answered wrong and he lose");
             is_lose = true;
-            //sendInfoToUserStat();
             getViewState().userLose(questionCursor);
         }
     }
 
     public void sendInfoToUserStat() {
-        SharedPreferences userSP = AppForContext.getContext().
-                getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
 
-        int[] money_and_type;
-        SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
-        money_and_type = sharedPreferencesFunctions.money_and_type(level, is_lose);
-        int money_add = money_and_type[0];
-        int money_type = money_and_type[1];
+        long coinsToAdd = coinsToAdd(levelUserChoose, is_lose);
+        UserDataSingleton.getInstance().addUserMoney(coinsToAdd);
 
-        int coins_add = 0;
-
-        if (money_type == 2) {
-            coins_add = money_add * 56;
-        }
-        if (money_type == 3) {
-            coins_add = money_add * 56 * 210;
-        }
-        if (money_type == 1) {
-            coins_add = money_add;
-        }
-
-        long usermoney = userSP.getLong(MONEY_TEMP, 0);
-        usermoney += (long) coins_add;
-        SharedPreferences.Editor editor = userSP.edit();
-        editor.putLong(MONEY_TEMP, usermoney);
-        if (level == 1 || level == 2 || level == 3) {
-            editor.putInt(NUMBER_EASY_GAMES, userSP.getInt(NUMBER_EASY_GAMES, 0) + 1);
+        if (levelUserChoose == 1 || levelUserChoose == 2 || levelUserChoose == 3) {
+            UserDataSingleton.getInstance().incrementNumber_easy_games();
             if (!is_lose) {
-                editor.putInt(NUMBER_EASY_WINNINGS, userSP.getInt(NUMBER_EASY_WINNINGS, 0) + 1);
+                UserDataSingleton.getInstance().incrementNumber_easy_winnings();
             }
         }
-        if (level == 4 || level == 5 || level == 6) {
-            editor.putInt(NUMBER_MEDIUM_GAMES, userSP.getInt(NUMBER_MEDIUM_GAMES, 0) + 1);
+        if (levelUserChoose == 4 || levelUserChoose == 5 || levelUserChoose == 6) {
+            UserDataSingleton.getInstance().incrementNumber_medium_games();
             if (!is_lose) {
-                editor.putInt(NUMBER_MEDIUM_WINNINGS, userSP.getInt(NUMBER_MEDIUM_WINNINGS, 0) + 1);
+                UserDataSingleton.getInstance().incrementNumber_medium_winnings();
             }
         }
-        if (level == 7 || level == 8 || level == 9 || level == 10) {
-            editor.putInt(NUMBER_HARD_GAMES, userSP.getInt(NUMBER_HARD_GAMES, 0) + 1);
+        if (levelUserChoose == 7 || levelUserChoose == 8 || levelUserChoose == 9 || levelUserChoose == 10) {
+            UserDataSingleton.getInstance().incrementNumber_hard_games();
             if (!is_lose) {
-                editor.putInt(NUMBER_HARD_WINNINGS, userSP.getInt(NUMBER_HARD_WINNINGS, 0) + 1);
+                UserDataSingleton.getInstance().incrementNumber_hard_winnings();
             }
         }
-        editor.apply();
 
-        Log.d("myLogs", "coins_add = " + (int) coins_add + ", type = " + money_type);
-
-        long[] money = sharedPreferencesFunctions.coins_GD_AD_CP(coins_add);
-        int coinGD = (int) money[0];
-        int coinAD = (int) money[1];
-        int coinCP = (int) money[2];
-        getViewState().showAddedScore(coinGD, coinAD, coinCP);
-
+        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(coinsToAdd);
+        getViewState().showAddedScore((int) coinsGAC[0], (int) coinsGAC[1], (int) coinsGAC[2]);
     }
 
     private void updateAnswerOnServer(int id_question, int userAnswer) {
@@ -183,56 +136,112 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     }
 
     public void sendFailToUserStat() {
-        SharedPreferences moneySP = AppForContext.getContext().
-                getSharedPreferences(SHARED_PREFERENCES_MONEY, Context.MODE_PRIVATE);
-        SharedPreferences userSP = AppForContext.getContext().
-                getSharedPreferences(SHARED_PREFERENCES_USER, Context.MODE_PRIVATE);
-        SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
 
         long moneyToReturn = 0;
 
-        if (level == 1){
-            moneyToReturn=moneySP.getInt(L_1_COST_CP,0);
+        if (levelUserChoose == 1) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_1_cost_cp();
         }
-        if (level == 2){
-            moneyToReturn=moneySP.getInt(L_2_COST_CP,0);
+        if (levelUserChoose == 2) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_2_cost_cp();
         }
-        if (level == 3){
-            moneyToReturn=moneySP.getInt(L_3_COST_CP,0);
+        if (levelUserChoose == 3) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_3_cost_cp();
         }
-        if (level == 4){
-            moneyToReturn=moneySP.getInt(L_4_COST_AD,0) * 56 ;
+        if (levelUserChoose == 4) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_4_cost_ad() * 56;
         }
-        if (level == 5){
-            moneyToReturn=moneySP.getInt(L_5_COST_AD,0) * 56 ;
+        if (levelUserChoose == 5) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_5_cost_ad() * 56;
         }
-        if (level == 6){
-            moneyToReturn=moneySP.getInt(L_6_COST_AD,0) * 56 ;
+        if (levelUserChoose == 6) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_6_cost_ad() * 56;
         }
-        if (level == 7){
-            moneyToReturn=moneySP.getInt(L_7_COST_GD,0) * 56 * 210 ;
+        if (levelUserChoose == 7) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_7_cost_gd() * 11720;
         }
-        if (level == 8){
-            moneyToReturn=moneySP.getInt(L_8_LOSE_GD,0) * 56 * 210 ;
+        if (levelUserChoose == 8) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_8_cost_gd() * 11720;
         }
-        if (level == 9){
-            moneyToReturn=moneySP.getInt(L_9_COST_GD,0) * 56 * 210 ;
+        if (levelUserChoose == 9) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_9_cost_gd() * 11720;
         }
-        if (level == 10){
-            moneyToReturn=moneySP.getInt(L_10_COST_GD,0) * 56 * 210 ;
+        if (levelUserChoose == 10) {
+            moneyToReturn = UserDataSingleton.getInstance().getL_10_cost_gd() * 11720;
         }
 
-        long userMoney = userSP.getLong(MONEY_TEMP,0);
-        userMoney+=moneyToReturn;
-        SharedPreferences.Editor editor = userSP.edit();
-        editor.putLong(MONEY_TEMP,userMoney);
-        editor.apply();
+        UserDataSingleton.getInstance().addUserMoney(moneyToReturn);
 
-        long[] coinsToReturn = sharedPreferencesFunctions.coins_GD_AD_CP(moneyToReturn);
-        int coinGD = (int) coinsToReturn[0];
-        int coinAD = (int) coinsToReturn[1];
-        int coinCP = (int) coinsToReturn[2];
-        getViewState().showAddedScore(coinGD, coinAD, coinCP);
+        long[] coinsToReturn = CoinConversation.coins_GD_AD_CP(moneyToReturn);
+        getViewState().showAddedScore((int) coinsToReturn[0], (int) coinsToReturn[1], (int) coinsToReturn[2]);
+    }
+
+    private long coinsToAdd(int level, boolean is_lose) {
+        long coins = 0;
+        if (is_lose) {
+            if (level == 1) {
+                coins = (UserDataSingleton.getInstance().getL_1_lose_cp());
+            }
+            if (level == 2) {
+                coins = (UserDataSingleton.getInstance().getL_2_lose_cp());
+            }
+            if (level == 3) {
+                coins = (UserDataSingleton.getInstance().getL_3_lose_cp());
+            }
+            if (level == 4) {
+                coins = (UserDataSingleton.getInstance().getL_4_lose_cp());
+            }
+            if (level == 5) {
+                coins = (UserDataSingleton.getInstance().getL_5_lose_ad() * 56);
+            }
+            if (level == 6) {
+                coins = (UserDataSingleton.getInstance().getL_6_lose_ad() * 56);
+            }
+            if (level == 7) {
+                coins = (UserDataSingleton.getInstance().getL_7_lose_ad() * 56);
+            }
+            if (level == 8) {
+                coins = (UserDataSingleton.getInstance().getL_8_lose_gd() * 11760);
+            }
+            if (level == 9) {
+                coins = (UserDataSingleton.getInstance().getL_9_lose_gd() * 11760);
+            }
+            if (level == 10) {
+                coins = (UserDataSingleton.getInstance().getL_10_lose_gd() * 11760);
+            }
+        } else {
+            if (level == 1) {
+                coins = (UserDataSingleton.getInstance().getL_1_reward_cp());
+            }
+            if (level == 2) {
+                coins = (UserDataSingleton.getInstance().getL_2_reward_cp());
+            }
+            if (level == 3) {
+                coins = (UserDataSingleton.getInstance().getL_3_reward_cp());
+            }
+            if (level == 4) {
+                coins = (UserDataSingleton.getInstance().getL_4_reward_ad() * 56);
+            }
+            if (level == 5) {
+                coins = (UserDataSingleton.getInstance().getL_5_reward_ad() * 56);
+            }
+            if (level == 6) {
+                coins = (UserDataSingleton.getInstance().getL_6_reward_ad() * 56);
+            }
+            if (level == 7) {
+                coins = (UserDataSingleton.getInstance().getL_7_reward_gd() * 11760);
+            }
+            if (level == 8) {
+                coins = (UserDataSingleton.getInstance().getL_8_reward_gd() * 11760);
+            }
+            if (level == 9) {
+                coins = (UserDataSingleton.getInstance().getL_9_reward_gd() * 11760);
+            }
+            if (level == 10) {
+                coins = (UserDataSingleton.getInstance().getL_10_reward_gd() * 11760);
+            }
+        }
+        return coins;
     }
 }
 
@@ -285,8 +294,8 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         int add_noa;
         int add_nog;
 
-        if (is_lose) addScore = level * questionCursor;
-        else addScore = level * questionCursor * 10;
+        if (is_lose) addScore = levelUserChoose * questionCursor;
+        else addScore = levelUserChoose * questionCursor * 10;
 
         scr += addScore;
 
@@ -313,7 +322,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         }
 
         Log.d("MyLogs", "score added " + addScore);
-        Log.d("MyLogs", "level " + lvl);
+        Log.d("MyLogs", "levelUserChoose " + lvl);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.COLUMN_U_LEVEL, lvl);
@@ -347,7 +356,7 @@ private int randomElement() {
             try {
                 database = databaseHelper.open();
                 cursor = database.query(DatabaseHelper.QTABLE, new String[]{DatabaseHelper.COLUMN_Q_ID_QUESTION},
-                        DatabaseHelper.COLUMN_Q_LEXEL + "=?", new String[]{String.valueOf(level)},
+                        DatabaseHelper.COLUMN_Q_LEXEL + "=?", new String[]{String.valueOf(levelUserChoose)},
                         null, null, null, null);
 
                 if (cursor != null) {

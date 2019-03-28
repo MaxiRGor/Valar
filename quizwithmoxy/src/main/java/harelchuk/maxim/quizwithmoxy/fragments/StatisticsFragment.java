@@ -1,7 +1,6 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
 import android.app.AlertDialog;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +16,10 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.squareup.picasso.Picasso;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
+import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
@@ -41,16 +40,10 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         names = new String[2];
         names[0] = "";
         names[1] = "";
-        setBackgroundsByTheme(0);
         return statisticsView;
     }
 
     private void setBackgroundsByTheme(int theme) {
-        Drawable windowImage = getResources().getDrawable(R.drawable.window_targariens);;
-
-        if(theme==0){
-            windowImage = getResources().getDrawable(R.drawable.window_targariens);
-        }
 
         ImageView nameWindow = statisticsView.findViewById(R.id.statisticsWindowUsernameImage);
         ImageView coinsWindow = statisticsView.findViewById(R.id.statisticsWindowCoinsImage);
@@ -59,25 +52,37 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         ImageView emblemsWindow = statisticsView.findViewById(R.id.statisticsWindowEmblemsImage);
         ImageView debitWindow = statisticsView.findViewById(R.id.statisticsWindowDebitImage);
         ImageView creditWindow = statisticsView.findViewById(R.id.statisticsWindowCreditImage);
-
-        nameWindow.setBackground(windowImage);
-        coinsWindow.setBackground(windowImage);
-        roundsWindow.setBackground(windowImage);
-        winningsWindow.setBackground(windowImage);
-        emblemsWindow.setBackground(windowImage);
-        debitWindow.setBackground(windowImage);
-        creditWindow.setBackground(windowImage);
+        if (theme == 0) {
+            nameWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            coinsWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            roundsWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            winningsWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            emblemsWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            debitWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            creditWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+        }
+        if (theme == 2) {
+            nameWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            coinsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            roundsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            winningsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            emblemsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            debitWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+            creditWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+        }
     }
 
     @Override
     public void showStatistics(String user_name, final long money_GD_temp, final long money_AD_temp, final long money_CP_temp,
-                               long money_GD_all, long money_AD_all, long money_CP_all,
                                int number_easy_games, int number_medium_games, int number_hard_games,
                                int number_easy_winnings, int number_medium_winnings, int number_hard_winnings,
-                               boolean is_books, boolean is_films,
+                               boolean is_books, boolean is_films, int current_theme,
                                boolean is_skin_targar, boolean is_skin_stark, boolean is_skin_lann, boolean is_skin_night,
                                boolean is_credit, long credit_time, long credit_sum,
                                boolean is_debit, long debit_time, long debit_sum) {
+
+        setBackgroundsByTheme(current_theme);
+
         EditText user_name_TV = statisticsView.findViewById(R.id.userNameTV);
         ImageView booksFilmsImage = statisticsView.findViewById(R.id.userReadWatchIV);
         TextView user_GD_temp_TV = statisticsView.findViewById(R.id.userGDTempTV);
@@ -101,8 +106,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         final TextView user_credit_value_TV = statisticsView.findViewById(R.id.userCreditValueTV);
         final long coinsADLong = money_GD_temp * 210 + money_AD_temp;
         final long coinsCPLong = coinsADLong * 56 + money_CP_temp;
-
-        int current_theme = 0;
 
         ImageView coinsWindow = statisticsView.findViewById(R.id.statisticsWindowCoinsImage);
         coinsWindow.setOnClickListener(new View.OnClickListener() {
@@ -205,12 +208,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         user_GD_temp_TV.setText(String.valueOf(money_GD_temp));
         user_AD_temp_TV.setText(String.valueOf(money_AD_temp));
         user_CP_temp_TV.setText(String.valueOf(money_CP_temp));
-        //user_GD_all_TV.setText(String.valueOf(money_GD_all));
-        //user_AD_all_TV.setText(String.valueOf(money_AD_all));
-        //user_CP_all_TV.setText(String.valueOf(money_CP_all));
-        //user_GD_all_TV.setVisibility(View.INVISIBLE);
-        //user_AD_all_TV.setVisibility(View.INVISIBLE);
-        //user_CP_all_TV.setVisibility(View.INVISIBLE);
         user_rounds_GD_TV.setText(String.valueOf(number_hard_games));
         user_rounds_AD_TV.setText(String.valueOf(number_medium_games));
         user_rounds_CP_TV.setText(String.valueOf(number_easy_games));
@@ -232,7 +229,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             public void afterTextChanged(Editable s) {
             }
         });
-
 
 
         if (is_skin_targar) {
@@ -268,9 +264,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             user_skin_night_TV.setText(R.string.unavailable);
         }
         if (is_debit) {
-            //user_debit_value_TV.setText(String.valueOf(debit_sum));
-            SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
-            long coins[] = sharedPreferencesFunctions.coins_GD_AD_CP(debit_sum);
+            long coins[] = CoinConversation.coins_GD_AD_CP(debit_sum);
             ImageView GD = statisticsView.findViewById(R.id.userDebitGDImage);
             ImageView AD = statisticsView.findViewById(R.id.userDebitADImage);
             ImageView CP = statisticsView.findViewById(R.id.userDebitCPImage);
@@ -293,9 +287,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
         }
         if (is_credit) {
-            //user_credit_value_TV.setText(String.valueOf(credit_sum));
-            SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
-            long coins[] = sharedPreferencesFunctions.coins_GD_AD_CP(credit_sum);
+            long coins[] = CoinConversation.coins_GD_AD_CP(credit_sum);
             ImageView GD = statisticsView.findViewById(R.id.userCreditGDImage);
             ImageView AD = statisticsView.findViewById(R.id.userCreditADImage);
             ImageView CP = statisticsView.findViewById(R.id.userCreditCPImage);
@@ -324,22 +316,6 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         } else {
             booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
         }
-/*
-
-        ImageView skinWindowImage = statisticsView.findViewById(R.id.imageViewWindow4);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(),"YES",Toast.LENGTH_SHORT).show();
-                final LayoutInflater inflater = getLayoutInflater();
-                final View view = inflater.inflate(R.layout.tab_menu,null);
-                BottomNavigationView navigationView = view.findViewById(R.id.navigation);
-                MenuItem goto3 = navigationView.findViewById(R.id.navigation_settings);
-                onOptionsItemSelected(goto3);
-            }
-        };
-        skinWindowImage.setOnClickListener(onClickListener);
-        */
     }
 
     @Override

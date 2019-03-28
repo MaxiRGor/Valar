@@ -1,8 +1,6 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesFunctions;
+import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
 import harelchuk.maxim.quizwithmoxy.presenter.SetBankPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SetBankView;
 
@@ -27,12 +25,10 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     SetBankPresenter setBankPresenter;
 
     public View view;
-    SharedPreferencesFunctions sharedPreferencesFunctions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bank_fragment, container, false);
-        sharedPreferencesFunctions = new SharedPreferencesFunctions();
         return view;
     }
 
@@ -75,17 +71,14 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         final TextView bankDebitAddSumCPTV = view.findViewById(R.id.bankDebitAddSumCPTV);
         final TextView bankDebitAddSumADTV = view.findViewById(R.id.bankDebitAddSumADTV);
         final TextView bankDebitAddSumGDTV = view.findViewById(R.id.bankDebitAddSumGDTV);
-        //final SharedPreferencesFunctions sharedPreferencesFunctions = new SharedPreferencesFunctions();
-
-        //if (is_debit) addDebitSeekBar.setProgress(0);
 
         showAddDebitCoins(addDebitSeekBar.getProgress(), user_money,
-                sharedPreferencesFunctions, bankDebitAddSumGDTV, bankDebitAddSumADTV, bankDebitAddSumCPTV);
+                bankDebitAddSumGDTV, bankDebitAddSumADTV, bankDebitAddSumCPTV);
 
         addDebitSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                showAddDebitCoins(progress, user_money, sharedPreferencesFunctions, bankDebitAddSumGDTV, bankDebitAddSumADTV, bankDebitAddSumCPTV);
+                showAddDebitCoins(progress, user_money, bankDebitAddSumGDTV, bankDebitAddSumADTV, bankDebitAddSumCPTV);
             }
 
             @Override
@@ -189,12 +182,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         if (is_credit) getCreditSeekBar.setProgress(0);
 
         showAddCreditCoins(getCreditSeekBar.getProgress(), user_money,
-                sharedPreferencesFunctions, creditGetGDTV, creditGetADTV, creditGetCPTV);
+                creditGetGDTV, creditGetADTV, creditGetCPTV);
 
         getCreditSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                showAddCreditCoins(progress, user_money, sharedPreferencesFunctions,
+                showAddCreditCoins(progress, user_money,
                         creditGetGDTV, creditGetADTV, creditGetCPTV);
             }
 
@@ -238,7 +231,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                         final long sum_to_get = user_money * progress;
                         if (sum_to_get > 0) {
                             setBankPresenter.writeCreditIntoSP(sum_to_get);
-                        } else{
+                        } else {
                             String title = getResources().getString(R.string.credit);
                             String text = getResources().getString(R.string.selectSum);
                             showAlertMessage(title, text);
@@ -282,7 +275,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                         bankDebitAddSumCPTV.setVisibility(View.INVISIBLE);
                         bankDebitAddSumADTV.setVisibility(View.INVISIBLE);
                         bankDebitAddSumGDTV.setVisibility(View.INVISIBLE);
-                        setBankPresenter.writeDebitIntoSP(sum_to_add);
+                        setBankPresenter.addDebit(sum_to_add);
                     } else {
                         String title = getResources().getString(R.string.debit);
                         String text = getResources().getString(R.string.selectSum);
@@ -296,10 +289,9 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     }
 
     private void showAddCreditCoins(int progress, long user_money,
-                                    SharedPreferencesFunctions sharedPreferencesFunctions,
                                     TextView creditGetGDTV, TextView creditGetADTV, TextView creditGetCPTV) {
         final long sum_to_get = user_money * progress;
-        long[] coinsGAC = sharedPreferencesFunctions.coins_GD_AD_CP(sum_to_get);
+        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(sum_to_get);
         if (coinsGAC[0] != 0) {
             creditGetGDTV.setText(String.valueOf(coinsGAC[0]));
             creditGetGDTV.setVisibility(View.VISIBLE);
@@ -315,10 +307,10 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
 
     }
 
-    private void showAddDebitCoins(int progress, long user_money, SharedPreferencesFunctions sharedPreferencesFunctions,
+    private void showAddDebitCoins(int progress, long user_money,
                                    TextView bankDebitAddSumGDTV, TextView bankDebitAddSumADTV, TextView bankDebitAddSumCPTV) {
         final long sum_to_add = user_money * progress / 10;
-        long[] coinsGAC = sharedPreferencesFunctions.coins_GD_AD_CP(sum_to_add);
+        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(sum_to_add);
         if (coinsGAC[0] != 0) {
             bankDebitAddSumGDTV.setText(String.valueOf(coinsGAC[0]));
             bankDebitAddSumGDTV.setVisibility(View.VISIBLE);

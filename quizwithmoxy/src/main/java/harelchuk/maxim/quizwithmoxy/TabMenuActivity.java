@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import harelchuk.maxim.quizwithmoxy.fragments.SettingsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.StatisticsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.TuneGameFragment;
-import harelchuk.maxim.quizwithmoxy.model.SharedPreferencesInitializer;
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 
 public class TabMenuActivity extends AppCompatActivity {
 
@@ -22,8 +22,8 @@ public class TabMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab_menu);
 
-        SharedPreferencesInitializer.setSharedPreferencesMoney(getApplicationContext());
-        SharedPreferencesInitializer.setSharedPreferencesUser(getApplicationContext());
+        //int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
 
         final ImageView imageView = findViewById(R.id.imageViewMenu);
 
