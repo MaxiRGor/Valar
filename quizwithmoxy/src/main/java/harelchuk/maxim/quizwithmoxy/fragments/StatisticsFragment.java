@@ -19,7 +19,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
-import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
@@ -62,13 +61,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             creditWindow.setBackground(getResources().getDrawable(R.drawable.window_targariens));
         }
         if (theme == 2) {
-            nameWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            coinsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            roundsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            winningsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            emblemsWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            debitWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
-            creditWindow.setBackground(getResources().getDrawable(R.drawable.emblem_lann));
+
         }
     }
 
@@ -309,9 +302,9 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         }
         if (is_books) {
             if (is_films) {
-                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
+                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_films_pressed));
             } else {
-                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
+                booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_pressed));
             }
         } else {
             booksFilmsImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));

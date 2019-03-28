@@ -14,7 +14,5 @@ public interface InPlayView extends MvpView {
 
     void showAddedScore(int coinGD, int coinAD, int coinCP);
 
-    void findElement();
-
     void showFailure();
 }

@@ -1,6 +1,5 @@
 package harelchuk.maxim.quizwithmoxy.presenter;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;

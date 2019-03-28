@@ -22,7 +22,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     @InjectPresenter
     InPlayPresenter inPlayPresenter;
 
-    private ViewGroup viewGroupQuestionFrame;
+    private ViewGroup questionContainer;
     private TextView coinsGD;
     private TextView coinsAD;
     private TextView coinsCP;
@@ -30,31 +30,43 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     private ImageView coinADImage;
     private ImageView coinCPImage;
 
+    private TextView questionLevelTV;
+    private TextView questionCategoryTV;
+    private ImageView bookFilmImage;
+    private ImageView categoryImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.in_play_empty_frame);
+        ImageView questionDescriptionBackground = findViewById(R.id.inPlayWindDescrIV);
+        ImageView backgroundImage = findViewById(R.id.inPlayBackgroundIV);
+        this.questionContainer = findViewById(R.id.frameQuestionLayout);
+        this.questionLevelTV = findViewById(R.id.inPlayLevelTV);
+        this.questionCategoryTV = findViewById(R.id.inPlayCategoryTV);
+        this.bookFilmImage = findViewById(R.id.inPlayBookFilmImage);
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+            Picasso.get()
+                    .load(R.drawable.targ_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundImage);
+            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+        }
     }
 
-    @Override
-    public void findElement() {
-        viewGroupQuestionFrame = findViewById(R.id.frameQuestionLayout);
-        ImageView backgroundImage = findViewById(R.id.inPlayBackgroundIV);
-        Picasso.get()
-                .load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(backgroundImage);
-    }
 
     @Override
     public void showQuestion(int questionsToTheEnd, String question, String a1, String a2, String a3, String a4, int category,
                              int level, boolean inBook, boolean inSerial) {
 
-        TextView questionLevelTV = findViewById(R.id.inPlayLevelTV);
-        TextView questionCategoryTV = findViewById(R.id.inPlayCategoryTV);
         String[] categories = getResources().getStringArray(R.array.categories);
-        ImageView bookFilmImage = findViewById(R.id.inPlayBookFilmImage);
+
+        this.questionContainer.removeAllViews();
+        View currentQuestionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, questionContainer, false);
+        this.questionContainer.addView(currentQuestionView);
+
         ImageView currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
         setQuestionCategoryImage(category);
 
@@ -63,9 +75,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         if (inBook) {
             if (inSerial) {
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_films_red));
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_films_pressed));
             } else
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_books_red));
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_pressed));
         } else
             bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
 
@@ -93,23 +105,30 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                 break;
         }
 
-        viewGroupQuestionFrame.removeAllViews();
-        View questionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, viewGroupQuestionFrame, false);
-        viewGroupQuestionFrame.addView(questionView);
 
-        questionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
-
-        final TextView qTTV = questionView.findViewById(R.id.questionTextTV);
-        final TextView a1TV = questionView.findViewById(R.id.answer1TV);
-        final TextView a2TV = questionView.findViewById(R.id.answer2TV);
-        final TextView a3TV = questionView.findViewById(R.id.answer3TV);
-        final TextView a4TV = questionView.findViewById(R.id.answer4TV);
+        final TextView qTTV = currentQuestionView.findViewById(R.id.questionTextTV);
+        final TextView a1TV = currentQuestionView.findViewById(R.id.answer1TV);
+        final TextView a2TV = currentQuestionView.findViewById(R.id.answer2TV);
+        final TextView a3TV = currentQuestionView.findViewById(R.id.answer3TV);
+        final TextView a4TV = currentQuestionView.findViewById(R.id.answer4TV);
 
         qTTV.setText(question);
         a1TV.setText(a1);
         a2TV.setText(a2);
         a3TV.setText(a3);
         a4TV.setText(a4);
+
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+            qTTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            a1TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+            a2TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+            a3TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+            a4TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+        }
+
+        currentQuestionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
 
         final ImageView finalCurrentQuestionImage = currentQuestionImage;
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -237,7 +256,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     }
 
     void setQuestionCategoryImage(int category) {
-        ImageView categoryImage = findViewById(R.id.inPlayCategoryImage);
+        this.categoryImage = findViewById(R.id.inPlayCategoryImage);
         if (category == 0) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_0_obschie));
         }
@@ -279,63 +298,97 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
     @Override
     public void userWin() {
-        ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
-        emptyView.removeAllViews();
-        View userWin = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, emptyView, false);
-        ImageView backgroundIV = userWin.findViewById(R.id.userWinBackgroundIV);
+        //ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
+        //emptyView.setBackground(getResources().getDrawable(R.drawable.blackscreen));
+        this.questionCategoryTV.setVisibility(View.INVISIBLE);
+        this.bookFilmImage.setVisibility(View.INVISIBLE);
+        this.categoryImage.setVisibility(View.INVISIBLE);
+        this.questionContainer.removeAllViews();
+        View userWin = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, questionContainer, false);
+        this.questionContainer.addView(userWin);
+        //ImageView backgroundIV = userWin.findViewById(R.id.userWinBackgroundIV);
+        ImageView userWinTextBackgroundTV = userWin.findViewById(R.id.userWinTextBackgroundTV);
+        ImageView userWinAnimalImage = userWin.findViewById(R.id.userWinWarriorIV);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+            /*Picasso.get()
+                    .load(R.drawable.targ_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundIV);*/
+            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            Picasso.get()
+                    .load(R.drawable.targ_win_warrior)
+                    //.fit()
+                    //.placeholder(R.drawable.blackscreen)
+                    .into(userWinAnimalImage);
+        }
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         };
-        backgroundIV.setOnClickListener(onClickListener);
-        Picasso.get()
-                .load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(backgroundIV);
-        coinsGD = userWin.findViewById(R.id.userWinCoinsGD);
-        coinsAD = userWin.findViewById(R.id.userWinCoinsAD);
-        coinsCP = userWin.findViewById(R.id.userWinCoinsCP);
-        coinGDImage = userWin.findViewById(R.id.endGameGDImage);
-        coinADImage = userWin.findViewById(R.id.endGameADImage);
-        coinCPImage = userWin.findViewById(R.id.endGameCPImage);
-        emptyView.addView(userWin);
+
+        this.questionContainer.setOnClickListener(onClickListener);
+
+        this.coinsGD = userWin.findViewById(R.id.userWinCoinsGD);
+        this.coinsAD = userWin.findViewById(R.id.userWinCoinsAD);
+        this.coinsCP = userWin.findViewById(R.id.userWinCoinsCP);
+        this.coinGDImage = userWin.findViewById(R.id.endGameGDImage);
+        this.coinADImage = userWin.findViewById(R.id.endGameADImage);
+        this.coinCPImage = userWin.findViewById(R.id.endGameCPImage);
         inPlayPresenter.sendInfoToUserStat();
     }
 
     @Override
     public void userLose(int answered) {
-        ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
-        emptyView.removeAllViews();
+        //ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
+        this.questionCategoryTV.setVisibility(View.INVISIBLE);
+        this.bookFilmImage.setVisibility(View.INVISIBLE);
+        this.categoryImage.setVisibility(View.INVISIBLE);
+        this.questionContainer.removeAllViews();
+        //emptyView.removeAllViews();
+        //emptyView.setBackground(getResources().getDrawable(R.drawable.blackscreen));
         View userLose;
-        userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
+        userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
+        questionContainer.addView(userLose);
+        //ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
 
-        ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
+        ImageView userLoseTextBackgroundTV = userLose.findViewById(R.id.userLoseTextBackgroundTV);
+        ImageView useLoseAnimalImage = userLose.findViewById(R.id.userLoseWarriorIV);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+           /* Picasso.get()
+                    .load(R.drawable.targ_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundIV);*/
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            Picasso.get()
+                    .load(R.drawable.targ_warrior_fail)
+                    .into(useLoseAnimalImage);
+        }
+
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         };
-        backgroundIV.setOnClickListener(onClickListener);
-        //backgroundIV.setVisibility(View.VISIBLE);
-        Picasso.get()
-                .load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(backgroundIV);
-
+        this.questionContainer.setOnClickListener(onClickListener);
         TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
         answeredTV.setText(String.valueOf(answered));
-        coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
-        coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
-        coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
-        coinGDImage = userLose.findViewById(R.id.endGameGDImage);
-        coinADImage = userLose.findViewById(R.id.endGameADImage);
-        coinCPImage = userLose.findViewById(R.id.endGameCPImage);
-        emptyView.addView(userLose);
+        this.coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
+        this.coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
+        this.coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
+        this.coinGDImage = userLose.findViewById(R.id.endGameGDImage);
+        this.coinADImage = userLose.findViewById(R.id.endGameADImage);
+        this.coinCPImage = userLose.findViewById(R.id.endGameCPImage);
+
         inPlayPresenter.sendInfoToUserStat();
     }
 
@@ -361,26 +414,40 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
     @Override
     public void showFailure() {
-        ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
-        emptyView.removeAllViews();
-        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, emptyView, false);
-        ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
-        Picasso.get()
-                .load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(backgroundIV);
+
+        this.questionCategoryTV.setVisibility(View.INVISIBLE);
+        this.bookFilmImage.setVisibility(View.INVISIBLE);
+        this.questionContainer.removeAllViews();
+
+        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
+        questionContainer.addView(userLose);
+
+        ImageView userLoseTextBackgroundTV = userLose.findViewById(R.id.userLoseTextBackgroundTV);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+        }
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        };
+        this.questionContainer.setOnClickListener(onClickListener);
+
         TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
         TextView notConnectedTV = userLose.findViewById(R.id.loseTV);
         notConnectedTV.setText(getResources().getString(R.string.notConnected));
-        coinGDImage = userLose.findViewById(R.id.endGameGDImage);
-        coinADImage = userLose.findViewById(R.id.endGameADImage);
-        coinCPImage = userLose.findViewById(R.id.endGameCPImage);
+        this.coinGDImage = userLose.findViewById(R.id.endGameGDImage);
+        this.coinADImage = userLose.findViewById(R.id.endGameADImage);
+        this.coinCPImage = userLose.findViewById(R.id.endGameCPImage);
         answeredTV.setText(String.valueOf(0));
-        coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
-        coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
-        coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
-        emptyView.addView(userLose);
+        this.coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
+        this.coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
+        this.coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
+
         inPlayPresenter.sendFailToUserStat();
     }
 

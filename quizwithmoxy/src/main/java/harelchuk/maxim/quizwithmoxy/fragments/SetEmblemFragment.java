@@ -8,36 +8,113 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.squareup.picasso.Picasso;
 
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
+import harelchuk.maxim.quizwithmoxy.presenter.SetEmblemPresenter;
+import harelchuk.maxim.quizwithmoxy.view.SetEmblemView;
 
-public class SetEmblemFragment extends MvpAppCompatFragment {
+public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblemView {
+
+    @InjectPresenter
+    SetEmblemPresenter setEmblemPresenter;
+
+    private View setEmblemView;
+    private ImageView targEmblem;
+    private ImageView starkEmblem;
+    private ImageView lannEmblem;
+    private ImageView nightEmblem;
+
+    private TextView targButton;
+    private TextView starkButton;
+    private TextView lannButton;
+    private TextView nightButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.set_emblem_fragment, container, false);
-        function(view);
-        return view;
+        this.setEmblemView = inflater.inflate(R.layout.set_emblem_fragment, container, false);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
+        ImageView background = setEmblemView.findViewById(R.id.emblemImageViewBackground);
+        if (theme == 0) {
+            background.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+        }
+
+        this.targEmblem = setEmblemView.findViewById(R.id.emblemTargImage);
+        this.starkEmblem = setEmblemView.findViewById(R.id.emblemStarkImage);
+        this.lannEmblem = setEmblemView.findViewById(R.id.emblemLannImage);
+        this.nightEmblem = setEmblemView.findViewById(R.id.emblemNKImage);
+
+        this.targButton = setEmblemView.findViewById(R.id.emblemUserSkinTargarTV);
+        this.starkButton = setEmblemView.findViewById(R.id.emblemUserSkinStarksTV);
+        this.lannButton = setEmblemView.findViewById(R.id.emblemUserSkinLannTV);
+        this.nightButton = setEmblemView.findViewById(R.id.emblemUserSkinNKTV);
+
+        setOnClickListeners();
+
+        return setEmblemView;
     }
 
-    private void function(View view) {
-        TextView starksTV = view.findViewById(R.id.emblemUserSkinStarksTV);
-
+    private void setOnClickListeners() {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ImageView imageView = getActivity().
-                        findViewById(R.id.imageViewMenu);
-                Picasso.get().
-                        load(R.drawable.background_starks)
-                        .fit()
-                        .placeholder(R.drawable.blackscreen)
-                        .into(imageView);
-            }
-        };
+                switch (v.getId()){
+                    case R.id.emblemUserSkinTargarTV:
+                        //setEmblemPresenter.checkTargar();
+                        break;
+                    case R.id.emblemUserSkinStarksTV:
+                        //setEmblemPresenter.checkStark();
+                        break;
+                    case R.id.emblemUserSkinLannTV:
+                        //setEmblemPresenter.checkLann();
+                        break;
+                    case R.id.emblemUserSkinNKTV:
+                        //setEmblemPresenter.checkNight();
+                        break;
+                    }
+                }
+            };
+        this.targButton.setOnClickListener(onClickListener);
+        this.lannButton.setOnClickListener(onClickListener);
+        this.starkButton.setOnClickListener(onClickListener);
+        this.nightButton.setOnClickListener(onClickListener);
+    }
 
-        starksTV.setOnClickListener(onClickListener);
 
+    @Override
+    public void fillEmblems(int theme, boolean is_targar, boolean is_starks, boolean is_lann, boolean is_night) {
+        if (is_targar) {
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_yes));
+        } else
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_not));
+        if (is_starks) {
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_yes));
+        } else
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_not));
+        if (is_lann) {
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_yes));
+        } else
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_not));
+        if (is_night) {
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_yes));
+        } else
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_not));
 
+        if (theme == 0) {
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_en));
+        }
+        if (theme == 1) {
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_en));
+        }
+        if (theme == 2) {
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_en));
+        }
+        if (theme == 3) {
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_en));
+        }
     }
 }

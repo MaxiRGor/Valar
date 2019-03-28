@@ -39,7 +39,6 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         this.questionCursor = 0;
         this.is_lose = false;
         getQuestionsByLevelFromServer(levelUserChoose);
-        getViewState().findElement();
     }
 
 

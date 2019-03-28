@@ -20,28 +20,32 @@ public class TabMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tab_menu);
+        setContentView(R.layout.main_layout_with_bottom_navigation);
 
-        //int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        final ImageView imageView = findViewById(R.id.mainBackground);
+        final BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
+        if (theme == 0) {
+            Picasso.get()
+                    .load(R.drawable.targ_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(imageView);
 
-        final ImageView imageView = findViewById(R.id.imageViewMenu);
+            navigation.getMenu().getItem(0).setIcon(R.drawable.targ_ic_menu_play_selector);
+            navigation.getMenu().getItem(1).setIcon(R.drawable.targ_menu_statistics_selector);
+            navigation.getMenu().getItem(2).setIcon(R.drawable.targ_menu_settings_selector);
+        }
 
-        Picasso.get().
-                load(R.drawable.background_targ)
-                .fit()
-                .placeholder(R.drawable.blackscreen)
-                .into(imageView);
+        navigation.setItemIconTintList(null);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction
                     .add(R.id.main_container, new TuneGameFragment()).commit();
         }
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setItemIconTintList(null);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
 
@@ -52,7 +56,7 @@ public class TabMenuActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.from_bottom_to_center,R.anim.from_center_to_bottom);
+                    .setCustomAnimations(R.anim.from_bottom_to_center, R.anim.from_center_to_bottom);
 
             switch (item.getItemId()) {
                 case R.id.navigation_play:

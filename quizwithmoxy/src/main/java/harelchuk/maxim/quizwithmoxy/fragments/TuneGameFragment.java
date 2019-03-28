@@ -38,6 +38,8 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     TuneGamePresenter gamePresenter;
 
     private View tuneGameMenuView;
+    private ImageView moneyImage;
+    private RecyclerView recyclerView;
 
     private Context context;
     private long[] coinsGAC;
@@ -48,9 +50,16 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.context = getContext();
-        //ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
-        //mainContainerVG.removeAllViews();
-        tuneGameMenuView = inflater.inflate(R.layout.tune_game_empty, container, false);
+        this.tuneGameMenuView = inflater.inflate(R.layout.tune_game_empty, container, false);
+        this.recyclerView= tuneGameMenuView.findViewById(R.id.recyclerView);
+        this.moneyImage = tuneGameMenuView.findViewById(R.id.tuneGameMoneyBackground);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
+        if (theme == 0) {
+            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+        }
 
         this.coinsGAC = new long[2];
         this.level_costs = new int[9];
@@ -71,7 +80,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Override
     public void fillLevelList(ArrayList<Map<String, Integer>> data, int[] costs) {
         level_costs = costs;
-        RecyclerView recyclerView = tuneGameMenuView.findViewById(R.id.recyclerView);
         DataAdapter adapter = new DataAdapter(getContext(), data);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
@@ -114,7 +122,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         final TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         final TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
         //ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
-        ImageView moneyImage = tuneGameMenuView.findViewById(R.id.windowUserMoneyIV);
+        //
         coins_AD.startAnimation(animation);
         coins_CP.startAnimation(animation);
         coins_GD.startAnimation(animation);
@@ -134,7 +142,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflate(context,R.layout.alertdialog_money_describtion, null);
+        View dialogView = inflate(context, R.layout.alertdialog_money_describtion, null);
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
         Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
