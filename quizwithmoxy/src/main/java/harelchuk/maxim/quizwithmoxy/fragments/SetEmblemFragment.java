@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.squareup.picasso.Picasso;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
@@ -40,7 +39,10 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
 
         ImageView background = setEmblemView.findViewById(R.id.emblemImageViewBackground);
         if (theme == 0) {
-            background.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            background.setBackground(getResources().getDrawable(R.drawable.targ_window));
+        }
+        if (theme == 2) {
+            background.setBackground(getResources().getDrawable(R.drawable.lann_window));
         }
 
         this.targEmblem = setEmblemView.findViewById(R.id.emblemTargImage);
@@ -65,12 +67,16 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
                 switch (v.getId()){
                     case R.id.emblemUserSkinTargarTV:
                         //setEmblemPresenter.checkTargar();
+                        UserDataSingleton.getInstance().setCurrent_theme(0);
+                        UserDataSingleton.getInstance().setIs_skin_targar(true);
                         break;
                     case R.id.emblemUserSkinStarksTV:
                         //setEmblemPresenter.checkStark();
                         break;
                     case R.id.emblemUserSkinLannTV:
                         //setEmblemPresenter.checkLann();
+                        UserDataSingleton.getInstance().setCurrent_theme(2);
+                        UserDataSingleton.getInstance().setIs_skin_lann(true);
                         break;
                     case R.id.emblemUserSkinNKTV:
                         //setEmblemPresenter.checkNight();
@@ -88,33 +94,33 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
     @Override
     public void fillEmblems(int theme, boolean is_targar, boolean is_starks, boolean is_lann, boolean is_night) {
         if (is_targar) {
-            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_yes));
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.logo_dragon_yes));
         } else
-            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_not));
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.logo_dragon_not));
         if (is_starks) {
-            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_yes));
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.logo_wolf_yes));
         } else
-            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_not));
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.logo_wolf_not));
         if (is_lann) {
-            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_yes));
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.logo_lion_yes));
         } else
-            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_not));
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.logo_lion_not));
         if (is_night) {
-            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_yes));
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.logo_nk_yes));
         } else
-            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_not));
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.logo_nk_not));
 
         if (theme == 0) {
-            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_dragon_en));
+            this.targEmblem.setBackground(getResources().getDrawable(R.drawable.logo_dragon_en));
         }
         if (theme == 1) {
-            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_wolf_en));
+            this.starkEmblem.setBackground(getResources().getDrawable(R.drawable.logo_wolf_en));
         }
         if (theme == 2) {
-            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_lion_en));
+            this.lannEmblem.setBackground(getResources().getDrawable(R.drawable.logo_lion_en));
         }
         if (theme == 3) {
-            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.ic_logo_nk_en));
+            this.nightEmblem.setBackground(getResources().getDrawable(R.drawable.logo_nk_en));
         }
     }
 }

@@ -3,6 +3,7 @@ package harelchuk.maxim.quizwithmoxy.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -57,8 +58,12 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
         if (theme == 0) {
-            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.window_targariens));
-            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.targ_window));
+            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.targ_window));
+        }
+        if(theme == 2){
+            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.lann_window));
         }
 
         this.coinsGAC = new long[2];
@@ -130,6 +135,30 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         coins_AD.setText(String.valueOf(coins_GAC[1]));
         coins_CP.setText(String.valueOf(coins_GAC[2]));
 
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
+        Drawable alertDialogButtonImage1 = null;
+        Drawable alertDialogWindowImage1 = null;
+
+        if(theme==0){
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.targ_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.targ_window);
+        }
+
+        if(theme==2){
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.lann_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.lann_window);
+        }
+
+
+
+        final Drawable alertDialogButtonImage = alertDialogButtonImage1;
+        final Drawable alertDialogWindowImage = alertDialogWindowImage1;
+
+
+
+
         final long[] coinsInCPCAG = {coinsGAC[0] * 210 * 56 + coinsGAC[1] * 56 + coinsGAC[2],
                 coinsGAC[0] * 210 + coinsGAC[1],
                 coinsGAC[0]};
@@ -141,11 +170,17 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         final String three = String.valueOf(coinsInCPCAG[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = getLayoutInflater();
+        //LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflate(context, R.layout.alertdialog_money_describtion, null);
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
+
+        ImageView background = dialogView.findViewById(R.id.alertDialogBackgroundImage);
+        background.setBackground(alertDialogWindowImage);
+
+
         Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
+        closeDialogButton.setBackground(alertDialogButtonImage);
         TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
         titleTV.setText(getResources().getString(R.string.money));
         TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);

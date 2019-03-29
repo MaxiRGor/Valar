@@ -1,6 +1,7 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
 import android.app.AlertDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,9 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     private TextView getCreditTV;
     private TextView returnCreditTV;
 
+    private Drawable alertDialogButtonImage;
+    private Drawable alertDialogWindowImage;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,12 +49,24 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
-            bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.window_targariens));
-            bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.targ_window));
+            bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.targ_window));
             returnDebitTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             addDebitTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             getCreditTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+            alertDialogButtonImage = getResources().getDrawable(R.drawable.targ_button_selector);
+            alertDialogWindowImage = getResources().getDrawable(R.drawable.targ_window);
+        }
+        if (theme == 2) {
+            bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            returnDebitTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            addDebitTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            getCreditTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            returnCreditTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            alertDialogButtonImage = getResources().getDrawable(R.drawable.lann_button_selector);
+            alertDialogWindowImage = getResources().getDrawable(R.drawable.lann_window);
         }
         return bankView;
     }
@@ -91,6 +107,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         TextView debitADTV = bankView.findViewById(R.id.bankDebitSumADTV);
         TextView debitCPTV = bankView.findViewById(R.id.bankDebitSumCPTV);
         SeekBar addDebitSeekBar = bankView.findViewById(R.id.bankAddDebitSeekBar);
+
         final TextView bankDebitAddSumCPTV = bankView.findViewById(R.id.bankDebitAddSumCPTV);
         final TextView bankDebitAddSumADTV = bankView.findViewById(R.id.bankDebitAddSumADTV);
         final TextView bankDebitAddSumGDTV = bankView.findViewById(R.id.bankDebitAddSumGDTV);
@@ -354,18 +371,27 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.alertdialog_text_message, null);
         builder.setView(dialogView);
+
         final AlertDialog dialog = builder.create();
+
+        ImageView background = dialogView.findViewById(R.id.alertDialogBackgroundImage);
+        background.setBackground(alertDialogWindowImage);
+
         Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
-        TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
-        titleTV.setText(alertTitle);
-        TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
-        textTV.setText(alertText);
+        closeDialogButton.setBackground(alertDialogButtonImage);
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
             }
         });
+
+        TextView titleTV = dialogView.findViewById(R.id.alert_dialog_text_title_TV);
+        titleTV.setText(alertTitle);
+
+        TextView textTV = dialogView.findViewById(R.id.alert_dialog_text_TV);
+        textTV.setText(alertText);
+
         dialog.getWindow().setDimAmount(0.8f);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
         dialog.show();

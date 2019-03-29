@@ -15,6 +15,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.TabMenuActivity;
 import harelchuk.maxim.quizwithmoxy.model.PagerAdapter;
+import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.SettingsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SettingsView;
 
@@ -33,13 +34,26 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
         //settingsView.startAnimation(animation);
 
         View view1 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
-        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_set_book_or_film_selector);
-
         View view2 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
-        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_set_emblem_selector);
-
         View view3 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
-        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_set_bank_selector);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
+        if(theme==0){
+            view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_books_films_selector);
+            view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_emblem_selector);
+            view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_bank_selector);
+        }
+        if(theme==2){
+            view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_books_films_selector);
+            view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_emblem_selector);
+            view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_bank_selector);
+        }
+
+
+
+
+
 
 
         TabLayout tabLayout = (TabLayout) settingsView.findViewById(R.id.tab_layout);

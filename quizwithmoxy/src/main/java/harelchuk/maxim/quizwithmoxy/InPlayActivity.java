@@ -52,8 +52,18 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
-            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
+
+        if (theme == 2) {
+            Picasso.get()
+                    .load(R.drawable.lann_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundImage);
+            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+
     }
 
 
@@ -75,11 +85,11 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         if (inBook) {
             if (inSerial) {
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_films_pressed));
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_books_films_unpressed));
             } else
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.targ_set_books_pressed));
+                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_book_unpressed));
         } else
-            bookFilmImage.setBackground(getResources().getDrawable(R.drawable.ic_set_films_red));
+            bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_films_unpressed));
 
         bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_left_to_center));
 
@@ -121,11 +131,19 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
-            qTTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            qTTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
             a1TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             a2TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             a3TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             a4TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
+        }
+
+        if (theme == 2) {
+            qTTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            a1TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            a2TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            a3TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+            a4TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
         }
 
         currentQuestionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
@@ -138,7 +156,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             @Override
             public void onClick(View v) {
                 Picasso.get()
-                        .load(R.drawable.ic_logo_dragon_yes)
+                        .load(R.drawable.logo_dragon_yes)
                         .fit()
                         .placeholder(R.drawable.blackscreen)
                         .into(finalCurrentQuestionImage);
@@ -317,13 +335,22 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundIV);*/
-            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
             Picasso.get()
-                    .load(R.drawable.targ_win_warrior)
+                    .load(R.drawable.targ_personage_win)
                     //.fit()
                     //.placeholder(R.drawable.blackscreen)
                     .into(userWinAnimalImage);
         }
+
+        if (theme == 2) {
+
+            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            Picasso.get()
+                    .load(R.drawable.lann_personage_win)
+                    .into(userWinAnimalImage);
+        }
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,9 +393,16 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundIV);*/
-            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
             Picasso.get()
-                    .load(R.drawable.targ_warrior_fail)
+                    .load(R.drawable.targ_personage_fail)
+                    .into(useLoseAnimalImage);
+        }
+
+        if (theme == 2) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            Picasso.get()
+                    .load(R.drawable.lann_personage_fail)
                     .into(useLoseAnimalImage);
         }
 
@@ -426,7 +460,11 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
-            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.window_targariens));
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
+        }
+
+        if (theme == 2) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {

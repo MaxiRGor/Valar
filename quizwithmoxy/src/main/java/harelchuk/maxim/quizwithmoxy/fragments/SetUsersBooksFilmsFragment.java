@@ -20,17 +20,40 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.set_users_preferences_fragment, container, false);
+
         final CheckBox checkBoxFilms = view.findViewById(R.id.checkBoxSeries);
+        final CheckBox checkBoxBooks = view.findViewById(R.id.checkBoxBooks);
+        final ImageView windowBooks = view.findViewById(R.id.userPrefBackgroundBooks);
+        final ImageView windowFilms = view.findViewById(R.id.userPrefBackgroundFilms);
+
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+
+        if(theme==0){
+            windowBooks.setBackground(getResources().getDrawable(R.drawable.targ_window));
+            windowFilms.setBackground(getResources().getDrawable(R.drawable.targ_window));
+            checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.targ_books_selector));
+            checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.targ_films_selector));
+        }
+
+        if(theme==2){
+            windowBooks.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            windowFilms.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.lann_books_selector));
+            checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.lann_films_selector));
+        }
+
         checkBoxFilms.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
         checkBoxFilms.setChecked(UserDataSingleton.getInstance().isIs_films());
+        checkBoxFilms.setTextColor(getResources().getColor(R.color.colorAccent));
         if (UserDataSingleton.getInstance().isIs_films()) {
             checkBoxFilms.setText(R.string.userWatchSeries);
         } else {
             checkBoxFilms.setText(R.string.userDontWatchSeries);
         }
 
-        final CheckBox checkBoxBooks = view.findViewById(R.id.checkBoxBooks);
+
         checkBoxBooks.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
+        checkBoxBooks.setTextColor(getResources().getColor(R.color.colorAccent));
         checkBoxBooks.setChecked(UserDataSingleton.getInstance().isIs_books());
 
         if (UserDataSingleton.getInstance().isIs_books()) {
@@ -38,8 +61,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
         } else {
             checkBoxBooks.setText(R.string.userDontReadBooks);
         }
-        final ImageView windowBooks = view.findViewById(R.id.userPrefWindow1);
-        final ImageView windowFilms = view.findViewById(R.id.userPrefWindow2);
+
 
         CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
 
@@ -81,10 +103,10 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.userPrefWindow1:
+                    case R.id.userPrefBackgroundBooks:
                         checkBoxBooks.performClick();
                         break;
-                    case R.id.userPrefWindow2:
+                    case R.id.userPrefBackgroundFilms:
                         checkBoxFilms.performClick();
                         break;
                 }

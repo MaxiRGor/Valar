@@ -22,6 +22,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private ArrayList<Map<String, Integer>> data;
     private Drawable[] drawablesGAC;
     private static ClickListener clickListener;
+    private Drawable[] buttonBackground;
 
     public DataAdapter(Context context, ArrayList<Map<String, Integer>> data) {
         this.data = data;
@@ -30,6 +31,18 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         this.drawablesGAC[0] = context.getResources().getDrawable(R.drawable.ic_money_dragon);
         this.drawablesGAC[1] = context.getResources().getDrawable(R.drawable.ic_money_deer);
         this.drawablesGAC[2] = context.getResources().getDrawable(R.drawable.ic_money_warior);
+        this.buttonBackground = new Drawable[data.size()];
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
+        if (theme == 0) {
+            for(int i=0; i<data.size();i++){
+                this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.targ_button_selector);
+            }
+        }
+        if (theme == 2) {
+            for(int i=0; i<data.size();i++){
+                this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.lann_button_selector);
+            }
+        }
     }
 
     @NonNull
@@ -49,25 +62,28 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         holder.levelTV.setText(level);
         holder.costTV.setText(cost);
         holder.coinImage.setBackground(drawablesGAC[coin]);
+        holder.background.setBackground(buttonBackground[position]);
     }
-
 
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+
+
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final ImageView coinImage;
+        final ImageView coinImage, background;
         final TextView levelTV, costTV, rewardTV;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            coinImage = itemView.findViewById(R.id.item_level_coinIV);
-            levelTV = itemView.findViewById(R.id.item_level_nomTV);
-            costTV = itemView.findViewById(R.id.item_level_cost_nomTV);
-            rewardTV = itemView.findViewById(R.id.item_level_rewardTV);
+            this.coinImage = itemView.findViewById(R.id.item_level_coinIV);
+            this.levelTV = itemView.findViewById(R.id.item_level_nomTV);
+            this.costTV = itemView.findViewById(R.id.item_level_cost_nomTV);
+            this.rewardTV = itemView.findViewById(R.id.item_level_rewardTV);
+            this.background = itemView.findViewById(R.id.itemBackground);
         }
 
         @Override

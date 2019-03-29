@@ -34,8 +34,20 @@ public class TabMenuActivity extends AppCompatActivity {
                     .into(imageView);
 
             navigation.getMenu().getItem(0).setIcon(R.drawable.targ_ic_menu_play_selector);
-            navigation.getMenu().getItem(1).setIcon(R.drawable.targ_menu_statistics_selector);
-            navigation.getMenu().getItem(2).setIcon(R.drawable.targ_menu_settings_selector);
+            navigation.getMenu().getItem(1).setIcon(R.drawable.targ_ic_menu_statistics_selector);
+            navigation.getMenu().getItem(2).setIcon(R.drawable.targ_ic_menu_settings_selector);
+        }
+
+        if (theme == 2) {
+            Picasso.get()
+                    .load(R.drawable.lann_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(imageView);
+
+            navigation.getMenu().getItem(0).setIcon(R.drawable.lann_menu_play_selector);
+            navigation.getMenu().getItem(1).setIcon(R.drawable.lann_menu_statistics_selector);
+            navigation.getMenu().getItem(2).setIcon(R.drawable.lann_menu_settings_selector);
         }
 
         navigation.setItemIconTintList(null);
