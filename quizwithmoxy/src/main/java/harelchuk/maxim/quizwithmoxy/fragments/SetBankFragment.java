@@ -170,10 +170,10 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         TextView debitName = bankView.findViewById(R.id.bankDebitTV);
 
         if (is_debit) {
-            creditName.setTextColor(getResources().getColor(R.color.unreachable));
-            getCreditTV.setTextColor(getResources().getColor(R.color.unreachable));
-            returnCreditTV.setTextColor(getResources().getColor(R.color.unreachable));
-            returnDebitTV.setTextColor(getResources().getColor(R.color.colorAccent));
+            creditName.setTextColor(getResources().getColor(R.color.targUnreachable));
+            getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+            returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+            returnDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             View.OnClickListener onDebitClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,11 +187,11 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
 
         } else {
             if (is_credit) {
-                addDebitTV.setTextColor(getResources().getColor(R.color.unreachable));
-                returnDebitTV.setTextColor(getResources().getColor(R.color.unreachable));
-                debitName.setTextColor(getResources().getColor(R.color.unreachable));
-                getCreditTV.setTextColor(getResources().getColor(R.color.unreachable));
-                returnCreditTV.setTextColor(getResources().getColor(R.color.colorAccent));
+                addDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                debitName.setTextColor(getResources().getColor(R.color.targUnreachable));
+                getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                returnCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
@@ -204,12 +204,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                 addDebitTV.setOnClickListener(onClickListener);
                 returnDebitTV.setOnClickListener(onClickListener);
             } else {
-                getCreditTV.setTextColor(getResources().getColor(R.color.colorAccent));
-                addDebitTV.setTextColor(getResources().getColor(R.color.colorAccent));
-                debitName.setTextColor(getResources().getColor(R.color.colorAccent));
-                creditName.setTextColor(getResources().getColor(R.color.colorAccent));
-                returnCreditTV.setTextColor(getResources().getColor(R.color.unreachable));
-                returnDebitTV.setTextColor(getResources().getColor(R.color.unreachable));
+                getCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                addDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                debitName.setTextColor(getResources().getColor(R.color.targColorAccent));
+                creditName.setTextColor(getResources().getColor(R.color.targColorAccent));
+                returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
             }
 
         }

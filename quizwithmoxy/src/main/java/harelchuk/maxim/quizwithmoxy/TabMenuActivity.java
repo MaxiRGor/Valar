@@ -27,6 +27,7 @@ public class TabMenuActivity extends AppCompatActivity {
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
         if (theme == 0) {
+            setTheme(R.style.TargarAppTheme);
             Picasso.get()
                     .load(R.drawable.targ_background)
                     .fit()
@@ -39,6 +40,7 @@ public class TabMenuActivity extends AppCompatActivity {
         }
 
         if (theme == 1) {
+            setTheme(R.style.StarkAppTheme);
             Picasso.get()
                     .load(R.drawable.stark_background)
                     .fit()
@@ -51,6 +53,7 @@ public class TabMenuActivity extends AppCompatActivity {
         }
 
         if (theme == 2) {
+            setTheme(R.style.LannAppTheme);
             Picasso.get()
                     .load(R.drawable.lann_background)
                     .fit()
@@ -63,6 +66,7 @@ public class TabMenuActivity extends AppCompatActivity {
         }
 
         if (theme == 3) {
+            setTheme(R.style.NightAppTheme);
             Picasso.get()
                     .load(R.drawable.night_background)
                     .fit()

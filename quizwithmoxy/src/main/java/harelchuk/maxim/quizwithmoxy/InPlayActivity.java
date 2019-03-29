@@ -1,6 +1,9 @@
 package harelchuk.maxim.quizwithmoxy;
 
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,12 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     private ImageView bookFilmImage;
     private ImageView categoryImage;
 
+    private Drawable unansweredLogo;
+    private Drawable answeredLogo;
+
+    private Animation animationConstriction;
+    private Animation animationFadeOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,42 +53,107 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         this.questionContainer = findViewById(R.id.frameQuestionLayout);
         this.questionLevelTV = findViewById(R.id.inPlayLevelTV);
         this.questionCategoryTV = findViewById(R.id.inPlayCategoryTV);
+        TextView levelNameTV = findViewById(R.id.inPlayLevelName);
+
         this.bookFilmImage = findViewById(R.id.inPlayBookFilmImage);
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
+            setTheme(R.style.TargarAppTheme);
             Picasso.get()
                     .load(R.drawable.targ_background)
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.targ_window));
+            this.unansweredLogo = getResources().getDrawable(R.drawable.logo_dragon_not);
+            this.answeredLogo = getResources().getDrawable(R.drawable.logo_dragon_yes);
+
+            this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
+
         }
         if (theme == 1) {
+            setTheme(R.style.StarkAppTheme);
             Picasso.get()
                     .load(R.drawable.stark_background)
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            this.unansweredLogo = getResources().getDrawable(R.drawable.logo_wolf_not);
+            this.answeredLogo = getResources().getDrawable(R.drawable.logo_wolf_yes);
+
+            this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
+
+
         }
 
         if (theme == 2) {
+            setTheme(R.style.LannAppTheme);
             Picasso.get()
                     .load(R.drawable.lann_background)
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
+            this.unansweredLogo = getResources().getDrawable(R.drawable.logo_lion_not);
+            this.answeredLogo = getResources().getDrawable(R.drawable.logo_lion_yes);
+
+            this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
         }
 
         if (theme == 3) {
+            setTheme(R.style.NightAppTheme);
             Picasso.get()
                     .load(R.drawable.night_background)
                     .fit()
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.night_window));
+            this.unansweredLogo = getResources().getDrawable(R.drawable.logo_nk_not);
+            this.answeredLogo = getResources().getDrawable(R.drawable.logo_nk_yes);
+
+            this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
+
         }
+
+        ImageView question1Logo = findViewById(R.id.inPlayQuestionImage1);
+        ImageView question2Logo = findViewById(R.id.inPlayQuestionImage2);
+        ImageView question3Logo = findViewById(R.id.inPlayQuestionImage3);
+        ImageView question4Logo = findViewById(R.id.inPlayQuestionImage4);
+        ImageView question5Logo = findViewById(R.id.inPlayQuestionImage5);
+        ImageView question6Logo = findViewById(R.id.inPlayQuestionImage6);
+        ImageView question7Logo = findViewById(R.id.inPlayQuestionImage7);
+
+        question1Logo.setBackground(unansweredLogo);
+        question2Logo.setBackground(unansweredLogo);
+        question3Logo.setBackground(unansweredLogo);
+        question4Logo.setBackground(unansweredLogo);
+        question5Logo.setBackground(unansweredLogo);
+        question6Logo.setBackground(unansweredLogo);
+        question7Logo.setBackground(unansweredLogo);
+
+        this.animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.constriction);
+        this.animationFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
 
     }
 
@@ -94,10 +168,10 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         View currentQuestionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, questionContainer, false);
         this.questionContainer.addView(currentQuestionView);
 
-        ImageView currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
+
         setQuestionCategoryImage(category);
 
-        questionLevelTV.setText(String.format(getResources().getString(R.string.level) + " = %s", level));
+        questionLevelTV.setText(String.valueOf(level));
         questionCategoryTV.setText(categories[category]);
 
         if (inBook) {
@@ -111,6 +185,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_left_to_center));
 
         int currentQuestion = 1 + 7 - questionsToTheEnd;
+
+        ImageView currentQuestionImage = findViewById(R.id.inPlayQuestionImage1);
+
         switch (currentQuestion) {
             case 2:
                 currentQuestionImage = findViewById(R.id.inPlayQuestionImage2);
@@ -180,17 +257,15 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         currentQuestionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
 
         final ImageView finalCurrentQuestionImage = currentQuestionImage;
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
-            final Animation animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.constriction);
-            final Animation animationFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
 
             @Override
             public void onClick(View v) {
-                Picasso.get()
-                        .load(R.drawable.logo_dragon_yes)
-                        .fit()
-                        .placeholder(R.drawable.blackscreen)
-                        .into(finalCurrentQuestionImage);
+
+                finalCurrentQuestionImage.setBackground(answeredLogo);
+
                 switch (v.getId()) {
                     case (R.id.answer1TV):
                         animationConstriction.setAnimationListener(new Animation.AnimationListener() {
@@ -304,7 +379,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         a4TV.setOnClickListener(onClickListener);
     }
 
-    void setQuestionCategoryImage(int category) {
+    private void setQuestionCategoryImage(int category) {
         this.categoryImage = findViewById(R.id.inPlayCategoryImage);
         if (category == 0) {
             categoryImage.setBackground(getResources().getDrawable(R.drawable.ic_category_0_obschie));

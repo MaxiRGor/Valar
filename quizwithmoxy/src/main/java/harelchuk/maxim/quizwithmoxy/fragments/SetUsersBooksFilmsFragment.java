@@ -57,7 +57,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
 
         checkBoxFilms.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
         checkBoxFilms.setChecked(UserDataSingleton.getInstance().isIs_films());
-        checkBoxFilms.setTextColor(getResources().getColor(R.color.colorAccent));
+        checkBoxFilms.setTextColor(getResources().getColor(R.color.targColorAccent));
         if (UserDataSingleton.getInstance().isIs_films()) {
             checkBoxFilms.setText(R.string.userWatchSeries);
         } else {
@@ -66,7 +66,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
 
 
         checkBoxBooks.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
-        checkBoxBooks.setTextColor(getResources().getColor(R.color.colorAccent));
+        checkBoxBooks.setTextColor(getResources().getColor(R.color.targColorAccent));
         checkBoxBooks.setChecked(UserDataSingleton.getInstance().isIs_books());
 
         if (UserDataSingleton.getInstance().isIs_books()) {

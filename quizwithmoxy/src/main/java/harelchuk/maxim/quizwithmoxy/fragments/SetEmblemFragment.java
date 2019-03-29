@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.Objects;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.SplashActivity;
@@ -111,9 +114,10 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
     }
 
     private void reloadApplication(){
-        Intent intent = getActivity().getIntent();
-        getActivity().finish();
+        //Intent intent = getActivity().getIntent();
+        Intent intent = new Intent(getActivity(),SplashActivity.class);
         startActivity(intent);
+        getActivity().finish();
     }
 
     @Override
