@@ -62,6 +62,15 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             debitWindow.setBackground(getResources().getDrawable(R.drawable.targ_window));
             creditWindow.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
+        if (theme == 1) {
+            nameWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            coinsWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            roundsWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            winningsWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            emblemsWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            debitWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            creditWindow.setBackground(getResources().getDrawable(R.drawable.stark_window));
+        }
         if (theme == 2) {
             nameWindow.setBackground(getResources().getDrawable(R.drawable.lann_window));
             coinsWindow.setBackground(getResources().getDrawable(R.drawable.lann_window));
@@ -70,6 +79,15 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             emblemsWindow.setBackground(getResources().getDrawable(R.drawable.lann_window));
             debitWindow.setBackground(getResources().getDrawable(R.drawable.lann_window));
             creditWindow.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+        if (theme == 3) {
+            nameWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            coinsWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            roundsWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            winningsWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            emblemsWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            debitWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
+            creditWindow.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
     }
 
@@ -109,26 +127,30 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         final long coinsCPLong = coinsADLong * 56 + money_CP_temp;
 
 
-
         Drawable alertDialogButtonImage1 = null;
         Drawable alertDialogWindowImage1 = null;
 
-        if(current_theme==0){
+        if (current_theme == 0) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.targ_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.targ_window);
         }
+        if (current_theme == 1) {
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.stark_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.stark_window);
+        }
 
-        if(current_theme==2){
+        if (current_theme == 2) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.lann_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.lann_window);
         }
-
+        if (current_theme == 3) {
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.night_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.night_window);
+        }
 
 
         final Drawable alertDialogButtonImage = alertDialogButtonImage1;
         final Drawable alertDialogWindowImage = alertDialogWindowImage1;
-
-
 
 
         ImageView coinsWindow = statisticsView.findViewById(R.id.statisticsWindowCoinsImage);
@@ -348,19 +370,31 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             user_credit_value_TV.setVisibility(View.VISIBLE);
         }
 
-        int theme= UserDataSingleton.getInstance().getCurrent_theme();
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
         Drawable[] knowleges = new Drawable[3];
 
-        if(theme==0){
+        if (theme == 0) {
             knowleges[0] = getResources().getDrawable(R.drawable.targ_books_films_pressed);
             knowleges[1] = getResources().getDrawable(R.drawable.targ_books_pressed);
             knowleges[2] = getResources().getDrawable(R.drawable.targ_films_pressed);
         }
 
-        if(theme==2){
+        if (theme == 1) {
+            knowleges[0] = getResources().getDrawable(R.drawable.stark_books_films_pressed);
+            knowleges[1] = getResources().getDrawable(R.drawable.stark_books_pressed);
+            knowleges[2] = getResources().getDrawable(R.drawable.stark_films_pressed);
+        }
+
+        if (theme == 2) {
             knowleges[0] = getResources().getDrawable(R.drawable.lann_books_films_pressed);
             knowleges[1] = getResources().getDrawable(R.drawable.lann_books_pressed);
             knowleges[2] = getResources().getDrawable(R.drawable.lann_films_pressed);
+        }
+
+        if (theme == 3) {
+            knowleges[0] = getResources().getDrawable(R.drawable.night_books_films_pressed);
+            knowleges[1] = getResources().getDrawable(R.drawable.night_books_pressed);
+            knowleges[2] = getResources().getDrawable(R.drawable.night_films_pressed);
         }
 
         if (is_books) {

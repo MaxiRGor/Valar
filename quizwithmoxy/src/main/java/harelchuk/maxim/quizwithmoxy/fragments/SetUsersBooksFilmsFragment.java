@@ -35,11 +35,24 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.targ_films_selector));
         }
 
+        if(theme==1){
+            windowBooks.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            windowFilms.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.stark_books_selector));
+            checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.stark_films_selector));
+        }
+
         if(theme==2){
             windowBooks.setBackground(getResources().getDrawable(R.drawable.lann_window));
             windowFilms.setBackground(getResources().getDrawable(R.drawable.lann_window));
             checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.lann_books_selector));
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.lann_films_selector));
+        }
+        if(theme==3){
+            windowBooks.setBackground(getResources().getDrawable(R.drawable.night_window));
+            windowFilms.setBackground(getResources().getDrawable(R.drawable.night_window));
+            checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.night_books_selector));
+            checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.night_films_selector));
         }
 
         checkBoxFilms.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));

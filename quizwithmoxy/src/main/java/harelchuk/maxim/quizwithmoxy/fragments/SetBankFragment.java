@@ -58,6 +58,16 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             alertDialogButtonImage = getResources().getDrawable(R.drawable.targ_button_selector);
             alertDialogWindowImage = getResources().getDrawable(R.drawable.targ_window);
         }
+        if (theme == 1) {
+            bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            returnDebitTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            addDebitTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            getCreditTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            returnCreditTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            alertDialogButtonImage = getResources().getDrawable(R.drawable.stark_button_selector);
+            alertDialogWindowImage = getResources().getDrawable(R.drawable.stark_window);
+        }
         if (theme == 2) {
             bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
             bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
@@ -67,6 +77,16 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
             alertDialogButtonImage = getResources().getDrawable(R.drawable.lann_button_selector);
             alertDialogWindowImage = getResources().getDrawable(R.drawable.lann_window);
+        }
+        if (theme == 3) {
+            bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.night_window));
+            bankCreditBackground.setBackground(getResources().getDrawable(R.drawable.night_window));
+            returnDebitTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            addDebitTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            getCreditTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            returnCreditTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            alertDialogButtonImage = getResources().getDrawable(R.drawable.night_button_selector);
+            alertDialogWindowImage = getResources().getDrawable(R.drawable.night_window);
         }
         return bankView;
     }

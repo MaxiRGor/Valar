@@ -44,16 +44,21 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
             view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_emblem_selector);
             view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.targ_bank_selector);
         }
+        if(theme==1){
+            view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.stark_books_films_selector);
+            view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.stark_emblem_selector);
+            view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.stark_bank_selector);
+        }
         if(theme==2){
             view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_books_films_selector);
             view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_emblem_selector);
             view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.lann_bank_selector);
         }
-
-
-
-
-
+        if(theme==3){
+            view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.night_books_films_selector);
+            view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.night_emblem_selector);
+            view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.night_bank_selector);
+        }
 
 
         TabLayout tabLayout = (TabLayout) settingsView.findViewById(R.id.tab_layout);

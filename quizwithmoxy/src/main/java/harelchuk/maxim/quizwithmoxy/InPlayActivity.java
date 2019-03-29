@@ -54,6 +54,14 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
+        if (theme == 1) {
+            Picasso.get()
+                    .load(R.drawable.stark_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundImage);
+            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.stark_window));
+        }
 
         if (theme == 2) {
             Picasso.get()
@@ -62,6 +70,15 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .placeholder(R.drawable.blackscreen)
                     .into(backgroundImage);
             questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+
+        if (theme == 3) {
+            Picasso.get()
+                    .load(R.drawable.night_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(backgroundImage);
+            questionDescriptionBackground.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
 
     }
@@ -137,6 +154,13 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             a3TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             a4TV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
         }
+        if (theme == 1) {
+            qTTV.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            a1TV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            a2TV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            a3TV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+            a4TV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
+        }
 
         if (theme == 2) {
             qTTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
@@ -144,6 +168,13 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             a2TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
             a3TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
             a4TV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
+        }
+        if (theme == 3) {
+            qTTV.setBackground(getResources().getDrawable(R.drawable.night_window));
+            a1TV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            a2TV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            a3TV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
+            a4TV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
         }
 
         currentQuestionView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.from_top_to_center));
@@ -330,16 +361,16 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
-            /*Picasso.get()
-                    .load(R.drawable.targ_background)
-                    .fit()
-                    .placeholder(R.drawable.blackscreen)
-                    .into(backgroundIV);*/
             userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
             Picasso.get()
                     .load(R.drawable.targ_personage_win)
-                    //.fit()
-                    //.placeholder(R.drawable.blackscreen)
+                    .into(userWinAnimalImage);
+        }
+
+        if (theme == 1) {
+            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            Picasso.get()
+                    .load(R.drawable.stark_personage_win)
                     .into(userWinAnimalImage);
         }
 
@@ -348,6 +379,14 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
             Picasso.get()
                     .load(R.drawable.lann_personage_win)
+                    .into(userWinAnimalImage);
+        }
+
+        if (theme == 3) {
+
+            userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.night_window));
+            Picasso.get()
+                    .load(R.drawable.night_personage_win)
                     .into(userWinAnimalImage);
         }
 
@@ -388,14 +427,16 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
-           /* Picasso.get()
-                    .load(R.drawable.targ_background)
-                    .fit()
-                    .placeholder(R.drawable.blackscreen)
-                    .into(backgroundIV);*/
             userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
             Picasso.get()
                     .load(R.drawable.targ_personage_fail)
+                    .into(useLoseAnimalImage);
+        }
+
+        if (theme == 1) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            Picasso.get()
+                    .load(R.drawable.stark_personage_fail)
                     .into(useLoseAnimalImage);
         }
 
@@ -403,6 +444,13 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
             Picasso.get()
                     .load(R.drawable.lann_personage_fail)
+                    .into(useLoseAnimalImage);
+        }
+
+        if (theme == 3) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.night_window));
+            Picasso.get()
+                    .load(R.drawable.night_personage_fail)
                     .into(useLoseAnimalImage);
         }
 
@@ -463,8 +511,15 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
 
+        if (theme == 1) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.stark_window));
+        }
+
         if (theme == 2) {
             userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+        if (theme == 3) {
+            userLoseTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {

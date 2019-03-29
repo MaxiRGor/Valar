@@ -61,9 +61,17 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.targ_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
+        if(theme == 1){
+            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.stark_window));
+            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.stark_window));
+        }
         if(theme == 2){
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.lann_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+        if(theme == 3){
+            this.moneyImage.setBackground(getResources().getDrawable(R.drawable.night_window));
+            this.recyclerView.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
 
         this.coinsGAC = new long[2];
@@ -146,17 +154,23 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.targ_window);
         }
 
+        if(theme==1){
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.stark_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.stark_window);
+        }
+
         if(theme==2){
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.lann_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.lann_window);
         }
 
-
+        if(theme==3){
+            alertDialogButtonImage1 = getResources().getDrawable(R.drawable.night_button_selector);
+            alertDialogWindowImage1 = getResources().getDrawable(R.drawable.night_window);
+        }
 
         final Drawable alertDialogButtonImage = alertDialogButtonImage1;
         final Drawable alertDialogWindowImage = alertDialogWindowImage1;
-
-
 
 
         final long[] coinsInCPCAG = {coinsGAC[0] * 210 * 56 + coinsGAC[1] * 56 + coinsGAC[2],

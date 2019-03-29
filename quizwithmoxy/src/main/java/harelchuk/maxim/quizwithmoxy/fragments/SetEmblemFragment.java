@@ -1,5 +1,9 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,8 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.SplashActivity;
+import harelchuk.maxim.quizwithmoxy.TabMenuActivity;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.SetEmblemPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SetEmblemView;
@@ -41,8 +47,14 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
         if (theme == 0) {
             background.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
+        if (theme == 1) {
+            background.setBackground(getResources().getDrawable(R.drawable.stark_window));
+        }
         if (theme == 2) {
             background.setBackground(getResources().getDrawable(R.drawable.lann_window));
+        }
+        if (theme == 3) {
+            background.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
 
         this.targEmblem = setEmblemView.findViewById(R.id.emblemTargImage);
@@ -69,17 +81,25 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
                         //setEmblemPresenter.checkTargar();
                         UserDataSingleton.getInstance().setCurrent_theme(0);
                         UserDataSingleton.getInstance().setIs_skin_targar(true);
+                        reloadApplication();
                         break;
                     case R.id.emblemUserSkinStarksTV:
                         //setEmblemPresenter.checkStark();
+                        UserDataSingleton.getInstance().setCurrent_theme(1);
+                        UserDataSingleton.getInstance().setIs_skin_stark(true);
+                        reloadApplication();
                         break;
                     case R.id.emblemUserSkinLannTV:
                         //setEmblemPresenter.checkLann();
                         UserDataSingleton.getInstance().setCurrent_theme(2);
                         UserDataSingleton.getInstance().setIs_skin_lann(true);
+                        reloadApplication();
                         break;
                     case R.id.emblemUserSkinNKTV:
                         //setEmblemPresenter.checkNight();
+                        UserDataSingleton.getInstance().setCurrent_theme(3);
+                        UserDataSingleton.getInstance().setIs_skin_night(true);
+                        reloadApplication();
                         break;
                     }
                 }
@@ -90,6 +110,11 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
         this.nightButton.setOnClickListener(onClickListener);
     }
 
+    private void reloadApplication(){
+        Intent intent = getActivity().getIntent();
+        getActivity().finish();
+        startActivity(intent);
+    }
 
     @Override
     public void fillEmblems(int theme, boolean is_targar, boolean is_starks, boolean is_lann, boolean is_night) {

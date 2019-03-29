@@ -38,6 +38,18 @@ public class TabMenuActivity extends AppCompatActivity {
             navigation.getMenu().getItem(2).setIcon(R.drawable.targ_ic_menu_settings_selector);
         }
 
+        if (theme == 1) {
+            Picasso.get()
+                    .load(R.drawable.stark_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(imageView);
+
+            navigation.getMenu().getItem(0).setIcon(R.drawable.stark_menu_play_selector);
+            navigation.getMenu().getItem(1).setIcon(R.drawable.stark_menu_statistics_selector);
+            navigation.getMenu().getItem(2).setIcon(R.drawable.stark_menu_settings_selector);
+        }
+
         if (theme == 2) {
             Picasso.get()
                     .load(R.drawable.lann_background)
@@ -48,6 +60,18 @@ public class TabMenuActivity extends AppCompatActivity {
             navigation.getMenu().getItem(0).setIcon(R.drawable.lann_menu_play_selector);
             navigation.getMenu().getItem(1).setIcon(R.drawable.lann_menu_statistics_selector);
             navigation.getMenu().getItem(2).setIcon(R.drawable.lann_menu_settings_selector);
+        }
+
+        if (theme == 3) {
+            Picasso.get()
+                    .load(R.drawable.night_background)
+                    .fit()
+                    .placeholder(R.drawable.blackscreen)
+                    .into(imageView);
+
+            navigation.getMenu().getItem(0).setIcon(R.drawable.night_menu_play_selector);
+            navigation.getMenu().getItem(1).setIcon(R.drawable.night_menu_statistics_selector);
+            navigation.getMenu().getItem(2).setIcon(R.drawable.night_menu_settings_selector);
         }
 
         navigation.setItemIconTintList(null);

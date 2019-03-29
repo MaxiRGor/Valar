@@ -38,9 +38,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.targ_button_selector);
             }
         }
+        if (theme == 1) {
+            for(int i=0; i<data.size();i++){
+                this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.stark_button_selector);
+            }
+        }
         if (theme == 2) {
             for(int i=0; i<data.size();i++){
                 this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.lann_button_selector);
+            }
+        }
+        if (theme == 3) {
+            for(int i=0; i<data.size();i++){
+                this.buttonBackground[i] = context.getResources().getDrawable(R.drawable.night_button_selector);
             }
         }
     }
