@@ -2,15 +2,22 @@ package harelchuk.maxim.quizwithmoxy.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.UUID;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static harelchuk.maxim.quizwithmoxy.model.STRINGS.*;
 
 public class UserDataSingleton {
 
     private SharedPreferences sharedPreferencesMoney;
+
+    //private
+
+    private final int MY_USER_ID = 1;
 
     private int l_1_cost_cp;
     private int l_2_cost_cp;
@@ -46,13 +53,13 @@ public class UserDataSingleton {
     private int l_10_lose_gd;
 
 
-    private SharedPreferences sharedPreferencesUser;
+    //private SharedPreferences sharedPreferencesUser;
 
-    private String user_id;
+    private int user_id;
+    private long user_uuid;
     private String user_name;
 
     private long user_money;
-
 
     private int number_easy_games;
     private int number_medium_games;
@@ -90,15 +97,43 @@ public class UserDataSingleton {
     }
 
     private UserDataSingleton() {
-        Log.d("myLogs", "///////////////Singleton created//////////////////////////////");
-
         setSharedPreferencesMoneyIfNotExists();
-        setSharedPreferencesUserIfNotExists();
-        getVariables();
+        getUserById();
     }
 
-    private void getVariables() {
+    private void getUserById() {
+        final User[] loadingUser = new User[1];
+        NetworkService.getInstance().getJSONApi().getUserInfo(MY_USER_ID).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                User user = response.body();
+                assert user != null;
+                getVariables(user);
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                //              LOAD    BAD         SCREEN
+            }
+        });
+    }
+
+    private void executeVoid(Call<Void> call) {
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.d("myLogs", "USER INFO UPDATED");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.d("myLogs", "USER INFO NOT UPDATED");
+            }
+        });
+    }
+
+
+    private void getVariables(User user) {
         this.l_1_cost_cp = sharedPreferencesMoney.getInt(L_1_COST_CP, 0);
         this.l_2_cost_cp = sharedPreferencesMoney.getInt(L_2_COST_CP, 0);
         this.l_3_cost_cp = sharedPreferencesMoney.getInt(L_3_COST_CP, 0);
@@ -132,40 +167,40 @@ public class UserDataSingleton {
         this.l_9_lose_gd = sharedPreferencesMoney.getInt(L_9_LOSE_GD, 0);
         this.l_10_lose_gd = sharedPreferencesMoney.getInt(L_10_LOSE_GD, 0);
 
+        this.user_id = user.getId_user();
+        this.user_uuid = user.getUser_uuid();
+        this.user_name = user.getUser_name();
 
-        this.user_id = sharedPreferencesUser.getString(USER_ID, "1234567890");
-        this.user_name = sharedPreferencesUser.getString(USER_NAME, "PLAYER");
+        this.user_money = user.getUser_money();
 
-        this.user_money = sharedPreferencesUser.getLong(USER_MONEY, 0);
+        this.number_easy_games = user.getEasy_games();
+        this.number_medium_games = user.getMedium_games();
+        this.number_hard_games = user.getHard_games();
 
-        this.number_easy_games = sharedPreferencesUser.getInt(NUMBER_EASY_GAMES, 0);
-        this.number_medium_games = sharedPreferencesUser.getInt(NUMBER_MEDIUM_GAMES, 0);
-        this.number_hard_games = sharedPreferencesUser.getInt(NUMBER_HARD_GAMES, 0);
+        this.number_easy_winnings = user.getEasy_winnings();
+        this.number_medium_winnings = user.getMedium_winnings();
+        this.number_hard_winnings = user.getHard_winnings();
 
-        this.number_easy_winnings = sharedPreferencesUser.getInt(NUMBER_EASY_WINNINGS, 0);
-        this.number_medium_winnings = sharedPreferencesUser.getInt(NUMBER_MEDIUM_WINNINGS, 0);
-        this.number_hard_winnings = sharedPreferencesUser.getInt(NUMBER_HARD_WINNINGS, 0);
+        this.is_adv = user.isIs_adv();
 
-        this.is_adv = sharedPreferencesUser.getBoolean(IS_ADV, false);
+        this.is_books = user.isIs_books();
+        this.is_films = user.isIs_films();
 
-        this.is_books = sharedPreferencesUser.getBoolean(IS_BOOKS, false);
-        this.is_films = sharedPreferencesUser.getBoolean(IS_FILMS, true);
+        this.current_theme = user.getCurrent_theme();
+        this.is_skin_targar = user.isIs_skin_targar();
+        this.is_skin_stark = user.isIs_skin_stark();
+        this.is_skin_lann = user.isIs_skin_lann();
+        this.is_skin_night = user.isIs_skin_night();
 
-        this.current_theme = sharedPreferencesUser.getInt(CURRENT_THEME, 0);
-        this.is_skin_targar = sharedPreferencesUser.getBoolean(IS_SKIN_TARGAR, true);
-        this.is_skin_stark = sharedPreferencesUser.getBoolean(IS_SKIN_STARK, true);
-        this.is_skin_lann = sharedPreferencesUser.getBoolean(IS_SKIN_LANN, true);
-        this.is_skin_night = sharedPreferencesUser.getBoolean(IS_SKIN_NIGHT, true);
+        this.is_credit = user.isIs_credit();
+        this.credit_time = user.getCredit_time();
+        this.credit_sum = user.getCredit_sum();
 
-        this.is_credit = sharedPreferencesUser.getBoolean(IS_CREDIT, false);
-        this.credit_time = sharedPreferencesUser.getLong(CREDIT_TIME, 0);
-        this.credit_sum = sharedPreferencesUser.getLong(CREDIT_SUM, 0);
+        this.is_debit = user.isIs_debit();
+        this.debit_time = user.getDebit_time();
+        this.debit_sum = user.getDebit_sum();
 
-        this.is_debit = sharedPreferencesUser.getBoolean(IS_DEBIT, false);
-        this.debit_time = sharedPreferencesUser.getLong(DEBIT_TIME, 0);
-        this.debit_sum = sharedPreferencesUser.getLong(DEBIT_SUM, 0);
-
-        this.chosen_level=0;
+        this.chosen_level = 0;
     }
 
     private void setSharedPreferencesMoneyIfNotExists() {
@@ -221,62 +256,6 @@ public class UserDataSingleton {
         }
 
     }
-
-    private void setSharedPreferencesUserIfNotExists() {
-
-        this.sharedPreferencesUser = AppForContext.getContext()
-                .getSharedPreferences(SHARED_PREFERENCES_USER_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                        , Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor;
-
-        if (!sharedPreferencesUser.contains("initialized")) {
-
-            Log.d("myLogs", "SP U CREATED");
-
-            editor = sharedPreferencesUser.edit();
-
-            editor.putBoolean("initialized", true);
-
-            String uniqueID = UUID.randomUUID().toString();
-
-            editor.putString(USER_ID, uniqueID);
-            editor.putString(USER_NAME, "Great Player");
-
-            editor.putLong(USER_MONEY, 6123456);            //      test version, need 3
-
-            editor.putInt(NUMBER_EASY_GAMES, 0);
-            editor.putInt(NUMBER_MEDIUM_GAMES, 0);
-            editor.putInt(NUMBER_HARD_GAMES, 0);
-
-            editor.putInt(NUMBER_EASY_WINNINGS, 0);
-            editor.putInt(NUMBER_MEDIUM_WINNINGS, 0);
-            editor.putInt(NUMBER_HARD_WINNINGS, 0);
-
-            editor.putBoolean(IS_ADV, true);
-
-            editor.putBoolean(IS_BOOKS, false);
-            editor.putBoolean(IS_FILMS, true);
-
-            editor.putInt(CURRENT_THEME, 0);
-            editor.putBoolean(IS_SKIN_TARGAR, true);
-            editor.putBoolean(IS_SKIN_STARK, false);
-            editor.putBoolean(IS_SKIN_LANN, false);
-            editor.putBoolean(IS_SKIN_NIGHT, false);
-
-            editor.putBoolean(IS_CREDIT, false);
-            editor.putLong(CREDIT_TIME, 0);
-            editor.putLong(CREDIT_SUM, 0);
-
-            editor.putBoolean(IS_DEBIT, false);
-            editor.putLong(DEBIT_TIME, 0);
-            editor.putLong(DEBIT_SUM, 0);
-
-            editor.commit();
-        }
-    }
-
-
 
     public int getL_1_cost_cp() {
         return l_1_cost_cp;
@@ -398,8 +377,8 @@ public class UserDataSingleton {
         return l_10_lose_gd;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public long getUser_uuid() {
+        return user_uuid;
     }
 
     public String getUser_name() {
@@ -494,166 +473,160 @@ public class UserDataSingleton {
         return chosen_level;
     }
 
-    public int setChosen_level(int chosen_level) {
+    public void setChosen_level(int chosen_level) {
         this.chosen_level = chosen_level;
-        return chosen_level;
+        //return chosen_level;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-        changeSharedPreferenceUserString(USER_ID, user_id);
+    public void setUser_uuid(long user_uuid) {
+        this.user_uuid = user_uuid;
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateUser_uuid(MY_USER_ID, user_uuid);
+        executeVoid(call);
     }
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
-        changeSharedPreferenceUserString(USER_NAME, user_name);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateUser_name(MY_USER_ID, user_name);
+        executeVoid(call);
     }
 
     public void addUserMoney(long adding_money) {
         this.user_money += adding_money;
-        changeSharedPreferenceUserLong(USER_MONEY, user_money);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateUser_money(MY_USER_ID, user_money);
+        executeVoid(call);
     }
 
     public void setUserMoney(long user_money) {
         this.user_money = user_money;
-        changeSharedPreferenceUserLong(USER_MONEY, user_money);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateUser_money(MY_USER_ID, user_money);
+        executeVoid(call);
     }
 
     public void incrementNumber_easy_games() {
         this.number_easy_games++;
-        changeSharedPreferenceUserInt(NUMBER_EASY_GAMES, number_easy_games);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateEasy_games(MY_USER_ID, number_easy_games);
+        executeVoid(call);
     }
 
     public void incrementNumber_medium_games() {
         this.number_medium_games++;
-        changeSharedPreferenceUserInt(NUMBER_MEDIUM_GAMES, number_medium_games);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateMedium_games(MY_USER_ID, number_medium_games);
+        executeVoid(call);
     }
 
     public void incrementNumber_hard_games() {
         this.number_hard_games++;
-        changeSharedPreferenceUserInt(NUMBER_HARD_GAMES, number_hard_games);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateHard_games(MY_USER_ID, number_hard_games);
+        executeVoid(call);
     }
 
     public void incrementNumber_easy_winnings() {
         this.number_easy_winnings++;
-        changeSharedPreferenceUserInt(NUMBER_EASY_WINNINGS, number_easy_winnings);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateEasy_winnings(MY_USER_ID, number_easy_winnings);
+        executeVoid(call);
     }
 
     public void incrementNumber_medium_winnings() {
         this.number_medium_winnings++;
-        changeSharedPreferenceUserInt(NUMBER_MEDIUM_WINNINGS, number_medium_winnings);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateMedium_winnings(MY_USER_ID, number_medium_winnings);
+        executeVoid(call);
     }
 
     public void incrementNumber_hard_winnings() {
         this.number_hard_winnings++;
-        changeSharedPreferenceUserInt(NUMBER_HARD_WINNINGS, number_hard_winnings);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateHard_winnings(MY_USER_ID, number_hard_winnings);
+        executeVoid(call);
     }
-
+/*
     public void setIs_adv(boolean is_adv) {
         this.is_adv = is_adv;
-        changeSharedPreferenceUserBoolean(IS_ADV, is_adv);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_adv(MY_USER_ID, is_adv);
+        executeVoid(call);
     }
-
+*/
     public void setIs_books(boolean is_books) {
         this.is_books = is_books;
-        changeSharedPreferenceUserBoolean(IS_BOOKS, is_books);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_books(MY_USER_ID, is_books);
+        executeVoid(call);
     }
 
     public void setIs_films(boolean is_films) {
         this.is_films = is_films;
-        changeSharedPreferenceUserBoolean(IS_FILMS, is_films);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_films(MY_USER_ID, is_films);
+        executeVoid(call);
     }
 
     public void setCurrent_theme(int current_theme) {
         this.current_theme = current_theme;
-        changeSharedPreferenceUserInt(CURRENT_THEME, current_theme);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateCurrent_theme(MY_USER_ID, current_theme);
+        executeVoid(call);
     }
 
     public void setIs_skin_targar(boolean is_skin_targar) {
         this.is_skin_targar = is_skin_targar;
-        changeSharedPreferenceUserBoolean(IS_SKIN_TARGAR, is_skin_targar);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_skin_targar(MY_USER_ID, is_skin_targar);
+        executeVoid(call);
     }
 
     public void setIs_skin_lann(boolean is_skin_lann) {
         this.is_skin_lann = is_skin_lann;
-        changeSharedPreferenceUserBoolean(IS_SKIN_LANN, is_skin_lann);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_skin_lann(MY_USER_ID, is_skin_lann);
+        executeVoid(call);
     }
 
     public void setIs_skin_stark(boolean is_skin_stark) {
         this.is_skin_stark = is_skin_stark;
-        changeSharedPreferenceUserBoolean(IS_SKIN_STARK, is_skin_stark);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_skin_stark(MY_USER_ID, is_skin_stark);
+        executeVoid(call);
     }
 
     public void setIs_skin_night(boolean is_skin_night) {
         this.is_skin_night = is_skin_night;
-        changeSharedPreferenceUserBoolean(IS_SKIN_NIGHT, is_skin_night);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_skin_night(MY_USER_ID, is_skin_night);
+        executeVoid(call);
     }
 
     public void setIs_credit(boolean is_credit) {
         this.is_credit = is_credit;
-        changeSharedPreferenceUserBoolean(IS_CREDIT, is_credit);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_credit(MY_USER_ID, is_credit);
+        executeVoid(call);
     }
 
     public void setCredit_time(long credit_time) {
         this.credit_time = credit_time;
-        changeSharedPreferenceUserLong(CREDIT_TIME, credit_time);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateCredit_time(MY_USER_ID, credit_time);
+        executeVoid(call);
     }
 
-    public void addCredit_sum(long adding_credit) {
-        this.credit_sum += adding_credit;
-        changeSharedPreferenceUserLong(CREDIT_SUM, credit_sum);
-    }
 
     public void setCredit_sum(long credit_sum) {
         this.credit_sum = credit_sum;
-        changeSharedPreferenceUserLong(CREDIT_SUM, credit_sum);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateCredit_sum(MY_USER_ID, credit_sum);
+        executeVoid(call);
     }
 
     public void setIs_debit(boolean is_debit) {
         this.is_debit = is_debit;
-        changeSharedPreferenceUserBoolean(IS_DEBIT, is_debit);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateIs_debit(MY_USER_ID, is_debit);
+        executeVoid(call);
     }
 
 
     public void setDebit_time(long debit_time) {
         this.debit_time = debit_time;
-        changeSharedPreferenceUserLong(DEBIT_TIME, debit_time);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateDebit_time(MY_USER_ID, debit_time);
+        executeVoid(call);
     }
 
-    public void addDebit_sum(long adding_debit) {
-        this.debit_sum += adding_debit;
-        changeSharedPreferenceUserLong(DEBIT_SUM, debit_sum);
-    }
-
+    /*
+        public void addDebit_sum(long adding_debit) {
+            this.debit_sum += adding_debit;
+            changeSharedPreferenceUserLong(DEBIT_SUM, debit_sum);
+        }
+    */
     public void setDebit_sum(long debit_sum) {
         this.debit_sum = debit_sum;
-        changeSharedPreferenceUserLong(DEBIT_SUM, debit_sum);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().updateDebit_sum(MY_USER_ID, debit_sum);
+        executeVoid(call);
     }
-
-    private void changeSharedPreferenceUserInt(String WHAT_TO_CHANGE, int value) {
-        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-        editor.putInt(WHAT_TO_CHANGE, value);
-        editor.apply();
-    }
-
-    private void changeSharedPreferenceUserLong(String WHAT_TO_CHANGE, long value) {
-        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-        editor.putLong(WHAT_TO_CHANGE, value);
-        editor.apply();
-    }
-
-    private void changeSharedPreferenceUserString(String WHAT_TO_CHANGE, String value) {
-        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-        editor.putString(WHAT_TO_CHANGE, value);
-        editor.apply();
-    }
-
-    private void changeSharedPreferenceUserBoolean(String WHAT_TO_CHANGE, boolean value) {
-        SharedPreferences.Editor editor = sharedPreferencesUser.edit();
-        editor.putBoolean(WHAT_TO_CHANGE, value);
-        editor.apply();
-    }
-
-
-
 }

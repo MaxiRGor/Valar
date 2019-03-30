@@ -38,7 +38,7 @@ final class STRINGS {
     static final String L_9_LOSE_GD = "L_9_LOSE_GD";
     static final String L_10_LOSE_GD = "L_10_LOSE_GD";
 
-
+/*
     static final String USER_ID = "USER_ID";
     static final String USER_NAME = "USER_NAME";
     static final String USER_MONEY = "USER_MONEY";
@@ -62,4 +62,5 @@ final class STRINGS {
     static final String IS_DEBIT = "IS_DEBIT";
     static final String DEBIT_TIME = "DEBIT_TIME";
     static final String DEBIT_SUM = "DEBIT_SUM";
+    */
 }
