@@ -1,11 +1,13 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,12 +32,9 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
         ViewGroup mainContainerVG = getActivity().findViewById(R.id.main_container);
         View settingsView = inflater.inflate(R.layout.settings, mainContainerVG, false);
 
-        //Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_center);
-        //settingsView.startAnimation(animation);
-
-        View view1 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
-        View view2 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
-        View view3 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        @SuppressLint("InflateParams") View view1 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        @SuppressLint("InflateParams") View view2 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
+        @SuppressLint("InflateParams") View view3 = getLayoutInflater().inflate(R.layout.custom_tab_item_icon,null);
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
@@ -61,16 +60,17 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
         }
 
 
-        TabLayout tabLayout = (TabLayout) settingsView.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = settingsView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
         tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
         tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
 
-        final ViewPager viewPager = (ViewPager) settingsView.findViewById(R.id.pager);
+        final ViewPager viewPager =  settingsView.findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
-                ( ((TabMenuActivity)getActivity()).getSupportFragmentManager(), tabLayout.getTabCount());
+                ( (getActivity()).getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

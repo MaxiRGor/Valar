@@ -9,7 +9,7 @@ import java.util.Date;
 
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.view.SetBankView;
 
@@ -110,8 +110,8 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
     }
 
     private void divideMoney(long debit_sum_temp, long credit_sum_temp) {
-        debit_GAC = CoinConversation.coins_GD_AD_CP(debit_sum_temp);
-        credit_GAC = CoinConversation.coins_GD_AD_CP(credit_sum_temp);
+        debit_GAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(debit_sum_temp);
+        credit_GAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(credit_sum_temp);
     }
 
     public void addDebit(long sum_to_add) {

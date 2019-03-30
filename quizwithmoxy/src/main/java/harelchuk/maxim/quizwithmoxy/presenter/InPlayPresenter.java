@@ -1,6 +1,6 @@
 package harelchuk.maxim.quizwithmoxy.presenter;
 
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -8,8 +8,7 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.List;
 
-import harelchuk.maxim.quizwithmoxy.model.AppForContext;
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.NetworkService;
 import harelchuk.maxim.quizwithmoxy.model.Question;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
@@ -54,16 +53,18 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
     private void getQuestionsByLevelFromServer(int lvl) {
         NetworkService.getInstance().getJSONApi().getByLevel(lvl, is_book, is_serial).enqueue(new Callback<List<Question>>() {
             @Override
-            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+            public void onResponse(@NonNull Call<List<Question>> call, @NonNull Response<List<Question>> response) {
                 questions = response.body();
                 Log.d("myLogs", "Connected");
                 if (questions != null) {
-                    sendQuestionToTheView();
+                    if (questions.size() < 7) {
+                        getViewState().showFailure();
+                    } else sendQuestionToTheView();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Question>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Question>> call, @NonNull Throwable t) {
                 Log.d("myLogs", "Not Connected");
                 getViewState().showFailure();
             }
@@ -72,23 +73,23 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
     public void checkAnswer(int userAnswer) {
 
-        updateAnswerOnServer(questions.get(questionCursor).getId_question(), userAnswer);
+        updateAnswerOnServer(this.questions.get(questionCursor).getId_question(), userAnswer);
 
-        if (userAnswer == questions.get(questionCursor).getRight_answer()) {
-            questionsToEnd--;
-            questionCursor++;
+        if (userAnswer == this.questions.get(questionCursor).getRight_answer()) {
+            this.questionsToEnd--;
+            this.questionCursor++;
             Log.d("myLogs", "User answered right");
-            if (questionsToEnd > 0) {
+            if (this.questionsToEnd > 0) {
                 sendQuestionToTheView();
             } else {
                 Log.d("myLogs", "All answered");
-                questionCursor++;
+                this.questionCursor++;
                 getViewState().userWin();
             }
         } else {
             Log.d("myLogs", "User answered wrong and he lose");
-            is_lose = true;
-            getViewState().userLose(questionCursor);
+            this.is_lose = true;
+            getViewState().userLose(this.questionCursor);
         }
     }
 
@@ -116,20 +117,20 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
             }
         }
 
-        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(coinsToAdd);
+        long[] coinsGAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(coinsToAdd);
         getViewState().showAddedScore((int) coinsGAC[0], (int) coinsGAC[1], (int) coinsGAC[2]);
     }
 
-    private void updateAnswerOnServer(int id_question, int userAnswer) {
+    private void updateAnswerOnServer(final int id_question, int userAnswer) {
         NetworkService.getInstance().getJSONApi().updateAnswer(id_question, userAnswer).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("myLogs", "maybe updated");
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.d("myLogs", "UPDATED ANSWER" + String.valueOf(id_question) + " ON SERVER");
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("myLogs", "MISTAKE");
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.d("myLogs", "ANSWER UPDATING FAILED");
             }
         });
     }
@@ -139,108 +140,130 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         long moneyToReturn = 0;
 
         if (levelUserChoose == 1) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_1_cost_cp();
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[0];
         }
         if (levelUserChoose == 2) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_2_cost_cp();
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[1];
         }
         if (levelUserChoose == 3) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_3_cost_cp();
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[2];
         }
         if (levelUserChoose == 4) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_4_cost_ad() * 56;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[3]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 5) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_5_cost_ad() * 56;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[4]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 6) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_6_cost_ad() * 56;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[5]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 7) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_7_cost_gd() * 11720;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[6]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 8) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_8_cost_gd() * 11720;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[7]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 9) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_9_cost_gd() * 11720;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[8]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 10) {
-            moneyToReturn = UserDataSingleton.getInstance().getL_10_cost_gd() * 11720;
+            moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[0]
+                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
 
         UserDataSingleton.getInstance().addUserMoney(moneyToReturn);
 
-        long[] coinsToReturn = CoinConversation.coins_GD_AD_CP(moneyToReturn);
+        long[] coinsToReturn = CoinValuesSingleton.getInstance().convertCoinsToGAC(moneyToReturn);
         getViewState().showAddedScore((int) coinsToReturn[0], (int) coinsToReturn[1], (int) coinsToReturn[2]);
     }
 
     private long coinsToAdd(int level, boolean is_lose) {
-        long coins = 0;
+        long coinsToAdd = 0;
         if (is_lose) {
             if (level == 1) {
-                coins = (UserDataSingleton.getInstance().getL_1_lose_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[0];
             }
             if (level == 2) {
-                coins = (UserDataSingleton.getInstance().getL_2_lose_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[1];
             }
             if (level == 3) {
-                coins = (UserDataSingleton.getInstance().getL_3_lose_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[2];
             }
             if (level == 4) {
-                coins = (UserDataSingleton.getInstance().getL_4_lose_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[3];
             }
             if (level == 5) {
-                coins = (UserDataSingleton.getInstance().getL_5_lose_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[4]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 6) {
-                coins = (UserDataSingleton.getInstance().getL_6_lose_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[5]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 7) {
-                coins = (UserDataSingleton.getInstance().getL_7_lose_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[6]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 8) {
-                coins = (UserDataSingleton.getInstance().getL_8_lose_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[7]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
             }
             if (level == 9) {
-                coins = (UserDataSingleton.getInstance().getL_9_lose_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[8]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
+
             }
             if (level == 10) {
-                coins = (UserDataSingleton.getInstance().getL_10_lose_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getLoseCoins()[9]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
+
             }
         } else {
             if (level == 1) {
-                coins = (UserDataSingleton.getInstance().getL_1_reward_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[0];
             }
             if (level == 2) {
-                coins = (UserDataSingleton.getInstance().getL_2_reward_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[1];
             }
             if (level == 3) {
-                coins = (UserDataSingleton.getInstance().getL_3_reward_cp());
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[2];
             }
             if (level == 4) {
-                coins = (UserDataSingleton.getInstance().getL_4_reward_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[3]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 5) {
-                coins = (UserDataSingleton.getInstance().getL_5_reward_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[4]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 6) {
-                coins = (UserDataSingleton.getInstance().getL_6_reward_ad() * 56);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[5]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_AD();
             }
             if (level == 7) {
-                coins = (UserDataSingleton.getInstance().getL_7_reward_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[6]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
             }
             if (level == 8) {
-                coins = (UserDataSingleton.getInstance().getL_8_reward_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[7]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
             }
             if (level == 9) {
-                coins = (UserDataSingleton.getInstance().getL_9_reward_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[8]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
             }
             if (level == 10) {
-                coins = (UserDataSingleton.getInstance().getL_10_reward_gd() * 11760);
+                coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[9]
+                        * CoinValuesSingleton.getInstance().getConversation_CP_GD();
             }
         }
-        return coins;
+        return coinsToAdd;
     }
 }
 

@@ -1,7 +1,5 @@
 package harelchuk.maxim.quizwithmoxy.model;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -9,51 +7,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static harelchuk.maxim.quizwithmoxy.model.STRINGS.*;
 
 public class UserDataSingleton {
 
-    private SharedPreferences sharedPreferencesMoney;
-
-    //private
-
     private final int MY_USER_ID = 1;
 
-    private int l_1_cost_cp;
-    private int l_2_cost_cp;
-    private int l_3_cost_cp;
-    private int l_4_cost_ad;
-    private int l_5_cost_ad;
-    private int l_6_cost_ad;
-    private int l_7_cost_gd;
-    private int l_8_cost_gd;
-    private int l_9_cost_gd;
-    private int l_10_cost_gd;
-
-    private int l_1_reward_cp;
-    private int l_2_reward_cp;
-    private int l_3_reward_cp;
-    private int l_4_reward_ad;
-    private int l_5_reward_ad;
-    private int l_6_reward_ad;
-    private int l_7_reward_gd;
-    private int l_8_reward_gd;
-    private int l_9_reward_gd;
-    private int l_10_reward_gd;
-
-    private int l_1_lose_cp;
-    private int l_2_lose_cp;
-    private int l_3_lose_cp;
-    private int l_4_lose_cp;
-    private int l_5_lose_ad;
-    private int l_6_lose_ad;
-    private int l_7_lose_ad;
-    private int l_8_lose_gd;
-    private int l_9_lose_gd;
-    private int l_10_lose_gd;
-
-
-    //private SharedPreferences sharedPreferencesUser;
+    //private boolean isConnected;
 
     private int user_id;
     private long user_uuid;
@@ -97,12 +56,11 @@ public class UserDataSingleton {
     }
 
     private UserDataSingleton() {
-        setSharedPreferencesMoneyIfNotExists();
+
         getUserById();
     }
 
     private void getUserById() {
-        final User[] loadingUser = new User[1];
         NetworkService.getInstance().getJSONApi().getUserInfo(MY_USER_ID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -134,38 +92,6 @@ public class UserDataSingleton {
 
 
     private void getVariables(User user) {
-        this.l_1_cost_cp = sharedPreferencesMoney.getInt(L_1_COST_CP, 0);
-        this.l_2_cost_cp = sharedPreferencesMoney.getInt(L_2_COST_CP, 0);
-        this.l_3_cost_cp = sharedPreferencesMoney.getInt(L_3_COST_CP, 0);
-        this.l_4_cost_ad = sharedPreferencesMoney.getInt(L_4_COST_AD, 0);
-        this.l_5_cost_ad = sharedPreferencesMoney.getInt(L_5_COST_AD, 0);
-        this.l_6_cost_ad = sharedPreferencesMoney.getInt(L_6_COST_AD, 0);
-        this.l_7_cost_gd = sharedPreferencesMoney.getInt(L_7_COST_GD, 0);
-        this.l_8_cost_gd = sharedPreferencesMoney.getInt(L_8_COST_GD, 0);
-        this.l_9_cost_gd = sharedPreferencesMoney.getInt(L_9_COST_GD, 0);
-        this.l_10_cost_gd = sharedPreferencesMoney.getInt(L_10_COST_GD, 0);
-
-        this.l_1_reward_cp = sharedPreferencesMoney.getInt(L_1_REWARD_CP, 0);
-        this.l_2_reward_cp = sharedPreferencesMoney.getInt(L_2_REWARD_CP, 0);
-        this.l_3_reward_cp = sharedPreferencesMoney.getInt(L_3_REWARD_CP, 0);
-        this.l_4_reward_ad = sharedPreferencesMoney.getInt(L_4_REWARD_AD, 0);
-        this.l_5_reward_ad = sharedPreferencesMoney.getInt(L_5_REWARD_AD, 0);
-        this.l_6_reward_ad = sharedPreferencesMoney.getInt(L_6_REWARD_AD, 0);
-        this.l_7_reward_gd = sharedPreferencesMoney.getInt(L_7_REWARD_GD, 0);
-        this.l_8_reward_gd = sharedPreferencesMoney.getInt(L_8_REWARD_GD, 0);
-        this.l_9_reward_gd = sharedPreferencesMoney.getInt(L_9_REWARD_GD, 0);
-        this.l_10_reward_gd = sharedPreferencesMoney.getInt(L_10_REWARD_GD, 0);
-
-        this.l_1_lose_cp = sharedPreferencesMoney.getInt(L_1_LOSE_CP, 0);
-        this.l_2_lose_cp = sharedPreferencesMoney.getInt(L_2_LOSE_CP, 0);
-        this.l_3_lose_cp = sharedPreferencesMoney.getInt(L_3_LOSE_CP, 0);
-        this.l_4_lose_cp = sharedPreferencesMoney.getInt(L_4_LOSE_CP, 0);
-        this.l_5_lose_ad = sharedPreferencesMoney.getInt(L_5_LOSE_AD, 0);
-        this.l_6_lose_ad = sharedPreferencesMoney.getInt(L_6_LOSE_AD, 0);
-        this.l_7_lose_ad = sharedPreferencesMoney.getInt(L_7_LOSE_AD, 0);
-        this.l_8_lose_gd = sharedPreferencesMoney.getInt(L_8_LOSE_GD, 0);
-        this.l_9_lose_gd = sharedPreferencesMoney.getInt(L_9_LOSE_GD, 0);
-        this.l_10_lose_gd = sharedPreferencesMoney.getInt(L_10_LOSE_GD, 0);
 
         this.user_id = user.getId_user();
         this.user_uuid = user.getUser_uuid();
@@ -203,179 +129,7 @@ public class UserDataSingleton {
         this.chosen_level = 0;
     }
 
-    private void setSharedPreferencesMoneyIfNotExists() {
 
-        this.sharedPreferencesMoney = AppForContext.getContext()
-                .getSharedPreferences(SHARED_PREFERENCES_MONEY_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                        , Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor;
-
-        if (!sharedPreferencesMoney.contains("initialized")) {
-
-            Log.d("myLogs", "SP M CREATED");
-
-            editor = sharedPreferencesMoney.edit();
-
-            editor.putBoolean("initialized", true);
-
-            editor.putInt(L_1_COST_CP, 1);
-            editor.putInt(L_2_COST_CP, 5);
-            editor.putInt(L_3_COST_CP, 15);
-            editor.putInt(L_4_COST_AD, 1);
-            editor.putInt(L_5_COST_AD, 8);
-            editor.putInt(L_6_COST_AD, 25);
-            editor.putInt(L_7_COST_GD, 1);
-            editor.putInt(L_8_COST_GD, 7);
-            editor.putInt(L_9_COST_GD, 21);
-            editor.putInt(L_10_COST_GD, 150);
-
-            editor.putInt(L_1_REWARD_CP, 11);
-            editor.putInt(L_2_REWARD_CP, 35);
-            editor.putInt(L_3_REWARD_CP, 127);
-            editor.putInt(L_4_REWARD_AD, 25);
-            editor.putInt(L_5_REWARD_AD, 83);
-            editor.putInt(L_6_REWARD_AD, 655);
-            editor.putInt(L_7_REWARD_GD, 29);
-            editor.putInt(L_8_REWARD_GD, 91);
-            editor.putInt(L_9_REWARD_GD, 321);
-            editor.putInt(L_10_REWARD_GD, 1000);
-
-            editor.putInt(L_1_LOSE_CP, 1);
-            editor.putInt(L_2_LOSE_CP, 2);
-            editor.putInt(L_3_LOSE_CP, 10);
-            editor.putInt(L_4_LOSE_CP, 30);
-            editor.putInt(L_5_LOSE_AD, 3);
-            editor.putInt(L_6_LOSE_AD, 24);
-            editor.putInt(L_7_LOSE_AD, 75);
-            editor.putInt(L_8_LOSE_GD, 4);
-            editor.putInt(L_9_LOSE_GD, 28);
-            editor.putInt(L_10_LOSE_GD, 63);
-
-            editor.commit();
-        }
-
-    }
-
-    public int getL_1_cost_cp() {
-        return l_1_cost_cp;
-    }
-
-    public int getL_2_cost_cp() {
-        return l_2_cost_cp;
-    }
-
-    public int getL_3_cost_cp() {
-        return l_3_cost_cp;
-    }
-
-    public int getL_4_cost_ad() {
-        return l_4_cost_ad;
-    }
-
-    public int getL_5_cost_ad() {
-        return l_5_cost_ad;
-    }
-
-    public int getL_6_cost_ad() {
-        return l_6_cost_ad;
-    }
-
-    public int getL_7_cost_gd() {
-        return l_7_cost_gd;
-    }
-
-    public int getL_8_cost_gd() {
-        return l_8_cost_gd;
-    }
-
-    public int getL_9_cost_gd() {
-        return l_9_cost_gd;
-    }
-
-    public int getL_10_cost_gd() {
-        return l_10_cost_gd;
-    }
-
-    public int getL_1_reward_cp() {
-        return l_1_reward_cp;
-    }
-
-    public int getL_2_reward_cp() {
-        return l_2_reward_cp;
-    }
-
-    public int getL_3_reward_cp() {
-        return l_3_reward_cp;
-    }
-
-    public int getL_4_reward_ad() {
-        return l_4_reward_ad;
-    }
-
-    public int getL_5_reward_ad() {
-        return l_5_reward_ad;
-    }
-
-    public int getL_6_reward_ad() {
-        return l_6_reward_ad;
-    }
-
-    public int getL_7_reward_gd() {
-        return l_7_reward_gd;
-    }
-
-    public int getL_8_reward_gd() {
-        return l_8_reward_gd;
-    }
-
-    public int getL_9_reward_gd() {
-        return l_9_reward_gd;
-    }
-
-    public int getL_10_reward_gd() {
-        return l_10_reward_gd;
-    }
-
-    public int getL_1_lose_cp() {
-        return l_1_lose_cp;
-    }
-
-    public int getL_2_lose_cp() {
-        return l_2_lose_cp;
-    }
-
-    public int getL_3_lose_cp() {
-        return l_3_lose_cp;
-    }
-
-    public int getL_4_lose_cp() {
-        return l_4_lose_cp;
-    }
-
-    public int getL_5_lose_ad() {
-        return l_5_lose_ad;
-    }
-
-    public int getL_6_lose_ad() {
-        return l_6_lose_ad;
-    }
-
-    public int getL_7_lose_ad() {
-        return l_7_lose_ad;
-    }
-
-    public int getL_8_lose_gd() {
-        return l_8_lose_gd;
-    }
-
-    public int getL_9_lose_gd() {
-        return l_9_lose_gd;
-    }
-
-    public int getL_10_lose_gd() {
-        return l_10_lose_gd;
-    }
 
     public long getUser_uuid() {
         return user_uuid;

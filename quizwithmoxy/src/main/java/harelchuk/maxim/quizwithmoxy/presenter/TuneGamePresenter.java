@@ -5,12 +5,8 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
 
@@ -20,36 +16,45 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
 
     public TuneGamePresenter() {
         Log.d("myLogs", "TuneGamePresenter const");
-        final int[] levels = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        final int[] rewards = new int[10];
-        final int[] costs = new int[10];
-
-        ArrayList<Map<String, Integer>> data = new ArrayList<>(10);
-
-        costs[0] = UserDataSingleton.getInstance().getL_1_cost_cp();
-        costs[1] = UserDataSingleton.getInstance().getL_2_cost_cp();
-        costs[2] = UserDataSingleton.getInstance().getL_3_cost_cp();
-        costs[3] = UserDataSingleton.getInstance().getL_4_cost_ad();
-        costs[4] = UserDataSingleton.getInstance().getL_5_cost_ad();
-        costs[5] = UserDataSingleton.getInstance().getL_6_cost_ad();
-        costs[6] = UserDataSingleton.getInstance().getL_7_cost_gd();
-        costs[7] = UserDataSingleton.getInstance().getL_8_cost_gd();
-        costs[8] = UserDataSingleton.getInstance().getL_9_cost_gd();
-        costs[9] = UserDataSingleton.getInstance().getL_10_cost_gd();
-        rewards[0] = UserDataSingleton.getInstance().getL_1_reward_cp();
-        rewards[1] = UserDataSingleton.getInstance().getL_2_reward_cp();
-        rewards[2] = UserDataSingleton.getInstance().getL_3_reward_cp();
-        rewards[3] = UserDataSingleton.getInstance().getL_4_reward_ad();
-        rewards[4] = UserDataSingleton.getInstance().getL_5_reward_ad();
-        rewards[5] = UserDataSingleton.getInstance().getL_6_reward_ad();
-        rewards[6] = UserDataSingleton.getInstance().getL_7_reward_gd();
-        rewards[7] = UserDataSingleton.getInstance().getL_8_reward_gd();
-        rewards[8] = UserDataSingleton.getInstance().getL_9_reward_gd();
-        rewards[9] = UserDataSingleton.getInstance().getL_10_reward_gd();
-
-        Map<String, Integer> map;
-
+        int[] levels = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] rewards = CoinValuesSingleton.getInstance().getRewardCoins();
+        int[] costs = CoinValuesSingleton.getInstance().getCostCoins();
+        int[] coinImagesInt = new int[10];
         for (int i = 0; i < 10; i++) {
+            if (i == 0 || i == 1 || i == 2) {
+                coinImagesInt[i] = R.drawable.ic_money_warior;
+            }
+            if (i == 3 || i == 4 || i == 5) {
+                coinImagesInt[i] = R.drawable.ic_money_deer;
+            }
+            if (i == 6 || i == 7 || i == 8 || i == 9) {
+                coinImagesInt[i] = R.drawable.ic_money_dragon;
+            }
+        }
+        getViewState().fillLevelList(levels, rewards, costs, coinImagesInt);
+    }
+
+
+    public void writeOff(long money_to_write_off) {
+        long money = UserDataSingleton.getInstance().getUser_money();
+        money -= money_to_write_off;
+        UserDataSingleton.getInstance().setUserMoney(money);
+    }
+
+    public void showUsersMoneyAndBF() {
+        long money = UserDataSingleton.getInstance().getUser_money();
+        long[] money_GD_AD_CP = CoinValuesSingleton.getInstance().convertCoinsToGAC(money);
+        getViewState().fillCoins(money_GD_AD_CP);
+    }
+}
+
+
+//ArrayList<Map<String, Integer>> data = new ArrayList<>(10);
+
+
+//Map<String, Integer> map;
+
+   /*     for (int i = 0; i < 10; i++) {
             map = new HashMap<>();
             map.put("level", levels[i]);
             map.put("cost", costs[i]);
@@ -64,30 +69,7 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
                 map.put("coin", 0);
             }
             data.add(map);
-        }
-
-
-
-        getViewState().fillLevelList(data, costs);
-    }
-
-
-    public void writeOff(long money_to_write_off) {
-        long money = UserDataSingleton.getInstance().getUser_money();
-        money -= money_to_write_off;
-        UserDataSingleton.getInstance().setUserMoney(money);
-    }
-
-    public void showUsersMoneyAndBF() {
-        long money = UserDataSingleton.getInstance().getUser_money();
-        long[] money_GD_AD_CP = CoinConversation.coins_GD_AD_CP(money);
-        getViewState().fillCoins(money_GD_AD_CP);
-    }
-}
-
-
-
-
+        }*/
 
 
 

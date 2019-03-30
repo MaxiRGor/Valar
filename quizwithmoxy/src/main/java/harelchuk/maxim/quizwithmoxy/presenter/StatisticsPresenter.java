@@ -7,7 +7,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
 
@@ -59,7 +59,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
                 user_money = UserDataSingleton.getInstance().getUser_money();
 
 
-                long[] mt = CoinConversation.coins_GD_AD_CP(user_money);
+                long[] mt = CoinValuesSingleton.getInstance().convertCoinsToGAC(user_money);
                 money_GD = mt[0];
                 money_AD = mt[1];
                 money_CP = mt[2];

@@ -21,11 +21,9 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import harelchuk.maxim.quizwithmoxy.InPlayActivity;
 import harelchuk.maxim.quizwithmoxy.R;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.TuneGamePresenter;
@@ -44,7 +42,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
     private Context context;
     private long[] coinsGAC;
-    private int[] level_costs;
+    //private int[] level_costs;
 
 
     @Nullable
@@ -52,7 +50,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.context = getContext();
         this.tuneGameMenuView = inflater.inflate(R.layout.tune_game_empty, container, false);
-        this.recyclerView= tuneGameMenuView.findViewById(R.id.recyclerView);
+        this.recyclerView = tuneGameMenuView.findViewById(R.id.recyclerView);
         this.moneyImage = tuneGameMenuView.findViewById(R.id.tuneGameMoneyBackground);
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
@@ -61,21 +59,21 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.targ_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.targ_window));
         }
-        if(theme == 1){
+        if (theme == 1) {
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.stark_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.stark_window));
         }
-        if(theme == 2){
+        if (theme == 2) {
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.lann_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.lann_window));
         }
-        if(theme == 3){
+        if (theme == 3) {
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.night_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
 
         this.coinsGAC = new long[2];
-        this.level_costs = new int[9];
+        //this.level_costs = new int[9];
         return tuneGameMenuView;
     }
 
@@ -91,9 +89,9 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     }
 
     @Override
-    public void fillLevelList(ArrayList<Map<String, Integer>> data, int[] costs) {
-        level_costs = costs;
-        DataAdapter adapter = new DataAdapter(getContext(), data);
+    public void fillLevelList(int[] levels, int[] rewards, int[] costs, int[] coinImagesInt) {
+        //this.level_costs = costs;
+        DataAdapter adapter = new DataAdapter(getContext(), levels, rewards, costs, coinImagesInt);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
             @Override
@@ -106,17 +104,15 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     }
 
     private void checkIfAvailable(int position) {
-        int level = position + 1;
-        UserDataSingleton.getInstance().setChosen_level(level);
-        long cost = level_costs[position];
-        if (level == 4 || level == 5 || level == 6) {
+        int cost = (int) CoinValuesSingleton.getInstance().getCostCoins()[position];
+        if (position == 3 || position == 4 || position == 5) {
             cost *= 56;
         }
-        if (level == 7 || level == 8 || level == 9 || level == 10) {
+        if (position == 6 || position == 7 || position == 8 || position == 9) {
             cost *= 56 * 210;
         }
-        long money = coinsGAC[2] + coinsGAC[1] * 56 + coinsGAC[0] * 56 * 210;
-        if (money >= cost) {
+        if (UserDataSingleton.getInstance().getUser_money() >= cost) {
+            UserDataSingleton.getInstance().setChosen_level(position + 1);
             gamePresenter.writeOff(cost);
             startGame();
         }
@@ -130,12 +126,11 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Override
     public void fillCoins(long[] coins_GAC) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_top_to_center);
-        coinsGAC = coins_GAC;
+        this.coinsGAC = coins_GAC;
         final TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
         final TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         final TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
-        //ImageView booksFilms = tuneGameMenuView.findViewById(R.id.tuneBookFilmIconIV);
-        //
+
         coins_AD.startAnimation(animation);
         coins_CP.startAnimation(animation);
         coins_GD.startAnimation(animation);
@@ -143,28 +138,27 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         coins_AD.setText(String.valueOf(coins_GAC[1]));
         coins_CP.setText(String.valueOf(coins_GAC[2]));
 
-
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
         Drawable alertDialogButtonImage1 = null;
         Drawable alertDialogWindowImage1 = null;
 
-        if(theme==0){
+        if (theme == 0) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.targ_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.targ_window);
         }
 
-        if(theme==1){
+        if (theme == 1) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.stark_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.stark_window);
         }
 
-        if(theme==2){
+        if (theme == 2) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.lann_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.lann_window);
         }
 
-        if(theme==3){
+        if (theme == 3) {
             alertDialogButtonImage1 = getResources().getDrawable(R.drawable.night_button_selector);
             alertDialogWindowImage1 = getResources().getDrawable(R.drawable.night_window);
         }

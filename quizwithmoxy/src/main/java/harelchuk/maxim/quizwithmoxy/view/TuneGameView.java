@@ -13,7 +13,7 @@ import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
 public interface TuneGameView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
 
-    void fillLevelList(ArrayList<Map<String, Integer>> data, int[] costs);
+    void fillLevelList(int[] levels,int[] rewards,int[] costs,int[] coinImagesInt);
 
     void fillCoins(long[] coins_GAC);
 

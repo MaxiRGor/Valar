@@ -1,6 +1,5 @@
 package harelchuk.maxim.quizwithmoxy;
 
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -41,6 +40,10 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     private Drawable unansweredLogo;
     private Drawable answeredLogo;
 
+    private Drawable books;
+    private Drawable films;
+    private Drawable booksAndFilms;
+
     private Animation animationConstriction;
     private Animation animationFadeOut;
 
@@ -53,6 +56,10 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         this.questionContainer = findViewById(R.id.frameQuestionLayout);
         this.questionLevelTV = findViewById(R.id.inPlayLevelTV);
         this.questionCategoryTV = findViewById(R.id.inPlayCategoryTV);
+        this.booksAndFilms = getResources().getDrawable(R.drawable.all_books_films_unpressed);
+        this.books = getResources().getDrawable(R.drawable.all_book_unpressed);
+        this.films = getResources().getDrawable(R.drawable.all_films_unpressed);
+
         TextView levelNameTV = findViewById(R.id.inPlayLevelName);
 
         this.bookFilmImage = findViewById(R.id.inPlayBookFilmImage);
@@ -176,11 +183,11 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
         if (inBook) {
             if (inSerial) {
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_books_films_unpressed));
+                this.bookFilmImage.setBackground(this.booksAndFilms);
             } else
-                bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_book_unpressed));
+                this.bookFilmImage.setBackground( this.books);
         } else
-            bookFilmImage.setBackground(getResources().getDrawable(R.drawable.all_films_unpressed));
+            this.bookFilmImage.setBackground(films);
 
         bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_left_to_center));
 

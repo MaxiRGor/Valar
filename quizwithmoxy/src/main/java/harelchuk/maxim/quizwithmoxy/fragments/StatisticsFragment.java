@@ -1,5 +1,6 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.StatisticsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.StatisticsView;
@@ -160,7 +161,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion, null);
+                @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.alertdialog_money_describtion, null);
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
 
@@ -230,7 +231,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 LayoutInflater inflater = getLayoutInflater();
 
-                View dialogView = inflater.inflate(R.layout.alertdialog_text_message, null);
+                @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.alertdialog_text_message, null);
                 builder.setView(dialogView);
                 final AlertDialog dialog = builder.create();
 
@@ -326,7 +327,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
             user_skin_night_TV.setText(R.string.unavailable);
         }
         if (is_debit) {
-            long coins[] = CoinConversation.coins_GD_AD_CP(debit_sum);
+            long coins[] = CoinValuesSingleton.getInstance().convertCoinsToGAC(debit_sum);
             ImageView GD = statisticsView.findViewById(R.id.userDebitGDImage);
             ImageView AD = statisticsView.findViewById(R.id.userDebitADImage);
             ImageView CP = statisticsView.findViewById(R.id.userDebitCPImage);
@@ -349,7 +350,7 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
 
         }
         if (is_credit) {
-            long coins[] = CoinConversation.coins_GD_AD_CP(credit_sum);
+            long coins[] = CoinValuesSingleton.getInstance().convertCoinsToGAC(credit_sum);
             ImageView GD = statisticsView.findViewById(R.id.userCreditGDImage);
             ImageView AD = statisticsView.findViewById(R.id.userCreditADImage);
             ImageView CP = statisticsView.findViewById(R.id.userCreditCPImage);

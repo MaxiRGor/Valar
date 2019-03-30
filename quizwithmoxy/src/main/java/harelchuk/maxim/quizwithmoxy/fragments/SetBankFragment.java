@@ -16,7 +16,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.model.CoinConversation;
+import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.SetBankPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SetBankView;
@@ -351,7 +351,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     private void showAddCreditCoins(int progress, long user_money,
                                     TextView creditGetGDTV, TextView creditGetADTV, TextView creditGetCPTV) {
         final long sum_to_get = user_money * progress;
-        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(sum_to_get);
+        long[] coinsGAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(sum_to_get);
         if (coinsGAC[0] != 0) {
             creditGetGDTV.setText(String.valueOf(coinsGAC[0]));
             creditGetGDTV.setVisibility(View.VISIBLE);
@@ -364,13 +364,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             creditGetCPTV.setVisibility(View.VISIBLE);
             creditGetCPTV.setText(String.valueOf(coinsGAC[2]));
         } else creditGetCPTV.setVisibility(View.INVISIBLE);
-
     }
 
     private void showAddDebitCoins(int progress, long user_money,
                                    TextView bankDebitAddSumGDTV, TextView bankDebitAddSumADTV, TextView bankDebitAddSumCPTV) {
         final long sum_to_add = user_money * progress / 10;
-        long[] coinsGAC = CoinConversation.coins_GD_AD_CP(sum_to_add);
+        long[] coinsGAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(sum_to_add);
         if (coinsGAC[0] != 0) {
             bankDebitAddSumGDTV.setText(String.valueOf(coinsGAC[0]));
             bankDebitAddSumGDTV.setVisibility(View.VISIBLE);
