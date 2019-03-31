@@ -1,5 +1,7 @@
 package harelchuk.maxim.quizwithmoxy.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,7 +15,7 @@ import retrofit2.Response;
 
 public class UserDataSingleton {
 
-    private final int MY_USER_ID = 1;
+    //private final int MY_USER_ID = 1;
 
     private boolean isConnected;
 
@@ -54,24 +56,78 @@ public class UserDataSingleton {
 
     private int chosen_level;
 
-    private static final UserDataSingleton ourInstance = new UserDataSingleton();
+    private static final UserDataSingleton oneInstance = new UserDataSingleton();
 
     public static UserDataSingleton getInstance() {
-        return ourInstance;
+        return oneInstance;
     }
 
     private UserDataSingleton() {
         this.isConnected = false;
-        getUserById();
+        //getUserById();
+        getUUIDFromSharedPreferences();
     }
 
-    private void getUserById() {
-        NetworkService.getInstance().getJSONApi().getUserById(MY_USER_ID).enqueue(new Callback<User>() {
+    private void getUUIDFromSharedPreferences() {
+        SharedPreferences sp_uuid = AppForContext.getContext().getSharedPreferences("SP_UUID", Context.MODE_PRIVATE);
+        boolean isSP = sp_uuid.getBoolean("is_SP", false);
+        if (!isSP) {
+            String stringUUID = UUID.randomUUID().toString();
+            this.user_uuid = stringUUID;
+            SharedPreferences.Editor editor = sp_uuid.edit();
+            editor.putBoolean("is_SP", true);
+            editor.putString("STRING_UUID", stringUUID);
+            editor.apply();
+            Log.d("myLogs", "SP CREATED + " + stringUUID);
+            createUserByUUIdOnServer(stringUUID);
+        }
+        if (isSP) {
+            String stringUUID = sp_uuid.getString("STRING_UUID", "FAIL");
+            Log.d("myLogs", "SP READ + " + stringUUID);
+            //this.user_uuid = stringUUID;
+            getUserByUUID(stringUUID);
+        }
+    }
+
+    private void createUserByUUIdOnServer(final String stringUUID) {
+        Log.d("myLogs", "TRYING TO CREATE USER BY UUID");
+        NetworkService.getInstance().getJSONApi().createUserByUUID(stringUUID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                Log.d("myLogs", "USER CREATED");
                 User user = response.body();
-                assert user != null;
-                getVariables(user);
+                if (response.isSuccessful()) {
+                    assert user != null;
+                    getVariables(user);
+                } else {
+                    Log.d("myLogs", "-------------RESPONSE USER CREATED IS NOT SUCCESSFUL");
+                    removeInfoFromSP();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                isConnected = false;
+                removeInfoFromSP();
+            }
+        });
+    }
+
+
+    private void getUserByUUID(String stringUUID) {
+        Log.d("myLogs", "TRYING TO FIND USER BY UUID");
+        NetworkService.getInstance().getJSONApi().getUserByUUID(stringUUID).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                Log.d("myLogs", "USER GOT");
+                User user = response.body();
+                if (response.isSuccessful()) {
+                    assert user != null;
+                    getVariables(user);
+                } else {
+                    Log.d("myLogs", "-------------RESPONSE USER GOT IS NOT SUCCESSFUL");
+                }
+
             }
 
             @Override
@@ -81,8 +137,16 @@ public class UserDataSingleton {
         });
     }
 
+    private void removeInfoFromSP() {
+        SharedPreferences sharedPreferences = AppForContext.getContext().getSharedPreferences("SP_UUID", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("is_SP", false);
+        editor.apply();
+    }
 
     private void getVariables(User user) {
+
+        Log.d("myLogs", "GETTING VARIABLES GOT");
 
         this.user_id = user.getId_user();
         this.user_uuid = user.getUser_uuid();
@@ -120,6 +184,7 @@ public class UserDataSingleton {
 
         this.chosen_level = 0;
         this.isConnected = true;
+        Log.d("myLogs", "VARIABLES GOT");
     }
 
     private void executeVoid(Call<Void> call) {
@@ -248,115 +313,116 @@ public class UserDataSingleton {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setUser_name(MY_USER_ID, user_name);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setUser_name(this.user_id, user_name);
         executeVoid(call);
     }
 
-    public void setUser_uuid() {
-        if(this.user_uuid.equals("EMPTY")){
-            String uuid = UUID.randomUUID().toString();
-            this.user_uuid = uuid;
-            Call<Void> call = NetworkService.getInstance().getJSONApi().setUser_uuid(MY_USER_ID, uuid);
-            executeVoid(call);
+    /*
+        public void setUser_uuid() {
+            if (this.user_uuid.equals("EMPTY")) {
+                String uuid = UUID.randomUUID().toString();
+                this.user_uuid = uuid;
+                Call<Void> call = NetworkService.getInstance().getJSONApi().setUser_uuid(this.user_id, uuid);
+                executeVoid(call);
+            }
         }
-    }
-
+    */
     public void addUserMoney(long add) {
         this.user_money += add;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().addUser_money(MY_USER_ID, add);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().addUser_money(this.user_id, add);
         executeVoid(call);
     }
 
     public void subtractUserMoney(long subtract) {
         this.user_money -= subtract;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().subtractUser_money(MY_USER_ID, subtract);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().subtractUser_money(this.user_id, subtract);
         executeVoid(call);
     }
 
     public void updateEasyWin() {
         this.number_easy_winnings++;
         this.number_easy_games++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().easy_win(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().easy_win(this.user_id);
         executeVoid(call);
     }
 
     public void updateEasyLose() {
         this.number_easy_games++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().easy_lose(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().easy_lose(this.user_id);
         executeVoid(call);
     }
 
     public void updateMediumWin() {
         this.number_medium_games++;
         this.number_medium_winnings++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().medium_win(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().medium_win(this.user_id);
         executeVoid(call);
     }
 
     public void updateMediumLose() {
         this.number_medium_games++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().medium_lose(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().medium_lose(this.user_id);
         executeVoid(call);
     }
 
     public void updateHardWin() {
         this.number_hard_games++;
         this.number_hard_winnings++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().hard_win(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().hard_win(this.user_id);
         executeVoid(call);
     }
 
     public void updateHardLose() {
         this.number_hard_games++;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().hard_lose(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().hard_lose(this.user_id);
         executeVoid(call);
     }
 
     public void setIs_adv(boolean is_adv) {
         this.is_adv = is_adv;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_adv(MY_USER_ID, is_adv);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_adv(this.user_id, is_adv);
         executeVoid(call);
     }
 
     public void setIs_books(boolean is_books) {
         this.is_books = is_books;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_books(MY_USER_ID, is_books);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_books(this.user_id, is_books);
         executeVoid(call);
     }
 
     public void setIs_films(boolean is_films) {
         this.is_films = is_films;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_films(MY_USER_ID, is_films);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_films(this.user_id, is_films);
         executeVoid(call);
     }
 
     public void setIs_skin_targar(boolean is_skin_targar) {
         this.is_skin_targar = is_skin_targar;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_targar(MY_USER_ID, is_skin_targar);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_targar(this.user_id, is_skin_targar);
         executeVoid(call);
     }
 
     public void setIs_skin_lann(boolean is_skin_lann) {
         this.is_skin_lann = is_skin_lann;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_lann(MY_USER_ID, is_skin_lann);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_lann(this.user_id, is_skin_lann);
         executeVoid(call);
     }
 
     public void setIs_skin_stark(boolean is_skin_stark) {
         this.is_skin_stark = is_skin_stark;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_stark(MY_USER_ID, is_skin_stark);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_stark(this.user_id, is_skin_stark);
         executeVoid(call);
     }
 
     public void setIs_skin_night(boolean is_skin_night) {
         this.is_skin_night = is_skin_night;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_night(MY_USER_ID, is_skin_night);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setIs_skin_night(this.user_id, is_skin_night);
         executeVoid(call);
     }
 
     public void setCurrent_theme(int current_theme) {
         this.current_theme = current_theme;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().setCurrent_theme(MY_USER_ID, current_theme);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().setCurrent_theme(this.user_id, current_theme);
         executeVoid(call);
     }
 
@@ -367,7 +433,7 @@ public class UserDataSingleton {
         this.credit_sum = add;
         this.credit_time = current_time;
         this.credit_time_to_increase = current_time;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().get_credit(MY_USER_ID, add);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().get_credit(this.user_id, add);
         executeVoid(call);
     }
 
@@ -380,7 +446,7 @@ public class UserDataSingleton {
             this.credit_sum = 0;
             this.credit_time = 0;
             this.credit_time_to_increase = 0;
-            Call<Void> call = NetworkService.getInstance().getJSONApi().remove_credit(MY_USER_ID);
+            Call<Void> call = NetworkService.getInstance().getJSONApi().remove_credit(this.user_id);
             executeVoid(call);
         }
     }
@@ -411,7 +477,7 @@ public class UserDataSingleton {
         this.debit_sum = updated_debit_sum_and_time()[0];
         this.debit_sum += add;
         this.debit_time = current_time;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().add_debit(MY_USER_ID, add);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().add_debit(this.user_id, add);
         executeVoid(call);
     }
 
@@ -422,7 +488,7 @@ public class UserDataSingleton {
         this.is_debit = false;
         this.debit_sum = 0;
         this.debit_time = 0;
-        Call<Void> call = NetworkService.getInstance().getJSONApi().remove_debit(MY_USER_ID);
+        Call<Void> call = NetworkService.getInstance().getJSONApi().remove_debit(this.user_id);
         executeVoid(call);
     }
 

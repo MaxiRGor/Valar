@@ -8,10 +8,10 @@ import harelchuk.maxim.quizwithmoxy.fragments.SetUsersBooksFilmsFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.SetEmblemFragment;
 import harelchuk.maxim.quizwithmoxy.fragments.SetBankFragment;
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public SettingsPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
     }

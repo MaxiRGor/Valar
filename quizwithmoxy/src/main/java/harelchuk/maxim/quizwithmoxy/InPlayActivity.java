@@ -156,7 +156,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         question6Logo.setBackground(unansweredLogo);
         question7Logo.setBackground(unansweredLogo);
 
-        this.animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.constriction);
+        this.animationConstriction = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.user_answer);
         this.animationFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
 
     }
@@ -186,6 +186,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             this.bookFilmImage.setBackground(films);
 
         bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.from_left_to_center));
+        bookFilmImage.startAnimation(AnimationUtils.loadAnimation(this,R.anim.book_film_appear));
 
         int currentQuestion = 1 + 7 - questionsToTheEnd;
 

@@ -34,6 +34,13 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
     private View statisticsView;
     private String[] names;
 
+    public static StatisticsFragment newInstance() {
+        Bundle args = new Bundle();
+        StatisticsFragment fragment = new StatisticsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -19,15 +19,25 @@ public interface JSONApi {
                                        @Path("in_serial") boolean in_serial);
 */
 
-    @PUT("/answer/{id_answer}/{user_answer}")
+    @PUT("/user_answer/{id_answer}/{user_answer}")
     Call<Void> updateAnswer(@Path("id_answer") int id_answer, @Path("user_answer") int user_answer);
 
+    @GET("/users/create/{user_uuid}")
+    Call<User> createUserByUUID(@Path("user_uuid") String user_uuid);
+
+    @GET("/users/get/{user_uuid}")
+    Call<User> getUserByUUID(@Path("user_uuid") String user_uuid);
+
+    /*
     @GET("/users/{id_user}")
     Call<User> getUserById(@Path("id_user") int id_user);
+*/
 
+
+    /*
     @PUT("/update/user/{id_user}/user_uuid/{user_uuid}")
     Call<Void> setUser_uuid(@Path("id_user") int id_user, @Path("user_uuid") String user_uuid);
-
+*/
     @PUT("/update/user/{id_user}/user_name/{user_name}")
     Call<Void> setUser_name(@Path("id_user") int id_user, @Path("user_name") String user_name);
 

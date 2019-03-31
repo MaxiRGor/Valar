@@ -3,11 +3,18 @@ package harelchuk.maxim.quizwithmoxy;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import harelchuk.maxim.quizwithmoxy.fragments.SettingsFragment;
@@ -17,16 +24,62 @@ import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 
 public class TabMenuActivity extends AppCompatActivity {
 
+    private int currentPageID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout_with_bottom_navigation);
 
-        final ImageView imageView = findViewById(R.id.mainBackground);
-        final BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
-        int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
-        UserDataSingleton.getInstance().setUser_uuid();
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.from_bottom_to_center, R.anim.from_center_to_bottom);
+            transaction
+                    .add(R.id.main_container, TuneGameFragment.newInstance()).commit();
+        }
+
+        setThemeAndIcons();
+
+        final BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+        navigation.setItemIconTintList(null);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener
+            mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int item_id = item.getItemId();
+            if (item_id == currentPageID) return false;
+            else {
+                if (item_id == R.id.navigation_play)
+                    replaceFragment(TuneGameFragment.newInstance());
+                if (item_id == R.id.navigation_settings)
+                    replaceFragment(SettingsFragment.newInstance());
+                if (item_id == R.id.navigation_statistics)
+                    replaceFragment(StatisticsFragment.newInstance());
+                currentPageID = item_id;
+                return true;
+            }
+        }
+    };
+
+    private void replaceFragment(Fragment newFragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().
+                beginTransaction().
+                setCustomAnimations(R.anim.from_bottom_to_center, R.anim.from_center_to_bottom);
+
+        fragmentTransaction.replace(R.id.main_container, newFragment)
+                .commit();
+    }
+
+    private void setThemeAndIcons() {
+        final BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+        final ImageView imageView = findViewById(R.id.mainBackground);
+        int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
         if (theme == 0) {
             setTheme(R.style.TargarAppTheme);
@@ -80,39 +133,5 @@ public class TabMenuActivity extends AppCompatActivity {
             navigation.getMenu().getItem(2).setIcon(R.drawable.night_menu_settings_selector);
         }
 
-        navigation.setItemIconTintList(null);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction
-                    .add(R.id.main_container, new TuneGameFragment()).commit();
-        }
     }
-
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.from_bottom_to_center, R.anim.from_center_to_bottom);
-
-            switch (item.getItemId()) {
-                case R.id.navigation_play:
-                    fragmentTransaction.replace(R.id.main_container, new TuneGameFragment()).commit();
-                    return true;
-                case R.id.navigation_settings:
-                    fragmentTransaction.replace(R.id.main_container, new SettingsFragment()).commit();
-                    return true;
-                case R.id.navigation_statistics:
-                    fragmentTransaction.replace(R.id.main_container, new StatisticsFragment()).commit();
-                    return true;
-            }
-            return false;
-        }
-    };
-
 }

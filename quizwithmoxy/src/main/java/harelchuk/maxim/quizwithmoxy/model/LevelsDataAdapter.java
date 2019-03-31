@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import harelchuk.maxim.quizwithmoxy.R;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class LevelsDataAdapter extends RecyclerView.Adapter<LevelsDataAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
 
@@ -26,7 +28,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private int[] rewards;
     private int[] costs;
 
-    public DataAdapter(Context context, int[] levels, int[] rewards, int[] costs, int[] coinImagesInt) {
+    public LevelsDataAdapter(Context context, int[] levels, int[] rewards, int[] costs, int[] coinImagesInt) {
 
         this.inflater = LayoutInflater.from(context);
         this.drawablesGAC = new Drawable[levels.length];
@@ -66,13 +68,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public DataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public LevelsDataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = inflater.inflate(R.layout.tune_game_item_level, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LevelsDataAdapter.ViewHolder holder, int position) {
         String level = String.valueOf(levels[position]);
         String cost = String.valueOf(costs[position]);
         String reward = String.valueOf(rewards[position]);
@@ -81,11 +83,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         holder.costTV.setText(cost);
         holder.coinImage.setBackground(drawablesGAC[position]);
         holder.background.setBackground(buttonBackgrounds[position]);
+        setAnimation(holder.coinImage);
     }
 
     @Override
     public int getItemCount() {
         return levels.length;
+    }
+
+
+    private void setAnimation(View viewToAnimate)
+    {
+            Animation animation = AnimationUtils.loadAnimation(AppForContext.getContext(), R.anim.from_right_to_center);
+            viewToAnimate.startAnimation(animation);
     }
 
 
@@ -111,7 +121,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        DataAdapter.clickListener = clickListener;
+        LevelsDataAdapter.clickListener = clickListener;
     }
 
 

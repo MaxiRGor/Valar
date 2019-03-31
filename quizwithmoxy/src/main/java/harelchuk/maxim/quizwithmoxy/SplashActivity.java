@@ -41,8 +41,9 @@ public class SplashActivity extends AppCompatActivity {
 
     private class MyThread extends Thread {
         public void run() {
+            int counter = 0;
             while (!Thread.currentThread().isInterrupted()) {
-                for (int counter = 0; counter < 150; counter++) {                                   //  max 15 seconds for connection
+                for (;counter < 150; counter++) {                                   //  max 15 seconds for connection
                     try {
                         Log.d("myLogs", "-------------------------COUNTER----------------------- ="
                                 + String.valueOf(counter));
@@ -57,7 +58,8 @@ public class SplashActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                if (!isConnected()) {
+                if (!isConnected() && counter >140) {
+                    Thread.currentThread().interrupt();
                     startNewActivity(false);
                 }
             }

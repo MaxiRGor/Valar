@@ -24,7 +24,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import harelchuk.maxim.quizwithmoxy.InPlayActivity;
 import harelchuk.maxim.quizwithmoxy.R;
 import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
-import harelchuk.maxim.quizwithmoxy.model.DataAdapter;
+import harelchuk.maxim.quizwithmoxy.model.LevelsDataAdapter;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.TuneGamePresenter;
 import harelchuk.maxim.quizwithmoxy.view.TuneGameView;
@@ -41,6 +41,15 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     private RecyclerView recyclerView;
 
     private Context context;
+
+
+    public static TuneGameFragment newInstance() {
+        Bundle args = new Bundle();
+        TuneGameFragment fragment = new TuneGameFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Nullable
     @Override
@@ -84,15 +93,16 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
     @Override
     public void fillLevelList(int[] levels, int[] rewards, int[] costs, int[] coinImagesInt) {
-        DataAdapter adapter = new DataAdapter(getContext(), levels, rewards, costs, coinImagesInt);
+        LevelsDataAdapter adapter = new LevelsDataAdapter(getContext(), levels, rewards, costs, coinImagesInt);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new LevelsDataAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 checkIfAvailable(position);
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.from_top_to_center));
     }
 
     private void checkIfAvailable(int position) {

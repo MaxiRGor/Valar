@@ -29,7 +29,7 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
     private long[] coinsCreditGAC;
     private int increase_credit_time_short;
 
-    private int conversation21600000To120 = 1800000;
+    private int conversation21600000To120 = 180000;
 
     public SetBankPresenter() {
         renewInfo();
@@ -55,6 +55,9 @@ public class SetBankPresenter extends MvpPresenter<SetBankView> {
                 coinsDebitGAC[0], coinsDebitGAC[1], coinsDebitGAC[2], user_money);
         getViewState().showCredit(is_credit, increase_credit_time_short, coinsCreditGAC, user_money);
         setBrokenButtons();
+        /*String title = AppForContext.getContext().getResources().getString(R.string.credit);
+        String text = String.valueOf(increase_debit_time_short) + "   " + String.valueOf(increase_credit_time_short);
+        getViewState().showAlertMessage(title, text);*/
     }
 
 

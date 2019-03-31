@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,8 +14,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import harelchuk.maxim.quizwithmoxy.R;
-import harelchuk.maxim.quizwithmoxy.TabMenuActivity;
-import harelchuk.maxim.quizwithmoxy.model.PagerAdapter;
+import harelchuk.maxim.quizwithmoxy.model.SettingsPagerAdapter;
 import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 import harelchuk.maxim.quizwithmoxy.presenter.SettingsPresenter;
 import harelchuk.maxim.quizwithmoxy.view.SettingsView;
@@ -25,6 +23,13 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
 
     @InjectPresenter
     SettingsPresenter settingsPresenter;
+
+    public static SettingsFragment newInstance() {
+        Bundle args = new Bundle();
+        SettingsFragment fragment = new SettingsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -65,7 +70,7 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
         tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
 
         final ViewPager viewPager =  settingsView.findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
+        final SettingsPagerAdapter adapter = new SettingsPagerAdapter
                 ( (getActivity()).getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
