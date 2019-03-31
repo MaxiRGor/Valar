@@ -59,7 +59,6 @@ public class SettingsFragment extends MvpAppCompatFragment implements SettingsVi
             view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.night_bank_selector);
         }
 
-
         TabLayout tabLayout = settingsView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
         tabLayout.addTab(tabLayout.newTab().setCustomView(view2));

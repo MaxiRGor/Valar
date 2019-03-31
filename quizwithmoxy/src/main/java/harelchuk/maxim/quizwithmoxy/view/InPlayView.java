@@ -12,7 +12,7 @@ public interface InPlayView extends MvpView {
     void userWin();
     void userLose(int answered);
 
-    void showAddedScore(int coinGD, int coinAD, int coinCP);
+    void showAddedScore(boolean is_lose, int coinGD, int coinAD, int coinCP);
 
     void showFailure();
 }

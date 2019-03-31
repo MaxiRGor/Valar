@@ -372,40 +372,40 @@ public class StatisticsFragment extends MvpAppCompatFragment implements Statisti
         }
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
-        Drawable[] knowleges = new Drawable[3];
+        Drawable[] knowledge = new Drawable[3];
 
         if (theme == 0) {
-            knowleges[0] = getResources().getDrawable(R.drawable.targ_books_films_pressed);
-            knowleges[1] = getResources().getDrawable(R.drawable.targ_books_pressed);
-            knowleges[2] = getResources().getDrawable(R.drawable.targ_films_pressed);
+            knowledge[0] = getResources().getDrawable(R.drawable.targ_books_films_pressed);
+            knowledge[1] = getResources().getDrawable(R.drawable.targ_books_pressed);
+            knowledge[2] = getResources().getDrawable(R.drawable.targ_films_pressed);
         }
 
         if (theme == 1) {
-            knowleges[0] = getResources().getDrawable(R.drawable.stark_books_films_pressed);
-            knowleges[1] = getResources().getDrawable(R.drawable.stark_books_pressed);
-            knowleges[2] = getResources().getDrawable(R.drawable.stark_films_pressed);
+            knowledge[0] = getResources().getDrawable(R.drawable.stark_books_films_pressed);
+            knowledge[1] = getResources().getDrawable(R.drawable.stark_books_pressed);
+            knowledge[2] = getResources().getDrawable(R.drawable.stark_films_pressed);
         }
 
         if (theme == 2) {
-            knowleges[0] = getResources().getDrawable(R.drawable.lann_books_films_pressed);
-            knowleges[1] = getResources().getDrawable(R.drawable.lann_books_pressed);
-            knowleges[2] = getResources().getDrawable(R.drawable.lann_films_pressed);
+            knowledge[0] = getResources().getDrawable(R.drawable.lann_books_films_pressed);
+            knowledge[1] = getResources().getDrawable(R.drawable.lann_books_pressed);
+            knowledge[2] = getResources().getDrawable(R.drawable.lann_films_pressed);
         }
 
         if (theme == 3) {
-            knowleges[0] = getResources().getDrawable(R.drawable.night_books_films_pressed);
-            knowleges[1] = getResources().getDrawable(R.drawable.night_books_pressed);
-            knowleges[2] = getResources().getDrawable(R.drawable.night_films_pressed);
+            knowledge[0] = getResources().getDrawable(R.drawable.night_books_films_pressed);
+            knowledge[1] = getResources().getDrawable(R.drawable.night_books_pressed);
+            knowledge[2] = getResources().getDrawable(R.drawable.night_films_pressed);
         }
 
         if (is_books) {
             if (is_films) {
-                booksFilmsImage.setBackground(knowleges[0]);
+                booksFilmsImage.setBackground(knowledge[0]);
             } else {
-                booksFilmsImage.setBackground(knowleges[1]);
+                booksFilmsImage.setBackground(knowledge[1]);
             }
         } else {
-            booksFilmsImage.setBackground(knowleges[2]);
+            booksFilmsImage.setBackground(knowledge[2]);
         }
     }
 

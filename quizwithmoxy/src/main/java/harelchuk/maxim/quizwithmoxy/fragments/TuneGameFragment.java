@@ -41,9 +41,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     private RecyclerView recyclerView;
 
     private Context context;
-    private long[] coinsGAC;
-    //private int[] level_costs;
-
 
     @Nullable
     @Override
@@ -71,9 +68,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             this.moneyImage.setBackground(getResources().getDrawable(R.drawable.night_window));
             this.recyclerView.setBackground(getResources().getDrawable(R.drawable.night_window));
         }
-
-        this.coinsGAC = new long[2];
-        //this.level_costs = new int[9];
         return tuneGameMenuView;
     }
 
@@ -90,7 +84,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
 
     @Override
     public void fillLevelList(int[] levels, int[] rewards, int[] costs, int[] coinImagesInt) {
-        //this.level_costs = costs;
         DataAdapter adapter = new DataAdapter(getContext(), levels, rewards, costs, coinImagesInt);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new DataAdapter.ClickListener() {
@@ -100,11 +93,10 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.from_bottom_to_center));
     }
 
     private void checkIfAvailable(int position) {
-        int cost = (int) CoinValuesSingleton.getInstance().getCostCoins()[position];
+        int cost =  CoinValuesSingleton.getInstance().getCostCoins()[position];
         if (position == 3 || position == 4 || position == 5) {
             cost *= 56;
         }
@@ -113,7 +105,7 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         }
         if (UserDataSingleton.getInstance().getUser_money() >= cost) {
             UserDataSingleton.getInstance().setChosen_level(position + 1);
-            gamePresenter.writeOff(cost);
+            gamePresenter.subtractMoney(cost);
             startGame();
         }
     }
@@ -126,7 +118,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
     @Override
     public void fillCoins(long[] coins_GAC) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.from_top_to_center);
-        this.coinsGAC = coins_GAC;
         final TextView coins_GD = tuneGameMenuView.findViewById(R.id.userGDTV);
         final TextView coins_AD = tuneGameMenuView.findViewById(R.id.userADTV);
         final TextView coins_CP = tuneGameMenuView.findViewById(R.id.userCPTV);
@@ -167,9 +158,9 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         final Drawable alertDialogWindowImage = alertDialogWindowImage1;
 
 
-        final long[] coinsInCPCAG = {coinsGAC[0] * 210 * 56 + coinsGAC[1] * 56 + coinsGAC[2],
-                coinsGAC[0] * 210 + coinsGAC[1],
-                coinsGAC[0]};
+        final long[] coinsInCPCAG = {coins_GAC[0] * 210 * 56 + coins_GAC[1] * 56 + coins_GAC[2],
+                coins_GAC[0] * 210 + coins_GAC[1],
+                coins_GAC[0]};
 
         final String one = String.valueOf(coinsInCPCAG[2]);
 
@@ -178,14 +169,13 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         final String three = String.valueOf(coinsInCPCAG[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        //LayoutInflater inflater = getLayoutInflater();
+
         View dialogView = inflate(context, R.layout.alertdialog_money_describtion, null);
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
 
         ImageView background = dialogView.findViewById(R.id.alertDialogBackgroundImage);
         background.setBackground(alertDialogWindowImage);
-
 
         Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
         closeDialogButton.setBackground(alertDialogButtonImage);
@@ -203,7 +193,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         TextView coinsCP = dialogView.findViewById(R.id.alertUsersCP);
         coinsCP.setText(three);
 
-
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +201,6 @@ public class TuneGameFragment extends MvpAppCompatFragment implements TuneGameVi
         });
         dialog.getWindow().setDimAmount(0.8f);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-
 
         moneyImage.setOnClickListener(new View.OnClickListener() {
             @Override

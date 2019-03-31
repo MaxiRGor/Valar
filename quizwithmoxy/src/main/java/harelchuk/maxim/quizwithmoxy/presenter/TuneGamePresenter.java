@@ -35,10 +35,8 @@ public class TuneGamePresenter extends MvpPresenter<TuneGameView> {
     }
 
 
-    public void writeOff(long money_to_write_off) {
-        long money = UserDataSingleton.getInstance().getUser_money();
-        money -= money_to_write_off;
-        UserDataSingleton.getInstance().setUserMoney(money);
+    public void subtractMoney(long subtract) {
+        UserDataSingleton.getInstance().subtractUserMoney(subtract);
     }
 
     public void showUsersMoneyAndBF() {

@@ -26,29 +26,19 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
 
     private int questionsToEnd;
     private int questionCursor;
-    private boolean is_lose;
+    //private boolean is_another_life;
     private List<Question> questions;
 
     public InPlayPresenter() {
         Log.d("myLogs", "InPlayPresenter const");
+        this.levelUserChoose = UserDataSingleton.getInstance().getChosen_level();
         this.is_book = UserDataSingleton.getInstance().isIs_books();
         this.is_serial = UserDataSingleton.getInstance().isIs_films();
-        this.levelUserChoose = UserDataSingleton.getInstance().getChosen_level();
         this.questionsToEnd = 7;
         this.questionCursor = 0;
-        this.is_lose = false;
+        //this.is_another_life = false;
         getQuestionsByLevelFromServer(levelUserChoose);
     }
-
-
-    private void sendQuestionToTheView() {
-        getViewState().showQuestion(questionsToEnd, questions.get(questionCursor).getQuestion_text(),
-                questions.get(questionCursor).getAnswer_one(), questions.get(questionCursor).getAnswer_two(),
-                questions.get(questionCursor).getAnswer_three(), questions.get(questionCursor).getAnswer_four(),
-                questions.get(questionCursor).getCategory(), questions.get(questionCursor).getLevel(),
-                questions.get(questionCursor).getIn_book(), questions.get(questionCursor).getIn_serial());
-    }
-
 
     private void getQuestionsByLevelFromServer(int lvl) {
         NetworkService.getInstance().getJSONApi().getByLevel(lvl, is_book, is_serial).enqueue(new Callback<List<Question>>() {
@@ -71,6 +61,14 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         });
     }
 
+    private void sendQuestionToTheView() {
+        getViewState().showQuestion(questionsToEnd, questions.get(questionCursor).getQuestion_text(),
+                questions.get(questionCursor).getAnswer_one(), questions.get(questionCursor).getAnswer_two(),
+                questions.get(questionCursor).getAnswer_three(), questions.get(questionCursor).getAnswer_four(),
+                questions.get(questionCursor).getCategory(), questions.get(questionCursor).getLevel(),
+                questions.get(questionCursor).getIn_book(), questions.get(questionCursor).getIn_serial());
+    }
+
     public void checkAnswer(int userAnswer) {
 
         updateAnswerOnServer(this.questions.get(questionCursor).getId_question(), userAnswer);
@@ -78,59 +76,51 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         if (userAnswer == this.questions.get(questionCursor).getRight_answer()) {
             this.questionsToEnd--;
             this.questionCursor++;
-            Log.d("myLogs", "User answered right");
-            if (this.questionsToEnd > 0) {
+            if (this.questionsToEnd > 0) {  //not end
                 sendQuestionToTheView();
-            } else {
-                Log.d("myLogs", "All answered");
+            } else {                        //all answered
                 this.questionCursor++;
                 getViewState().userWin();
             }
-        } else {
-            Log.d("myLogs", "User answered wrong and he lose");
-            this.is_lose = true;
+        } else {                            //lose
             getViewState().userLose(this.questionCursor);
         }
     }
 
-    public void sendInfoToUserStat() {
+    public void sendInfoToUserStat(boolean is_lose) {
+        long add = coinsToAdd(levelUserChoose, is_lose);
+        UserDataSingleton.getInstance().addUserMoney(add);
 
-        long coinsToAdd = coinsToAdd(levelUserChoose, is_lose);
-        UserDataSingleton.getInstance().addUserMoney(coinsToAdd);
+        if (is_lose) {
+            if (levelUserChoose == 1 || levelUserChoose == 2 || levelUserChoose == 3)
+                UserDataSingleton.getInstance().updateEasyLose();
+            if (levelUserChoose == 4 || levelUserChoose == 5 || levelUserChoose == 6)
+                UserDataSingleton.getInstance().updateMediumLose();
 
-        if (levelUserChoose == 1 || levelUserChoose == 2 || levelUserChoose == 3) {
-            UserDataSingleton.getInstance().incrementNumber_easy_games();
-            if (!is_lose) {
-                UserDataSingleton.getInstance().incrementNumber_easy_winnings();
-            }
+            if (levelUserChoose == 7 || levelUserChoose == 8 || levelUserChoose == 9 || levelUserChoose == 10)
+                UserDataSingleton.getInstance().updateHardLose();
         }
-        if (levelUserChoose == 4 || levelUserChoose == 5 || levelUserChoose == 6) {
-            UserDataSingleton.getInstance().incrementNumber_medium_games();
-            if (!is_lose) {
-                UserDataSingleton.getInstance().incrementNumber_medium_winnings();
-            }
-        }
-        if (levelUserChoose == 7 || levelUserChoose == 8 || levelUserChoose == 9 || levelUserChoose == 10) {
-            UserDataSingleton.getInstance().incrementNumber_hard_games();
-            if (!is_lose) {
-                UserDataSingleton.getInstance().incrementNumber_hard_winnings();
-            }
+        if (!is_lose) {
+            if (levelUserChoose == 1 || levelUserChoose == 2 || levelUserChoose == 3)
+                UserDataSingleton.getInstance().updateEasyWin();
+            if (levelUserChoose == 4 || levelUserChoose == 5 || levelUserChoose == 6)
+                UserDataSingleton.getInstance().updateMediumWin();
+            if (levelUserChoose == 7 || levelUserChoose == 8 || levelUserChoose == 9 || levelUserChoose == 10)
+                UserDataSingleton.getInstance().updateHardWin();
         }
 
-        long[] coinsGAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(coinsToAdd);
-        getViewState().showAddedScore((int) coinsGAC[0], (int) coinsGAC[1], (int) coinsGAC[2]);
+        long[] coinsGAC = CoinValuesSingleton.getInstance().convertCoinsToGAC(add);
+        getViewState().showAddedScore(is_lose, (int) coinsGAC[0], (int) coinsGAC[1], (int) coinsGAC[2]);
     }
 
     private void updateAnswerOnServer(final int id_question, int userAnswer) {
         NetworkService.getInstance().getJSONApi().updateAnswer(id_question, userAnswer).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("myLogs", "UPDATED ANSWER" + String.valueOf(id_question) + " ON SERVER");
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.d("myLogs", "ANSWER UPDATING FAILED");
             }
         });
     }
@@ -150,37 +140,37 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         }
         if (levelUserChoose == 4) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[3]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 5) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[4]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 6) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[5]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_AD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_AD();
         }
         if (levelUserChoose == 7) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[6]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 8) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[7]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 9) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[8]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
         if (levelUserChoose == 10) {
             moneyToReturn = CoinValuesSingleton.getInstance().getCostCoins()[0]
-                    *CoinValuesSingleton.getInstance().getConversation_CP_GD();
+                    * CoinValuesSingleton.getInstance().getConversation_CP_GD();
         }
 
         UserDataSingleton.getInstance().addUserMoney(moneyToReturn);
 
         long[] coinsToReturn = CoinValuesSingleton.getInstance().convertCoinsToGAC(moneyToReturn);
-        getViewState().showAddedScore((int) coinsToReturn[0], (int) coinsToReturn[1], (int) coinsToReturn[2]);
+        getViewState().showAddedScore(true, (int) coinsToReturn[0], (int) coinsToReturn[1], (int) coinsToReturn[2]);
     }
 
     private long coinsToAdd(int level, boolean is_lose) {
@@ -224,7 +214,8 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
                         * CoinValuesSingleton.getInstance().getConversation_CP_GD();
 
             }
-        } else {
+        }
+        if (!is_lose) {
             if (level == 1) {
                 coinsToAdd = CoinValuesSingleton.getInstance().getRewardCoins()[0];
             }
@@ -316,7 +307,7 @@ public class InPlayPresenter extends MvpPresenter<InPlayView> {
         int add_noa;
         int add_nog;
 
-        if (is_lose) addScore = levelUserChoose * questionCursor;
+        if (is_another_life) addScore = levelUserChoose * questionCursor;
         else addScore = levelUserChoose * questionCursor * 10;
 
         scr += addScore;

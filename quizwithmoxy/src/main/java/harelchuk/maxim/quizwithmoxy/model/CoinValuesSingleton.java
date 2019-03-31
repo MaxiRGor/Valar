@@ -44,7 +44,10 @@ public class CoinValuesSingleton {
     private int conversation_CP_AD;
 
     private CoinValuesSingleton() {
+        //setVariables();
+    }
 
+    public void setVariables(){
         this.l_1_cost_cp = 1;
         this.l_2_cost_cp = 5;
         this.l_3_cost_cp = 15;

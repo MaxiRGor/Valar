@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import harelchuk.maxim.quizwithmoxy.model.CoinValuesSingleton;
@@ -22,16 +20,15 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void connectToServer() {
-
-        UserDataSingleton.getInstance();
-        CoinValuesSingleton.getInstance();
+        //UserDataSingleton.getInstance();
+        CoinValuesSingleton.getInstance().setVariables();
         Thread thread = new MyThread();
         thread.start();
     }
 
-    private boolean isMoneyNotNull() {
-        final long money = UserDataSingleton.getInstance().getUser_money();
-        return money != 0;
+    private boolean isConnected() {
+        //UserDataSingleton.getInstance().setUser_uuid();
+        return UserDataSingleton.getInstance().isConnected();
     }
 
     private void startNewActivity(boolean isConnected) {
@@ -42,20 +39,15 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-
     private class MyThread extends Thread {
-        final boolean[] isConnected = {false};
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
-                for (int counter = 0; counter < 150; counter++) {
+                for (int counter = 0; counter < 150; counter++) {                                   //  max 15 seconds for connection
                     try {
-                        Log.d("myLogs", "---------COUNTER------- ="
+                        Log.d("myLogs", "-------------------------COUNTER----------------------- ="
                                 + String.valueOf(counter));
                         TimeUnit.MILLISECONDS.sleep(100);
-                        if (isMoneyNotNull()) {
-                            Log.d("myLogs", "---------MONEY------- ="
-                                    + String.valueOf(UserDataSingleton.getInstance().getUser_money()));
-                            isConnected[0] = true;
+                        if (isConnected()) {
                             Thread.currentThread().interrupt();
                             startNewActivity(true);
                         }
@@ -65,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                if (!isConnected[0]) {
+                if (!isConnected()) {
                     startNewActivity(false);
                 }
             }

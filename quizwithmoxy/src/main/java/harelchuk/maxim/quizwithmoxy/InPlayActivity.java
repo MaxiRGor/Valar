@@ -25,12 +25,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
     InPlayPresenter inPlayPresenter;
 
     private ViewGroup questionContainer;
-    private TextView coinsGD;
-    private TextView coinsAD;
-    private TextView coinsCP;
-    private ImageView coinGDImage;
-    private ImageView coinADImage;
-    private ImageView coinCPImage;
+
+    //private View userWin;
+    //private View userLose;
 
     private TextView questionLevelTV;
     private TextView questionCategoryTV;
@@ -78,9 +75,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
-            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
-            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
-            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.constantine));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.constantine));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.constantine));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.constantine));
 
         }
         if (theme == 1) {
@@ -97,9 +94,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
-            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
-            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
-            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.bemountline));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.bemountline));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.bemountline));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.bemountline));
 
 
         }
@@ -118,9 +115,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
-            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
-            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
-            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.kotyhoroshko));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.kotyhoroshko));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.kotyhoroshko));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.kotyhoroshko));
         }
 
         if (theme == 3) {
@@ -137,9 +134,9 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             this.questionLevelTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             this.questionCategoryTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             levelNameTV.setTextColor(getResources().getColor(R.color.targColorAccent));
-            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
-            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
-            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(),R.font.gnutypewriter));
+            this.questionLevelTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.gnutypewriter));
+            this.questionCategoryTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.gnutypewriter));
+            levelNameTV.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.gnutypewriter));
 
         }
 
@@ -175,7 +172,6 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         View currentQuestionView = LayoutInflater.from(this).inflate(R.layout.in_play_question, questionContainer, false);
         this.questionContainer.addView(currentQuestionView);
 
-
         setQuestionCategoryImage(category);
 
         questionLevelTV.setText(String.valueOf(level));
@@ -185,7 +181,7 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             if (inSerial) {
                 this.bookFilmImage.setBackground(this.booksAndFilms);
             } else
-                this.bookFilmImage.setBackground( this.books);
+                this.bookFilmImage.setBackground(this.books);
         } else
             this.bookFilmImage.setBackground(films);
 
@@ -429,17 +425,15 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
 
     @Override
     public void userWin() {
-        //ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
-        //emptyView.setBackground(getResources().getDrawable(R.drawable.blackscreen));
+        View userWin = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, questionContainer, false);
         this.questionCategoryTV.setVisibility(View.INVISIBLE);
         this.bookFilmImage.setVisibility(View.INVISIBLE);
         this.categoryImage.setVisibility(View.INVISIBLE);
         this.questionContainer.removeAllViews();
-        View userWin = LayoutInflater.from(this).inflate(R.layout.in_play_user_win, questionContainer, false);
-        this.questionContainer.addView(userWin);
-        //ImageView backgroundIV = userWin.findViewById(R.id.userWinBackgroundIV);
         ImageView userWinTextBackgroundTV = userWin.findViewById(R.id.userWinTextBackgroundTV);
         ImageView userWinAnimalImage = userWin.findViewById(R.id.userWinWarriorIV);
+        this.questionContainer.addView(userWin);
+        inPlayPresenter.sendInfoToUserStat(false);
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
@@ -457,7 +451,6 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         }
 
         if (theme == 2) {
-
             userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.lann_window));
             Picasso.get()
                     .load(R.drawable.lann_personage_win)
@@ -465,7 +458,6 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
         }
 
         if (theme == 3) {
-
             userWinTextBackgroundTV.setBackground(getResources().getDrawable(R.drawable.night_window));
             Picasso.get()
                     .load(R.drawable.night_personage_win)
@@ -478,34 +470,22 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                 onBackPressed();
             }
         };
-
         this.questionContainer.setOnClickListener(onClickListener);
 
-        this.coinsGD = userWin.findViewById(R.id.userWinCoinsGD);
-        this.coinsAD = userWin.findViewById(R.id.userWinCoinsAD);
-        this.coinsCP = userWin.findViewById(R.id.userWinCoinsCP);
-        this.coinGDImage = userWin.findViewById(R.id.endGameGDImage);
-        this.coinADImage = userWin.findViewById(R.id.endGameADImage);
-        this.coinCPImage = userWin.findViewById(R.id.endGameCPImage);
-        inPlayPresenter.sendInfoToUserStat();
     }
 
     @Override
     public void userLose(int answered) {
-        //ViewGroup emptyView = findViewById(R.id.in_play_empty_frame);
+        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
         this.questionCategoryTV.setVisibility(View.INVISIBLE);
         this.bookFilmImage.setVisibility(View.INVISIBLE);
         this.categoryImage.setVisibility(View.INVISIBLE);
         this.questionContainer.removeAllViews();
-        //emptyView.removeAllViews();
-        //emptyView.setBackground(getResources().getDrawable(R.drawable.blackscreen));
-        View userLose;
-        userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
-        questionContainer.addView(userLose);
-        //ImageView backgroundIV = userLose.findViewById(R.id.userLoseBackgroundIV);
-
         ImageView userLoseTextBackgroundTV = userLose.findViewById(R.id.userLoseTextBackgroundTV);
         ImageView useLoseAnimalImage = userLose.findViewById(R.id.userLoseWarriorIV);
+        TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
+        this.questionContainer.addView(userLose);
+        inPlayPresenter.sendInfoToUserStat(true);
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
@@ -536,7 +516,6 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
                     .into(useLoseAnimalImage);
         }
 
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -544,49 +523,20 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             }
         };
         this.questionContainer.setOnClickListener(onClickListener);
-        TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
         answeredTV.setText(String.valueOf(answered));
-        this.coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
-        this.coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
-        this.coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
-        this.coinGDImage = userLose.findViewById(R.id.endGameGDImage);
-        this.coinADImage = userLose.findViewById(R.id.endGameADImage);
-        this.coinCPImage = userLose.findViewById(R.id.endGameCPImage);
-
-        inPlayPresenter.sendInfoToUserStat();
     }
-
-    @Override
-    public void showAddedScore(int coinGD, int coinAD, int coinCP) {
-        coinsGD.setText(String.valueOf(coinGD));
-        if (coinGD == 0) {
-            coinsGD.setVisibility(View.INVISIBLE);
-            coinGDImage.setVisibility(View.INVISIBLE);
-        }
-        coinsAD.setText(String.valueOf(coinAD));
-        if (coinAD == 0) {
-            coinsAD.setVisibility(View.INVISIBLE);
-            coinADImage.setVisibility(View.INVISIBLE);
-        }
-        coinsCP.setText(String.valueOf(coinCP));
-        if (coinCP == 0) {
-            coinsCP.setVisibility(View.INVISIBLE);
-            coinCPImage.setVisibility(View.INVISIBLE);
-        }
-    }
-
 
     @Override
     public void showFailure() {
-
+        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
         this.questionCategoryTV.setVisibility(View.INVISIBLE);
         this.bookFilmImage.setVisibility(View.INVISIBLE);
         this.questionContainer.removeAllViews();
-
-        View userLose = LayoutInflater.from(this).inflate(R.layout.in_play_user_lose, questionContainer, false);
-        questionContainer.addView(userLose);
-
         ImageView userLoseTextBackgroundTV = userLose.findViewById(R.id.userLoseTextBackgroundTV);
+        TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
+        TextView notConnectedTV = userLose.findViewById(R.id.loseTV);
+        this.questionContainer.addView(userLose);
+        inPlayPresenter.sendFailToUserStat();
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
         if (theme == 0) {
@@ -611,19 +561,52 @@ public class InPlayActivity extends MvpAppCompatActivity implements InPlayView {
             }
         };
         this.questionContainer.setOnClickListener(onClickListener);
-
-        TextView answeredTV = userLose.findViewById(R.id.loseAnsweredTV);
-        TextView notConnectedTV = userLose.findViewById(R.id.loseTV);
         notConnectedTV.setText(getResources().getString(R.string.notConnected));
-        this.coinGDImage = userLose.findViewById(R.id.endGameGDImage);
-        this.coinADImage = userLose.findViewById(R.id.endGameADImage);
-        this.coinCPImage = userLose.findViewById(R.id.endGameCPImage);
         answeredTV.setText(String.valueOf(0));
-        this.coinsGD = userLose.findViewById(R.id.userLoseCoinsGD);
-        this.coinsAD = userLose.findViewById(R.id.userLoseCoinsAD);
-        this.coinsCP = userLose.findViewById(R.id.userLoseCoinsCP);
+    }
 
-        inPlayPresenter.sendFailToUserStat();
+    @Override
+    public void showAddedScore(boolean is_lose, int coinGD, int coinAD, int coinCP) {
+        TextView coinsGD;
+        TextView coinsAD;
+        TextView coinsCP;
+        ImageView coinGDImage;
+        ImageView coinADImage;
+        ImageView coinCPImage;
+        View userEndGame;
+
+        if (is_lose) {
+            userEndGame = questionContainer.findViewById(R.id.in_play_user_lose);
+            coinsGD = userEndGame.findViewById(R.id.userLoseCoinsGD);
+            coinsAD = userEndGame.findViewById(R.id.userLoseCoinsAD);
+            coinsCP = userEndGame.findViewById(R.id.userLoseCoinsCP);
+            coinGDImage = userEndGame.findViewById(R.id.endGameGDImage);
+            coinADImage = userEndGame.findViewById(R.id.endGameADImage);
+            coinCPImage = userEndGame.findViewById(R.id.endGameCPImage);
+        } else {
+            userEndGame = questionContainer.findViewById(R.id.in_play_user_win);
+            coinsGD = userEndGame.findViewById(R.id.userWinCoinsGD);
+            coinsAD = userEndGame.findViewById(R.id.userWinCoinsAD);
+            coinsCP = userEndGame.findViewById(R.id.userWinCoinsCP);
+            coinGDImage = userEndGame.findViewById(R.id.endGameGDImage);
+            coinADImage = userEndGame.findViewById(R.id.endGameADImage);
+            coinCPImage = userEndGame.findViewById(R.id.endGameCPImage);
+        }
+        coinsGD.setText(String.valueOf(coinGD));
+        if (coinGD == 0) {
+            coinsGD.setVisibility(View.INVISIBLE);
+            coinGDImage.setVisibility(View.INVISIBLE);
+        }
+        coinsAD.setText(String.valueOf(coinAD));
+        if (coinAD == 0) {
+            coinsAD.setVisibility(View.INVISIBLE);
+            coinADImage.setVisibility(View.INVISIBLE);
+        }
+        coinsCP.setText(String.valueOf(coinCP));
+        if (coinCP == 0) {
+            coinsCP.setVisibility(View.INVISIBLE);
+            coinCPImage.setVisibility(View.INVISIBLE);
+        }
     }
 
 }

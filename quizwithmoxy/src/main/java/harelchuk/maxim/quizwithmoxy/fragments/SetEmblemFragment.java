@@ -3,6 +3,7 @@ package harelchuk.maxim.quizwithmoxy.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
     @InjectPresenter
     SetEmblemPresenter setEmblemPresenter;
 
-    private View setEmblemView;
     private ImageView targEmblem;
     private ImageView starkEmblem;
     private ImageView lannEmblem;
@@ -35,8 +35,8 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
     private TextView nightButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.setEmblemView = inflater.inflate(R.layout.set_emblem_fragment, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View setEmblemView = inflater.inflate(R.layout.set_emblem_fragment, container, false);
 
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
@@ -108,7 +108,6 @@ public class SetEmblemFragment extends MvpAppCompatFragment implements SetEmblem
     }
 
     private void reloadActivity(){
-        //Intent intent = getActivity().getIntent();
         Intent intent = new Intent(getActivity(),TabMenuActivity.class);
         startActivity(intent);
         getActivity().finish();

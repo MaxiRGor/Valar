@@ -24,7 +24,7 @@ public class NetworkService {
         return mInstance;
     }
 
-    public JSONPlaceHolderApi getJSONApi() {
-        return mRetrofit.create(JSONPlaceHolderApi.class);
+    public JSONApi getJSONApi() {
+        return mRetrofit.create(JSONApi.class);
     }
 }

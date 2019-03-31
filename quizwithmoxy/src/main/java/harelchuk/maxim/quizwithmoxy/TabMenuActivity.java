@@ -26,6 +26,8 @@ public class TabMenuActivity extends AppCompatActivity {
         final BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
+        UserDataSingleton.getInstance().setUser_uuid();
+
         if (theme == 0) {
             setTheme(R.style.TargarAppTheme);
             Picasso.get()

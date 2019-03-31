@@ -3,14 +3,14 @@ package harelchuk.maxim.quizwithmoxy.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+class User {
     @SerializedName("id_user")
     @Expose
     private Integer id_user;
 
     @SerializedName("user_uuid")
     @Expose
-    private long user_uuid;
+    private String user_uuid;
 
     @SerializedName("user_name")
     @Expose
@@ -84,6 +84,10 @@ public class User {
     @Expose
     private long credit_time;
 
+    @SerializedName("credit_time_to_increase")
+    @Expose
+    private long credit_time_to_increase;
+
     @SerializedName("credit_sum")
     @Expose
     private long credit_sum;
@@ -104,7 +108,7 @@ public class User {
         return id_user;
     }
 
-    long getUser_uuid() {
+    String getUser_uuid() {
         return user_uuid;
     }
 
@@ -174,6 +178,10 @@ public class User {
 
     boolean isIs_credit() {
         return is_credit;
+    }
+
+    long getCredit_time_to_increase() {
+        return credit_time_to_increase;
     }
 
     long getCredit_time() {

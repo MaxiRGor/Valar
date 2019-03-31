@@ -1,6 +1,8 @@
 package harelchuk.maxim.quizwithmoxy.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import harelchuk.maxim.quizwithmoxy.model.UserDataSingleton;
 
 public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.set_users_preferences_fragment, container, false);
 
@@ -26,6 +28,8 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
         final ImageView windowBooks = view.findViewById(R.id.userPrefBackgroundBooks);
         final ImageView windowFilms = view.findViewById(R.id.userPrefBackgroundFilms);
 
+        Typeface typeface =ResourcesCompat.getFont(AppForContext.getContext(), R.font.gnutypewriter);
+
         int theme = UserDataSingleton.getInstance().getCurrent_theme();
 
         if(theme==0){
@@ -33,6 +37,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
             windowFilms.setBackground(getResources().getDrawable(R.drawable.targ_window));
             checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.targ_books_selector));
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.targ_films_selector));
+            typeface = ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine);
         }
 
         if(theme==1){
@@ -40,6 +45,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
             windowFilms.setBackground(getResources().getDrawable(R.drawable.stark_window));
             checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.stark_books_selector));
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.stark_films_selector));
+            typeface = ResourcesCompat.getFont(AppForContext.getContext(), R.font.bemountline);
         }
 
         if(theme==2){
@@ -47,15 +53,18 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
             windowFilms.setBackground(getResources().getDrawable(R.drawable.lann_window));
             checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.lann_books_selector));
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.lann_films_selector));
+            typeface = ResourcesCompat.getFont(AppForContext.getContext(), R.font.kotyhoroshko);
+
         }
         if(theme==3){
             windowBooks.setBackground(getResources().getDrawable(R.drawable.night_window));
             windowFilms.setBackground(getResources().getDrawable(R.drawable.night_window));
             checkBoxBooks.setButtonDrawable(getResources().getDrawable(R.drawable.night_books_selector));
             checkBoxFilms.setButtonDrawable(getResources().getDrawable(R.drawable.night_films_selector));
+            typeface = ResourcesCompat.getFont(AppForContext.getContext(), R.font.gnutypewriter);
         }
 
-        checkBoxFilms.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
+        checkBoxFilms.setTypeface(typeface);
         checkBoxFilms.setChecked(UserDataSingleton.getInstance().isIs_films());
         checkBoxFilms.setTextColor(getResources().getColor(R.color.targColorAccent));
         if (UserDataSingleton.getInstance().isIs_films()) {
@@ -65,7 +74,7 @@ public class SetUsersBooksFilmsFragment extends MvpAppCompatFragment {
         }
 
 
-        checkBoxBooks.setTypeface(ResourcesCompat.getFont(AppForContext.getContext(), R.font.constantine));
+        checkBoxBooks.setTypeface(typeface);
         checkBoxBooks.setTextColor(getResources().getColor(R.color.targColorAccent));
         checkBoxBooks.setChecked(UserDataSingleton.getInstance().isIs_books());
 

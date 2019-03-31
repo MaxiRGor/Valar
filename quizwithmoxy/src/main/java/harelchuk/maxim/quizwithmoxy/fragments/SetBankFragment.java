@@ -3,6 +3,7 @@ package harelchuk.maxim.quizwithmoxy.fragments;
 import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
     private TextView getCreditTV;
     private TextView returnCreditTV;
 
-    private Drawable alertDialogButtonImage;
-    private Drawable alertDialogWindowImage;
+    private Drawable alertDialogButtonDrawable;
+    private Drawable alertDialogWindowDrawable;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.bankView = inflater.inflate(R.layout.bank_fragment, container, false);
         ImageView bankDebitBackground = bankView.findViewById(R.id.bankDebitBackground);
         this.returnDebitTV = bankView.findViewById(R.id.bankReturnDebitTV);
@@ -55,8 +56,8 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             addDebitTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             getCreditTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.targ_button_selector));
-            alertDialogButtonImage = getResources().getDrawable(R.drawable.targ_button_selector);
-            alertDialogWindowImage = getResources().getDrawable(R.drawable.targ_window);
+            alertDialogButtonDrawable = getResources().getDrawable(R.drawable.targ_button_selector);
+            alertDialogWindowDrawable = getResources().getDrawable(R.drawable.targ_window);
         }
         if (theme == 1) {
             bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.stark_window));
@@ -65,8 +66,8 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             addDebitTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
             getCreditTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.stark_button_selector));
-            alertDialogButtonImage = getResources().getDrawable(R.drawable.stark_button_selector);
-            alertDialogWindowImage = getResources().getDrawable(R.drawable.stark_window);
+            alertDialogButtonDrawable = getResources().getDrawable(R.drawable.stark_button_selector);
+            alertDialogWindowDrawable = getResources().getDrawable(R.drawable.stark_window);
         }
         if (theme == 2) {
             bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.lann_window));
@@ -75,8 +76,8 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             addDebitTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
             getCreditTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.lann_button_selector));
-            alertDialogButtonImage = getResources().getDrawable(R.drawable.lann_button_selector);
-            alertDialogWindowImage = getResources().getDrawable(R.drawable.lann_window);
+            alertDialogButtonDrawable = getResources().getDrawable(R.drawable.lann_button_selector);
+            alertDialogWindowDrawable = getResources().getDrawable(R.drawable.lann_window);
         }
         if (theme == 3) {
             bankDebitBackground.setBackground(getResources().getDrawable(R.drawable.night_window));
@@ -85,44 +86,22 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             addDebitTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
             getCreditTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
             returnCreditTV.setBackground(getResources().getDrawable(R.drawable.night_button_selector));
-            alertDialogButtonImage = getResources().getDrawable(R.drawable.night_button_selector);
-            alertDialogWindowImage = getResources().getDrawable(R.drawable.night_window);
+            alertDialogButtonDrawable = getResources().getDrawable(R.drawable.night_button_selector);
+            alertDialogWindowDrawable = getResources().getDrawable(R.drawable.night_window);
         }
         return bankView;
     }
 
     @Override
-    public void showDebit(boolean is_debit, final long debit_time_to_increase_in_seconds, long debit_GD, long debit_AD, long debit_CP, final long user_money) {
+    public void showDebit(boolean is_debit, final int debit_time_to_increase, long debit_GD, long debit_AD, long debit_CP, final long user_money) {
 
         final ProgressBar timeToIncreaseProgressBar = bankView.findViewById(R.id.debitProgressBar);
-        timeToIncreaseProgressBar.setMax(Integer.valueOf(getResources().getString(R.string.sixHoursOr120Seconds)));
+        timeToIncreaseProgressBar.setMax(120);
 
         if (is_debit) {
-            timeToIncreaseProgressBar.setProgress((int) debit_time_to_increase_in_seconds);
+            timeToIncreaseProgressBar.setProgress( debit_time_to_increase);
         } else timeToIncreaseProgressBar.setProgress(0);
-/*
-        @SuppressLint("StaticFieldLeak") AsyncTask<Integer,Integer,Void> asyncTask = new AsyncTask<Integer, Integer, Void>() {
-            @Override
-            protected Void doInBackground(Integer... integers) {
-                for( int i = (int) debit_time_to_increase_in_seconds; i<120; i++)
-                try {
-                    Thread.sleep(1000);
-                    publishProgress(i);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
 
-            @Override
-            protected void onProgressUpdate(Integer... values) {
-                super.onProgressUpdate(values);
-                timeToIncreaseProgressBar.setProgress(values[0]);
-            }
-        };
-
-        asyncTask.execute(0);
-*/
         TextView debitGDTV = bankView.findViewById(R.id.bankDebitSumGDTV);
         TextView debitADTV = bankView.findViewById(R.id.bankDebitSumADTV);
         TextView debitCPTV = bankView.findViewById(R.id.bankDebitSumCPTV);
@@ -155,25 +134,20 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         debitCPTV.setText(String.valueOf(debit_CP));
 
         setDebitOnClickListeners(is_debit, user_money);
-
     }
 
     @Override
     public void setBrokenButtons(boolean is_debit, boolean is_credit) {
 
-        //TextView getCreditTV = bankView.findViewById(R.id.bankGetCreditTV);
-        //TextView returnCreditTV = bankView.findViewById(R.id.bankReturnCreditTV);
         TextView creditName = bankView.findViewById(R.id.bankCreditTV);
 
-        //TextView addDebitTV = bankView.findViewById(R.id.bankAddDebitTV);
-        //TextView returnDebitTV = bankView.findViewById(R.id.bankReturnDebitTV);
         TextView debitName = bankView.findViewById(R.id.bankDebitTV);
 
         if (is_debit) {
             creditName.setTextColor(getResources().getColor(R.color.targUnreachable));
-            getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
-            returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
-            returnDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+            this.getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+            this.returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+            this.returnDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
             View.OnClickListener onDebitClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -182,16 +156,17 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                     showAlertMessage(title, text);
                 }
             };
-            getCreditTV.setOnClickListener(onDebitClickListener);
-            returnCreditTV.setOnClickListener(onDebitClickListener);
+            this.getCreditTV.setOnClickListener(onDebitClickListener);
+            this.returnCreditTV.setOnClickListener(onDebitClickListener);
 
-        } else {
+        }
+        if (!is_debit) {
             if (is_credit) {
-                addDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
-                returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
                 debitName.setTextColor(getResources().getColor(R.color.targUnreachable));
-                getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
-                returnCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                this.addDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                this.returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                this.getCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                this.returnCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
@@ -201,15 +176,16 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                         showAlertMessage(title, text);
                     }
                 };
-                addDebitTV.setOnClickListener(onClickListener);
-                returnDebitTV.setOnClickListener(onClickListener);
-            } else {
-                getCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
-                addDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                this.addDebitTV.setOnClickListener(onClickListener);
+                this.returnDebitTV.setOnClickListener(onClickListener);
+            }
+            if (!is_credit) {
                 debitName.setTextColor(getResources().getColor(R.color.targColorAccent));
                 creditName.setTextColor(getResources().getColor(R.color.targColorAccent));
-                returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
-                returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                this.getCreditTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                this.addDebitTV.setTextColor(getResources().getColor(R.color.targColorAccent));
+                this.returnCreditTV.setTextColor(getResources().getColor(R.color.targUnreachable));
+                this.returnDebitTV.setTextColor(getResources().getColor(R.color.targUnreachable));
             }
 
         }
@@ -217,12 +193,12 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
 
 
     @Override
-    public void showCredit(boolean is_credit, long max_progress, long credit_time_to_return, long[] credit_GAC, final long user_money) {
+    public void showCredit(boolean is_credit, int credit_time_to_return, long[] credit_GAC, final long user_money) {
 
         ProgressBar creditTimeProgressBar = bankView.findViewById(R.id.bankCreditProgressBar);
-        creditTimeProgressBar.setMax((int) max_progress);
+        creditTimeProgressBar.setMax(120);  //in minutes, step = 1 minute
         if (is_credit) {
-            creditTimeProgressBar.setProgress((int) credit_time_to_return);
+            creditTimeProgressBar.setProgress(credit_time_to_return);
         } else creditTimeProgressBar.setProgress(0);
 
         TextView creditGD = bankView.findViewById(R.id.bankCreditSumGDTV);
@@ -277,7 +253,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             public void onClick(View v) {
                 if (v == returnCreditTV) {
                     //returnButtonBackground.performClick();
-                    if (is_credit) setBankPresenter.returnCreditUsingSP();
+                    if (is_credit) setBankPresenter.returnCredit();
                     else {
                         String title = getResources().getString(R.string.credit);
                         String text = getResources().getString(R.string.nothingToReturn);
@@ -290,7 +266,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
                         final int progress = addCreditSeekBar.getProgress();
                         final long sum_to_get = user_money * progress;
                         if (sum_to_get > 0) {
-                            setBankPresenter.writeCreditIntoSP(sum_to_get);
+                            setBankPresenter.getCredit(sum_to_get);
                         } else {
                             String title = getResources().getString(R.string.credit);
                             String text = getResources().getString(R.string.selectSum);
@@ -321,7 +297,7 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
             @Override
             public void onClick(View v) {
                 if (v == returnAllTV) {
-                    if (is_debit) setBankPresenter.removeDebitFromSP();
+                    if (is_debit) setBankPresenter.returnDebit();
                     else {
                         String title = getResources().getString(R.string.debit);
                         String text = getResources().getString(R.string.nothingToReturn);
@@ -394,10 +370,10 @@ public class SetBankFragment extends MvpAppCompatFragment implements SetBankView
         final AlertDialog dialog = builder.create();
 
         ImageView background = dialogView.findViewById(R.id.alertDialogBackgroundImage);
-        background.setBackground(alertDialogWindowImage);
+        background.setBackground(alertDialogWindowDrawable);
 
         Button closeDialogButton = dialogView.findViewById(R.id.alert_dialog_button);
-        closeDialogButton.setBackground(alertDialogButtonImage);
+        closeDialogButton.setBackground(alertDialogButtonDrawable);
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
